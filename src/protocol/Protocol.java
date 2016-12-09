@@ -1,3 +1,4 @@
+package protocol;
 
 public abstract class Protocol
 {

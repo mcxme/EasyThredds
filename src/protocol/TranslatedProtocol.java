@@ -1,13 +1,12 @@
+package protocol;
 
 public abstract class TranslatedProtocol extends Protocol
 {
-	public abstract void translate(CollectiveProtocol protocol);
-	
 	protected abstract String getProtocolUrlAbbrevation();
 		
-	protected abstract String getTranslatedQuery();
+	protected abstract String getTranslatedQuery(CollectiveProtocol protocol);
 	
-	public String getUrl() {
+	public String getTranslatedUrl(CollectiveProtocol protocol) {
 		StringBuilder builder = new StringBuilder();
 		builder.append(getBaseUrl());
 		builder.append("/");
@@ -15,7 +14,7 @@ public abstract class TranslatedProtocol extends Protocol
 		builder.append("/");
 		builder.append(getDataset());
 		builder.append("?");
-		builder.append(getTranslatedQuery());
+		builder.append(getTranslatedQuery(protocol));
 		return builder.toString();
 	}
 }

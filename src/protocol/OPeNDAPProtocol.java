@@ -1,13 +1,7 @@
+package protocol;
 
 public class OPeNDAPProtocol extends TranslatedProtocol
 {
-
-	@Override
-	public void translate(CollectiveProtocol protocol)
-	{
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	protected String getProtocolUrlAbbrevation()
@@ -17,7 +11,7 @@ public class OPeNDAPProtocol extends TranslatedProtocol
 	}
 
 	@Override
-	protected String getTranslatedQuery()
+	protected String getTranslatedQuery(CollectiveProtocol protocol)
 	{
 		// TODO Auto-generated method stub
 		return null;
