@@ -1,24 +1,86 @@
 package service;
 
+import java.io.IOException;
+import java.util.logging.Logger;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
+
+import protocol.CollectiveProtocol;
+import protocol.Protocol;
+import protocol.ProtocolPicker;
+import protocol.TranslatedProtocol;
+import util.ConfigReader;
 
 @Path("/translate")
 public class ProtocolTranslatorService
 {
+    private ConfigReader config;
+    private final static Logger LOGGER = Logger.getLogger(ProtocolTranslatorService.class.getName());
 
-	@GET
-	@Produces(MediaType.TEXT_PLAIN)
-	public Response translate(@Context UriInfo info) {
-		
-		
-		
-		return Response.ok().build();
+    @PostConstruct
+    public void init()
+    {
+	LOGGER.info("Initializing...");
+	this.config = ConfigReader.getInstace();
+    }
+
+    @PreDestroy
+    public void close()
+    {
+	LOGGER.info("Closing...");
+	this.config.close();
+    }
+
+    @GET
+    @Path("{dataset}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response translate(@Context UriInfo info, @PathParam("dataset") String dataset)
+    {
+	ResponseBuilder response;
+	try {
+	    // extract the query from the request
+	    CollectiveProtocol query = new CollectiveProtocol(
+		    this.config.getThreddsUrl(),
+		    dataset,
+		    queryToString(info));
+	    
+	    TranslatedProtocol translated = ProtocolPicker.pickBest(query);
+	    response = Response.ok(translated.getTranslatedUrl());
+	} catch (IllegalStateException | IllegalArgumentException e) {
+	    response = Response.status(Status.INTERNAL_SERVER_ERROR).entity(e);
+	}
+
+	return response.build();
+    }
+    
+    private String queryToString(UriInfo info) {
+	StringBuilder builder = new StringBuilder();
+	MultivaluedMap<String, String> params = info.getQueryParameters();
+	for (String key : params.keySet()) {
+	    builder.append(key);
+	    builder.append("=");
+	    builder.append(params.getFirst(key));
+	    builder.append("&");
 	}
 	
+	// remove the last '&' character
+	if (builder.length() > 0) {
+	    builder.deleteCharAt(builder.length() - 1);
+	}
+	
+	return builder.toString();
+    }
+
 }

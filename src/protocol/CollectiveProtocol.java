@@ -10,7 +10,8 @@ public class CollectiveProtocol extends Protocol
 	private Range lonRange;
 	private Range hightRange;
 	
-	public CollectiveProtocol(String query) {
+	public CollectiveProtocol(String baseUrl, String dataset, String query) {
+	    	super(dataset, baseUrl);
 		parseInput(query);
 	}
 	

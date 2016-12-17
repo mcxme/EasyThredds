@@ -1,20 +1,24 @@
 package protocol;
 
+import util.ConfigReader;
+
 public class OPeNDAPProtocol extends TranslatedProtocol
 {
+    public OPeNDAPProtocol(CollectiveProtocol query)
+    {
+	super(query);
+    }
 
-	@Override
-	protected String getProtocolUrlAbbrevation()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    protected String getProtocolUrlAbbrevation()
+    {
+	return ConfigReader.getInstace().getOpenDapUrlName();
+    }
 
-	@Override
-	protected String getTranslatedQuery(CollectiveProtocol protocol)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    protected String getTranslatedQuery(CollectiveProtocol protocol)
+    {
+	return null;
+    }
 
 }
