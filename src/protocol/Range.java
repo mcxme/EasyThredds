@@ -32,6 +32,14 @@ public class Range
 	}
 	
 	/**
+	 * Textual representation of the range in the format [start:step:end]
+	 */
+	@Override
+	public String toString() {
+	    return "[" + start + ":" + step + ":" + end + "]";
+	}
+	
+	/**
 	 * Parses a range in the format '[x:y:z]' where x<z define the bounds of the range and y the step size:
 	 * [x, x + y, x + 2y, ..., z]
 	 * @param textualRange

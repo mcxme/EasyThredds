@@ -1,6 +1,6 @@
 package service;
 
-import java.io.IOException;
+import java.util.List;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
@@ -12,13 +12,13 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
 import protocol.CollectiveProtocol;
-import protocol.Protocol;
 import protocol.ProtocolPicker;
 import protocol.TranslatedProtocol;
 import util.ConfigReader;
@@ -44,20 +44,21 @@ public class ProtocolTranslatorService
     }
 
     @GET
-    @Path("{dataset}")
+    @Path("{dataset: .*}")
     @Produces(MediaType.TEXT_PLAIN)
-    public Response translate(@Context UriInfo info, @PathParam("dataset") String dataset)
+    public Response translate(@Context UriInfo info, @PathParam("dataset") List<PathSegment> datasetSegments)
     {
 	ResponseBuilder response;
 	try {
 	    // extract the query from the request
 	    CollectiveProtocol query = new CollectiveProtocol(
 		    this.config.getThreddsUrl(),
-		    dataset,
+		    datasetToString(datasetSegments),
 		    queryToString(info));
 	    
 	    TranslatedProtocol translated = ProtocolPicker.pickBest(query);
-	    response = Response.ok(translated.getTranslatedUrl());
+//	    response = Response.seeOther(translated.getTranslatedUrl());
+	    response = Response.ok(translated.getTranslatedUrl().toString());
 	} catch (IllegalStateException | IllegalArgumentException e) {
 	    response = Response.status(Status.INTERNAL_SERVER_ERROR).entity(e);
 	}
@@ -80,6 +81,21 @@ public class ProtocolTranslatorService
 	    builder.deleteCharAt(builder.length() - 1);
 	}
 	
+	return builder.toString();
+    }
+    
+    private String datasetToString(List<PathSegment> datasetSegments) {
+	if (datasetSegments.isEmpty()) {
+	    throw new IllegalArgumentException("no dataset specified");
+	}
+	
+	StringBuilder builder = new StringBuilder();
+	for (PathSegment segment : datasetSegments) {
+	    builder.append(segment.getPath());
+	    builder.append("/");
+	}
+	
+	builder.deleteCharAt(builder.length() - 1);	
 	return builder.toString();
     }
 

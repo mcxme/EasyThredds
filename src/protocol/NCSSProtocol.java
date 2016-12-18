@@ -1,5 +1,7 @@
 package protocol;
 
+import util.ConfigReader;
+
 public class NCSSProtocol extends TranslatedProtocol
 {
     public NCSSProtocol(CollectiveProtocol query)
@@ -10,7 +12,7 @@ public class NCSSProtocol extends TranslatedProtocol
     @Override
     protected String getProtocolUrlAbbrevation()
     {
-	return null;
+	return ConfigReader.getInstace().getNcssUrlName();
     }
 
     @Override

@@ -11,6 +11,7 @@ public class ConfigReader implements AutoCloseable
     // Properties:
     private static final String THREDDS_URL_PROPERTY = "threddsServerUrl";
     private static final String OPENDAP_URL_PROPERTY = "opendapUrlName";
+    private static final String NCSS_URL_PROPERTY = "ncssUrlName";
     
     private static ConfigReader instance;
     
@@ -42,6 +43,10 @@ public class ConfigReader implements AutoCloseable
     
     public String getOpenDapUrlName() {
 	return props.getProperty(OPENDAP_URL_PROPERTY);
+    }
+    
+    public String getNcssUrlName() {
+	return props.getProperty(NCSS_URL_PROPERTY);
     }
 
     @Override
