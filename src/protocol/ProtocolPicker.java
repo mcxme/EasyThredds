@@ -1,7 +1,11 @@
 package protocol;
 
+import java.util.Random;
+
 public class ProtocolPicker
 {
+    
+    private static int counter = 0;
 
     /**
      * Chooses any of the implemented protocols that should work best for the given query.
@@ -9,9 +13,21 @@ public class ProtocolPicker
      */
     public static TranslatedProtocol pickBest(CollectiveProtocol query) {
 
-	// TODO currently only forwards to OPeNDAP
-	TranslatedProtocol translated = new OPeNDAPProtocol(query);
+	// TODO currently only picks a random protocol
 	
+	TranslatedProtocol translated = null;
+	switch (Math.abs(counter++) % 3) {
+	case 0:
+	    translated = new OPeNDAPProtocol(query); break;
+	case 1:
+	    translated = new CdmRemoteProtocol(query); break;
+	case 2:
+	    translated = new NCSSProtocol(query); break;
+	default:
+	    throw new IllegalStateException();
+	}
+	
+	assert (translated != null);
 	return translated;
     }
     

@@ -15,7 +15,7 @@ public abstract class TranslatedProtocol extends Protocol
 
     protected abstract String getProtocolUrlAbbrevation();
 
-    protected abstract String getTranslatedQuery(CollectiveProtocol protocol);
+    protected abstract StringBuilder getTranslatedQuery(CollectiveProtocol protocol);
 
     public URI getTranslatedUrl()
     {
@@ -30,8 +30,7 @@ public abstract class TranslatedProtocol extends Protocol
 	try {
 	    return new URI(builder.toString());
 	} catch (URISyntaxException e) {
-	    e.printStackTrace();
-	    return null;
+	    throw new IllegalStateException(e);
 	}
     }
 }

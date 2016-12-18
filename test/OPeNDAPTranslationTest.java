@@ -7,8 +7,8 @@ import protocol.OPeNDAPProtocol;
 
 public class OPeNDAPTranslationTest
 {
-    	private static final String STD_SERVER = "server";
-    	private static final String STD_DATASET = "dataset";
+    	private static final String STD_SERVER = "http://nc-catalogue.scc.kit.edu/thredds";
+    	private static final String STD_DATASET = "dataset/foo/bar.sc";
 
 	@Test
 	public void testOpenDapTranslation() {

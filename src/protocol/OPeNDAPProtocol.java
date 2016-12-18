@@ -18,7 +18,7 @@ public class OPeNDAPProtocol extends TranslatedProtocol
     }
 
     @Override
-    protected String getTranslatedQuery(CollectiveProtocol protocol)
+    protected StringBuilder getTranslatedQuery(CollectiveProtocol protocol)
     {
 	Range xRange = protocol.getLongitudeRange();
 	Range yRange = protocol.getLatitudeRange();
@@ -30,6 +30,6 @@ public class OPeNDAPProtocol extends TranslatedProtocol
 	builder.append(xRange);
 	builder.append(yRange);
 	
-	return builder.toString();
+	return builder;
     }
 }

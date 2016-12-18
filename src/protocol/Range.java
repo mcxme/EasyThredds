@@ -2,7 +2,6 @@ package protocol;
 
 public class Range
 {
-
 	private int start;
 	private int step;
 	private int end;
@@ -11,7 +10,7 @@ public class Range
 		if (end < start) {
 			throw new IllegalArgumentException("The range has to be defined as: start <= end");
 		} else if (step < 1) {
-			throw new IllegalArgumentException("The step size has to be a natural number (>0)");
+			throw new IllegalArgumentException("The step size has to be > 0");
 		}
 		
 		this.start = start;
@@ -29,6 +28,14 @@ public class Range
 	
 	public int getEnd() {
 		return end;
+	}
+	
+	public int getMax() {
+	    return Math.max(start, end);
+	}
+	
+	public int getMin() {
+	    return Math.min(start, end);
 	}
 	
 	/**
