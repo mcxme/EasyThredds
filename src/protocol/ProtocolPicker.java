@@ -3,6 +3,7 @@ package protocol;
 import java.util.Random;
 
 import protocol.translated.CdmRemoteProtocol;
+import protocol.translated.Dap4Protocol;
 import protocol.translated.NCSSProtocol;
 import protocol.translated.OPeNDAPProtocol;
 import protocol.translated.TranslatedProtocol;
@@ -21,13 +22,15 @@ public class ProtocolPicker
 	// TODO currently only picks a random protocol
 	
 	TranslatedProtocol translated = null;
-	switch (Math.abs(counter++) % 3) {
+	switch (Math.abs(counter++) % 4) {
 	case 0:
 	    translated = new OPeNDAPProtocol(query); break;
 	case 1:
 	    translated = new CdmRemoteProtocol(query); break;
 	case 2:
 	    translated = new NCSSProtocol(query); break;
+	case 3:
+	    translated = new Dap4Protocol(query); break;
 	default:
 	    throw new IllegalStateException();
 	}

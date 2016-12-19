@@ -3,10 +3,9 @@ package protocol.translated;
 import config.ConfigReader;
 import protocol.CollectiveProtocol;
 
-public class OPeNDAPProtocol extends DapProtocol
+public class Dap4Protocol extends DapProtocol
 {
-
-    public OPeNDAPProtocol(CollectiveProtocol query)
+    public Dap4Protocol(CollectiveProtocol query)
     {
 	super(query);
     }
@@ -14,6 +13,6 @@ public class OPeNDAPProtocol extends DapProtocol
     @Override
     protected String getProtocolUrlAbbrevation()
     {
-	return ConfigReader.getInstace().getOpenDapUrlName();
+	return ConfigReader.getInstace().getDap4UrlName();
     }
 }
