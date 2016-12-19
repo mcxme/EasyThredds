@@ -48,8 +48,9 @@ public class QueryBuilder
 	if (valueBuilder.length() == 0) {
 	    throw new IllegalArgumentException("Did not contain elements to be added to the query");
 	}
-	
-	valueBuilder.deleteCharAt(valueBuilder.length() - VAR_LIST_SEPARATOR.length());
+
+	assert (VAR_LIST_SEPARATOR.length() == 1);
+	valueBuilder.deleteCharAt(valueBuilder.length() - 1);
 	add(key, valueBuilder);
     }
     
@@ -63,6 +64,23 @@ public class QueryBuilder
 	}
 	
 	builder.append(value.toString());
+    }
+    
+    
+    public void appendInBrackets(String value) {
+	appendInBrackets(value);
+    }
+    
+    public void appendInBrackets(Object value) {
+	builder.append("[");
+	append(value);
+	builder.append("]");
+    }
+    
+    public void removeLastChar() {
+	if (builder.length() > 0) {
+	    builder.deleteCharAt(builder.length() - 1);
+	}
     }
     
     @Override

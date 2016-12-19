@@ -19,6 +19,13 @@ public class NumericRange
 		this.step = step;
 		this.end = end;
 	}
+	
+	/**
+	 * Returns true if the range comprises a single value only 
+	 */
+	public boolean isSingleValue() {
+	    return start.equals(end);
+	}
 
 	public Number getStart() {
 		return start;
@@ -43,8 +50,9 @@ public class NumericRange
 	/**
 	 * Parses a range in the format '[x:y:z]' where x<z define the bounds of the range and y the step size:
 	 * [x, x + y, x + 2y, ..., z]
-	 * @param textualRange
-	 * @return
+	 * 
+	 * If the stride is omitted a default stride is assumed.
+	 * If the end is omitted it is set to the start: [x;y;] = [x;y;x]
 	 */
 	public static NumericRange parse(String textualRange) {
 		if (textualRange.length() <= 4) {
@@ -58,13 +66,26 @@ public class NumericRange
 			throw new IllegalArgumentException("A range must contain 3 variables to be valid but had " + vars.length);
 		}
 		
-		
-		
-		Number x = Double.parseDouble(vars[0]);
 		int y = (vars[1].isEmpty())? STD_STRIDE : Integer.parseInt(vars[1]);
-		Number z = Double.parseDouble(vars[2]);
+		Number x,z;
+		// can both values be represented as integer or as float?
+		if (isInteger(vars[0]) && (vars[2].isEmpty() || isInteger(vars[2]))) {
+		    x = Integer.parseInt(vars[0]);
+		    z = (vars[2].isEmpty())? x : Integer.parseInt(vars[2]);
+		} else {
+		    x = Double.parseDouble(vars[0]);
+		    z = (vars[2].isEmpty())? x : Double.parseDouble(vars[2]);
+		}
 		
 		return new NumericRange(x,y,z);
 	}
 	
+	private static boolean isInteger(String textualNumeric) {
+	    try {
+		Integer.parseInt(textualNumeric);
+		return true;
+	    } catch (NumberFormatException e) {
+		return false;
+	    }
+	}
 }

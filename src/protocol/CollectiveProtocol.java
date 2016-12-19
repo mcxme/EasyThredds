@@ -68,9 +68,17 @@ public class CollectiveProtocol extends Protocol
 		}
 	}
 	
+	public boolean hasLatitudeRange() {
+	    return latRange != null;
+	}
+	
 	public NumericRange getLatitudeRange()
 	{
 		return latRange;
+	}
+	
+	public boolean hasLongitudeRange() {
+	    return lonRange != null;
 	}
 
 	public NumericRange getLongitudeRange()
@@ -78,6 +86,10 @@ public class CollectiveProtocol extends Protocol
 		return lonRange;
 	}
 
+	public boolean hasHightRange() {
+	    return hightRange != null;
+	}
+	
 	public NumericRange getHightRange()
 	{
 		return hightRange;

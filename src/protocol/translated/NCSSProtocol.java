@@ -45,7 +45,18 @@ public class NCSSProtocol extends TranslatedProtocol
 	
 	// take the minimum stride
 	int horizontalStride = Math.min(latRange.getStep(), lonRange.getStep());
-	query.add("horizontalStride", horizontalStride);
+	query.add("horizStride", horizontalStride);
+	
+	if (protocol.hasHightRange()) {
+	    NumericRange hightRange = protocol.getHightRange();
+	    if (hightRange.isSingleValue()) {
+		// The range is a single value -> single level
+		query.add("vertCoord", hightRange.getStart());
+	    } else {
+		// The range has multiple values -> vertical stride
+		query.add("vertStride", hightRange.getStep());
+	    }
+	}
 	
 	// add the time specification if defined
 	if (protocol.hasTimeRangeDefined()) {

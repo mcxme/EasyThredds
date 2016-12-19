@@ -43,6 +43,11 @@ public class TimeRange
 		return this.stride;
 	}
 	
+	@Override
+	public String toString() {
+	    return "[" + start + ";" + stride + ";" + end + "]";
+	}
+	
 	/**
 	 * Parses the textual representation of a time range.
 	 * Input format:
@@ -50,6 +55,7 @@ public class TimeRange
 	 * [dd/MM/yyyy-HH:mm:ss ; x ; dd/MM/yyyy-HH:mm:ss]
 	 * 
 	 * A default stride is selected if the stride is omitted: [start;;end]
+	 * If no end time is provided the end time is set equal to the start time: [start;;]
 	 */
 	public static TimeRange parse(String textual) {
 		if (!textual.startsWith("[") || !textual.endsWith("]")) {
@@ -64,8 +70,8 @@ public class TimeRange
 		
 		DateTimeFormatter formatter = DateTimeFormat.forPattern(DATE_FORMAT);
 		DateTime start = formatter.parseDateTime(parts[0]);
-		DateTime end = formatter.parseDateTime(parts[2]);
 		int stride = (parts[1].isEmpty())? STD_STRIDE : Integer.parseInt(parts[1]);
+		DateTime end = (parts[2].isEmpty())? start : formatter.parseDateTime(parts[2]);
 		
 		return new TimeRange(start, end, stride);
 	}
