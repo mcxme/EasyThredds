@@ -2,8 +2,13 @@ package protocol.translated;
 
 import config.ConfigReader;
 import protocol.CollectiveProtocol;
-import protocol.parse.Range;
+import protocol.parse.NumericRange;
+import protocol.parse.TimeRange;
+import protocol.translated.util.QueryBuilder;
 
+/**
+ * Adapter class for the NetCdf Subset Service (NCSS) 
+ */
 public class NCSSProtocol extends TranslatedProtocol
 {
     public NCSSProtocol(CollectiveProtocol query)
@@ -22,37 +27,33 @@ public class NCSSProtocol extends TranslatedProtocol
      * {@link http://www.unidata.ucar.edu/software/thredds/current/tds/reference/NetcdfSubsetServiceReference.html}
      */
     @Override
-    protected StringBuilder getTranslatedQuery(CollectiveProtocol protocol)
+    protected void translateQuery(CollectiveProtocol protocol, QueryBuilder query)
     {
-	StringBuilder builder = new StringBuilder();
-	
-	Range latRange = protocol.getLatitudeRange();
-	Range lonRange = protocol.getLongitudeRange();
+	NumericRange latRange = protocol.getLatitudeRange();
+	NumericRange lonRange = protocol.getLongitudeRange();
 	
 	// create the bounding box
-	builder.append("north=");
-	builder.append(latRange.getEnd());
-	builder.append("&south=");
-	builder.append(latRange.getStart());
-	builder.append("&east=");
-	builder.append(lonRange.getStart());
-	builder.append("&west=");
-	builder.append(lonRange.getEnd());
+	query.add("north", latRange.getEnd());
+	query.add("east", lonRange.getStart());
+	query.add("south", latRange.getStart());
+	query.add("west", lonRange.getEnd());
 	
 	// add all variables
-	builder.append("&var=");
-	for (String variable : protocol.getVariables()) {
-	    builder.append(variable);
-	    builder.append(",");
+	if (protocol.hasVariablesDefined()) {
+	    query.add("var", protocol.getVariables());
 	}
-	builder.deleteCharAt(builder.length() - 1);
 	
 	// take the minimum stride
 	int horizontalStride = Math.min(latRange.getStep(), lonRange.getStep());
-	builder.append("&horizStride=");
-	builder.append(horizontalStride);
+	query.add("horizontalStride", horizontalStride);
 	
-	return builder;
+	// add the time specification if defined
+	if (protocol.hasTimeRangeDefined()) {
+	    TimeRange timeRange = protocol.getTimeRange();
+	    query.add("time_start", timeRange.getStart());
+	    query.add("time_end", timeRange.getEnd());
+	    query.add("time_stride", timeRange.getStride());
+	}
     }
 
 }

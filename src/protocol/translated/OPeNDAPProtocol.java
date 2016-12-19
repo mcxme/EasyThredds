@@ -2,7 +2,8 @@ package protocol.translated;
 
 import config.ConfigReader;
 import protocol.CollectiveProtocol;
-import protocol.parse.Range;
+import protocol.parse.NumericRange;
+import protocol.translated.util.QueryBuilder;
 
 public class OPeNDAPProtocol extends TranslatedProtocol
 {
@@ -20,18 +21,16 @@ public class OPeNDAPProtocol extends TranslatedProtocol
     }
 
     @Override
-    protected StringBuilder getTranslatedQuery(CollectiveProtocol protocol)
+    protected void translateQuery(CollectiveProtocol protocol, QueryBuilder query)
     {
-	Range xRange = protocol.getLongitudeRange();
-	Range yRange = protocol.getLatitudeRange();
-	Range zRange = protocol.getHightRange();
+	NumericRange xRange = protocol.getLongitudeRange();
+	NumericRange yRange = protocol.getLatitudeRange();
+	NumericRange zRange = protocol.getHightRange();
 	
 	// example output format: Z_sfc[0:1:0][0:1:94][0:1:134]
-	StringBuilder builder = new StringBuilder(VAR_NAME);
-	builder.append(zRange);
-	builder.append(xRange);
-	builder.append(yRange);
-	
-	return builder;
+	query.append(VAR_NAME);
+	query.append(zRange);
+	query.append(xRange);
+	query.append(yRange);
     }
 }

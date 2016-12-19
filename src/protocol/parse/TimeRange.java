@@ -22,13 +22,17 @@ public class TimeRange
 	public TimeRange(DateTime start, DateTime end, int stride) {
 		if (start == null || end == null) {
 			throw new IllegalArgumentException("Neither the start nor the end can be null");
-		} else if (this.end.isBefore(this.start)) {
+		} else if (end.isBefore(start)) {
 			throw new IllegalArgumentException("The start time of the time range has to be before the end time");
 		}
 		
 		this.start = start;
 		this.end = end;
 		this.stride = stride;
+	}
+	
+	public DateTime getStart() {
+	    return this.start;
 	}
 	
 	public DateTime getEnd() {
@@ -47,8 +51,8 @@ public class TimeRange
 	 * 
 	 * A default stride is selected if the stride is omitted: [start;;end]
 	 */
-	public TimeRange parse(String textual) {
-		if (!textual.startsWith("[") || textual.endsWith("]")) {
+	public static TimeRange parse(String textual) {
+		if (!textual.startsWith("[") || !textual.endsWith("]")) {
 			throw new IllegalArgumentException("The time range has to be in brackets: [...]");
 		}
 		

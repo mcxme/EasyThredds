@@ -2,6 +2,7 @@ package protocol.translated;
 
 import config.ConfigReader;
 import protocol.CollectiveProtocol;
+import protocol.translated.util.QueryBuilder;
 
 public class CdmRemoteProtocol extends TranslatedProtocol
 {
@@ -18,11 +19,9 @@ public class CdmRemoteProtocol extends TranslatedProtocol
     }
 
     @Override
-    protected StringBuilder getTranslatedQuery(CollectiveProtocol protocol)
+    protected void translateQuery(CollectiveProtocol protocol, QueryBuilder query)
     {
-	StringBuilder builder = new StringBuilder();
-	
-	return builder;
+	query.add("todo", "true");
     }
 
 }

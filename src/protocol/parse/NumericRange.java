@@ -1,15 +1,15 @@
 package protocol.parse;
 
-public class Range
+public class NumericRange
 {
 	private static final int STD_STRIDE = 1;
 	
-	private int start;
+	private Number start;
 	private int step;
-	private int end;
+	private Number end;
 	
-	public Range(int start, int step, int end) {
-		if (end < start) {
+	public NumericRange(Number start, int step, Number end) {
+		if (end.doubleValue() < start.doubleValue()) {
 			throw new IllegalArgumentException("The range has to be defined as: start <= end");
 		} else if (step < 1) {
 			throw new IllegalArgumentException("The step size has to be > 0");
@@ -20,7 +20,7 @@ public class Range
 		this.end = end;
 	}
 
-	public int getStart() {
+	public Number getStart() {
 		return start;
 	}
 	
@@ -28,16 +28,8 @@ public class Range
 		return step;
 	}
 	
-	public int getEnd() {
+	public Number getEnd() {
 		return end;
-	}
-	
-	public int getMax() {
-	    return Math.max(start, end);
-	}
-	
-	public int getMin() {
-	    return Math.min(start, end);
 	}
 	
 	/**
@@ -54,7 +46,7 @@ public class Range
 	 * @param textualRange
 	 * @return
 	 */
-	public static Range parse(String textualRange) {
+	public static NumericRange parse(String textualRange) {
 		if (textualRange.length() <= 4) {
 			throw new IllegalArgumentException("The textual representation of the range is not long enough to be valid: " + textualRange);
 		}
@@ -66,11 +58,13 @@ public class Range
 			throw new IllegalArgumentException("A range must contain 3 variables to be valid but had " + vars.length);
 		}
 		
-		int x = Integer.parseInt(vars[0]);
-		int y = (vars[1].isEmpty())? STD_STRIDE : Integer.parseInt(vars[1]);
-		int z = Integer.parseInt(vars[2]);
 		
-		return new Range(x,y,z);
+		
+		Number x = Double.parseDouble(vars[0]);
+		int y = (vars[1].isEmpty())? STD_STRIDE : Integer.parseInt(vars[1]);
+		Number z = Double.parseDouble(vars[2]);
+		
+		return new NumericRange(x,y,z);
 	}
 	
 }

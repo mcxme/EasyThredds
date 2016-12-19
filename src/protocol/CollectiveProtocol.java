@@ -1,10 +1,11 @@
 package protocol;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import protocol.parse.Range;
+import protocol.parse.NumericRange;
 import protocol.parse.TimeRange;
 
 public class CollectiveProtocol extends Protocol
@@ -15,14 +16,15 @@ public class CollectiveProtocol extends Protocol
 	public static final String VAR_VARIABLE = "var";
 	public static final String TIME_VARIABLE = "time";
 	
-	private Range latRange;
-	private Range lonRange;
-	private Range hightRange;
+	private NumericRange latRange;
+	private NumericRange lonRange;
+	private NumericRange hightRange;
 	private TimeRange timeRange;
 	private List<String> variables;
 	
 	public CollectiveProtocol(String baseUrl, String dataset, String query) {
 	    	super(dataset, baseUrl);
+	    	this.variables = new ArrayList<String>();
 		parseInput(query);
 	}
 	
@@ -37,6 +39,10 @@ public class CollectiveProtocol extends Protocol
 		for (int i = 0; i < varParts.length; i++) {
 			parseDefinition(varParts[i]);
 		}
+		
+		if (!hasVariablesDefined()) {
+		    throw new IllegalArgumentException("No variables defined");
+		}
 	}
 	
 	private void parseDefinition(String definition) {
@@ -48,37 +54,41 @@ public class CollectiveProtocol extends Protocol
 		String variable = def[0];
 		switch (variable) {
 		case LATITUDE_VARIABLE:
-			latRange = Range.parse(def[1]); break;
+			latRange = NumericRange.parse(def[1]); break;
 		case LONGITUDE_VARIABLE:
-			lonRange = Range.parse(def[1]); break;
+			lonRange = NumericRange.parse(def[1]); break;
 		case HIGHT_VARIABLE:
-			hightRange = Range.parse(def[1]); break;
+			hightRange = NumericRange.parse(def[1]); break;
 		case VAR_VARIABLE:
 		    variables = Arrays.asList(def[1].split(",")); break;
 		case TIME_VARIABLE:
-			timeRange = timeRange.parse(def[1]);
+			timeRange = TimeRange.parse(def[1]); break;
 		default:
 			throw new IllegalArgumentException("Unknown variable " + variable);
 		}
 	}
 	
-	public Range getLatitudeRange()
+	public NumericRange getLatitudeRange()
 	{
 		return latRange;
 	}
 
-	public Range getLongitudeRange()
+	public NumericRange getLongitudeRange()
 	{
 		return lonRange;
 	}
 
-	public Range getHightRange()
+	public NumericRange getHightRange()
 	{
 		return hightRange;
 	}
 	
+	public boolean hasVariablesDefined() {
+	    return variables != null && !variables.isEmpty();
+	}
+	
 	public List<String> getVariables() {
-	    if (variables == null) {
+	    if (!hasVariablesDefined()) {
 		return new LinkedList<String>();
 	    }
 	    
@@ -87,5 +97,9 @@ public class CollectiveProtocol extends Protocol
 	
 	public TimeRange getTimeRange() {
 		return timeRange;
+	}
+	
+	public boolean hasTimeRangeDefined() {
+	    return timeRange != null;
 	}
 }
