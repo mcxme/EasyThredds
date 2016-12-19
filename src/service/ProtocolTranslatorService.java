@@ -57,10 +57,11 @@ public class ProtocolTranslatorService
 		    datasetToString(datasetSegments),
 		    queryToString(info));
 	    
-	    TranslatedProtocol translated = ProtocolPicker.pickBest(query);
-	    // TODO redirect!
-//	    response = Response.seeOther(translated.getTranslatedUrl());
-	    response = Response.ok(translated.getTranslatedUrl().toString());
+	    TranslatedProtocol protocol = ProtocolPicker.pickBest(query);
+	    URI translatedUri = protocol.getTranslatedUrl();
+	    LOGGER.info(translatedUri.toString());
+//	    response = Response.seeOther(translatedUri);	    
+	    response = Response.ok(translatedUri.toString());
 	} catch (IllegalStateException | IllegalArgumentException e) {
 	    response = Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage());
 	}

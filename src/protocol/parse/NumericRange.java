@@ -61,7 +61,7 @@ public class NumericRange
 		
 		// Remove the brackets
 		String trimmedRange = textualRange.substring(1, textualRange.length() - 1);
-		String[] vars = trimmedRange.split(":");
+		String[] vars = trimmedRange.split(":", -1);
 		if (vars.length != 3) {
 			throw new IllegalArgumentException("A range must contain 3 variables to be valid but had " + vars.length);
 		}
