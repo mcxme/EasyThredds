@@ -19,10 +19,10 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
+import config.ConfigReader;
 import protocol.CollectiveProtocol;
 import protocol.ProtocolPicker;
-import protocol.TranslatedProtocol;
-import util.ConfigReader;
+import protocol.translated.TranslatedProtocol;
 
 @Path("/translate")
 public class ProtocolTranslatorService

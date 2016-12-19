@@ -4,16 +4,21 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import protocol.parse.Range;
+import protocol.parse.TimeRange;
+
 public class CollectiveProtocol extends Protocol
 {
 	public static final String LATITUDE_VARIABLE = "lat";
 	public static final String LONGITUDE_VARIABLE = "lon";
 	public static final String HIGHT_VARIABLE = "hig";
 	public static final String VAR_VARIABLE = "var";
+	public static final String TIME_VARIABLE = "time";
 	
 	private Range latRange;
 	private Range lonRange;
 	private Range hightRange;
+	private TimeRange timeRange;
 	private List<String> variables;
 	
 	public CollectiveProtocol(String baseUrl, String dataset, String query) {
@@ -50,6 +55,8 @@ public class CollectiveProtocol extends Protocol
 			hightRange = Range.parse(def[1]); break;
 		case VAR_VARIABLE:
 		    variables = Arrays.asList(def[1].split(",")); break;
+		case TIME_VARIABLE:
+			timeRange = timeRange.parse(def[1]);
 		default:
 			throw new IllegalArgumentException("Unknown variable " + variable);
 		}
@@ -76,5 +83,9 @@ public class CollectiveProtocol extends Protocol
 	    }
 	    
 	    return variables;
+	}
+	
+	public TimeRange getTimeRange() {
+		return timeRange;
 	}
 }

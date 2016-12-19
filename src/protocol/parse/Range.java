@@ -1,7 +1,9 @@
-package protocol;
+package protocol.parse;
 
 public class Range
 {
+	private static final int STD_STRIDE = 1;
+	
 	private int start;
 	private int step;
 	private int end;
@@ -65,7 +67,7 @@ public class Range
 		}
 		
 		int x = Integer.parseInt(vars[0]);
-		int y = Integer.parseInt(vars[1]);
+		int y = (vars[1].isEmpty())? STD_STRIDE : Integer.parseInt(vars[1]);
 		int z = Integer.parseInt(vars[2]);
 		
 		return new Range(x,y,z);

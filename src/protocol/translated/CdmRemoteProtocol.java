@@ -1,6 +1,7 @@
-package protocol;
+package protocol.translated;
 
-import util.ConfigReader;
+import config.ConfigReader;
+import protocol.CollectiveProtocol;
 
 public class CdmRemoteProtocol extends TranslatedProtocol
 {

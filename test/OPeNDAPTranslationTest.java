@@ -1,7 +1,7 @@
 import org.junit.Test;
 
 import protocol.CollectiveProtocol;
-import protocol.OPeNDAPProtocol;
+import protocol.translated.OPeNDAPProtocol;
 
 
 

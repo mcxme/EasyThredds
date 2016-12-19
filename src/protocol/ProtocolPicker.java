@@ -2,6 +2,11 @@ package protocol;
 
 import java.util.Random;
 
+import protocol.translated.CdmRemoteProtocol;
+import protocol.translated.NCSSProtocol;
+import protocol.translated.OPeNDAPProtocol;
+import protocol.translated.TranslatedProtocol;
+
 public class ProtocolPicker
 {
     

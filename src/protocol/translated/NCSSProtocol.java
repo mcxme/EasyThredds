@@ -1,6 +1,8 @@
-package protocol;
+package protocol.translated;
 
-import util.ConfigReader;
+import config.ConfigReader;
+import protocol.CollectiveProtocol;
+import protocol.parse.Range;
 
 public class NCSSProtocol extends TranslatedProtocol
 {

@@ -1,7 +1,10 @@
-package protocol;
+package protocol.translated;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+
+import protocol.CollectiveProtocol;
+import protocol.Protocol;
 
 public abstract class TranslatedProtocol extends Protocol
 {
