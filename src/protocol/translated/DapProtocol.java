@@ -3,6 +3,7 @@ package protocol.translated;
 import config.ConfigReader;
 import protocol.CollectiveProtocol;
 import protocol.parse.NumericRange;
+import protocol.parse.SpatialRange;
 import protocol.parse.TimeRange;
 import protocol.translated.util.QueryBuilder;
 
@@ -16,8 +17,8 @@ public abstract class DapProtocol extends TranslatedProtocol
     @Override
     protected void translateQuery(CollectiveProtocol protocol, QueryBuilder query)
     {
-	NumericRange lonRange = protocol.getLongitudeRange();
-	NumericRange latRange = protocol.getLatitudeRange();
+	SpatialRange lonRange = protocol.getLongitudeRange();
+	SpatialRange latRange = protocol.getLatitudeRange();
 	NumericRange zRange = protocol.getHightRange();
 	TimeRange timeRange = protocol.getTimeRange();
 	
@@ -25,16 +26,16 @@ public abstract class DapProtocol extends TranslatedProtocol
 	for (String var : protocol.getVariables()) {
 	    query.append(var);
 	    if (protocol.hasTimeRangeDefined()) {
-		query.append(timeRange);
+		query.append(timeRange.getSelection());
 	    }
 	    if (protocol.hasHightRange()) {
 		query.append(zRange);
 	    }
 	    if (protocol.hasLatitudeRange()) {
-		query.append(latRange);
+		query.append(latRange.getSelection());
 	    }
 	    if (protocol.hasLongitudeRange()) {
-		query.append(lonRange);
+		query.append(lonRange.getSelection());
 	    }
 	    
 	    query.append(",");

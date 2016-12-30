@@ -9,7 +9,13 @@ public class Dap4Protocol extends DapProtocol
     {
 	super(query);
     }
-
+    
+    @Override
+    protected String getFileNameExtension()
+    {
+	return null;
+    }
+    
     @Override
     protected String getProtocolUrlAbbrevation()
     {

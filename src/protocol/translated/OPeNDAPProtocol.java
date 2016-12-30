@@ -5,6 +5,8 @@ import protocol.CollectiveProtocol;
 
 public class OPeNDAPProtocol extends DapProtocol
 {
+    
+    public static final String FILE_EXTENSION = "ascii";
 
     public OPeNDAPProtocol(CollectiveProtocol query)
     {
@@ -15,5 +17,11 @@ public class OPeNDAPProtocol extends DapProtocol
     protected String getProtocolUrlAbbrevation()
     {
 	return ConfigReader.getInstace().getOpenDapUrlName();
+    }
+    
+    @Override
+    protected String getFileNameExtension()
+    {
+	return FILE_EXTENSION;
     }
 }

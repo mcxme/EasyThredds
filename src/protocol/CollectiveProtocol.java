@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import protocol.parse.NumericRange;
+import protocol.parse.SpatialRange;
 import protocol.parse.TimeRange;
 
 public class CollectiveProtocol extends Protocol
@@ -16,8 +17,8 @@ public class CollectiveProtocol extends Protocol
 	public static final String VAR_VARIABLE = "var";
 	public static final String TIME_VARIABLE = "time";
 	
-	private NumericRange latRange;
-	private NumericRange lonRange;
+	private SpatialRange latRange;
+	private SpatialRange lonRange;
 	private NumericRange hightRange;
 	private TimeRange timeRange;
 	private List<String> variables;
@@ -54,9 +55,9 @@ public class CollectiveProtocol extends Protocol
 		String variable = def[0];
 		switch (variable) {
 		case LATITUDE_VARIABLE:
-			latRange = NumericRange.parse(def[1]); break;
+			latRange = SpatialRange.parse(def[1]); break;
 		case LONGITUDE_VARIABLE:
-			lonRange = NumericRange.parse(def[1]); break;
+			lonRange = SpatialRange.parse(def[1]); break;
 		case HIGHT_VARIABLE:
 			hightRange = NumericRange.parse(def[1]); break;
 		case VAR_VARIABLE:
@@ -72,7 +73,7 @@ public class CollectiveProtocol extends Protocol
 	    return latRange != null;
 	}
 	
-	public NumericRange getLatitudeRange()
+	public SpatialRange getLatitudeRange()
 	{
 		return latRange;
 	}
@@ -81,7 +82,7 @@ public class CollectiveProtocol extends Protocol
 	    return lonRange != null;
 	}
 
-	public NumericRange getLongitudeRange()
+	public SpatialRange getLongitudeRange()
 	{
 		return lonRange;
 	}

@@ -14,6 +14,7 @@ public class ConfigReader implements AutoCloseable
     private static final String NCSS_URL_PROPERTY = "ncssUrlName";
     private static final String CDM_REMOTE_URL_PROPERTY = "cdmRemoteUrlName";
     private static final String DAP_4_URL_PROPERTY = "dap4UrlName";
+    private static final String NCSS_OUTPUT_FORMAT = "nccsOutputFormat";
     
     private static ConfigReader instance;
     
@@ -57,6 +58,10 @@ public class ConfigReader implements AutoCloseable
     
     public String getDap4UrlName() {
 	return props.getProperty(DAP_4_URL_PROPERTY);
+    }
+    
+    public String getNcssOutputFormat() {
+	return props.getProperty(NCSS_OUTPUT_FORMAT);
     }
 
     @Override

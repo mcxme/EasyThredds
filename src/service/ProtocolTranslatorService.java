@@ -60,8 +60,8 @@ public class ProtocolTranslatorService
 	    TranslatedProtocol protocol = ProtocolPicker.pickBest(query);
 	    URI translatedUri = protocol.getTranslatedUrl();
 	    LOGGER.info(translatedUri.toString());
-//	    response = Response.seeOther(translatedUri);	    
-	    response = Response.ok(translatedUri.toString());
+	    response = Response.seeOther(translatedUri);	    
+//	    response = Response.ok(translatedUri.toString());
 	} catch (IllegalStateException | IllegalArgumentException e) {
 	    response = Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage());
 	}

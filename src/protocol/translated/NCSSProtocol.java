@@ -3,6 +3,7 @@ package protocol.translated;
 import config.ConfigReader;
 import protocol.CollectiveProtocol;
 import protocol.parse.NumericRange;
+import protocol.parse.SpatialRange;
 import protocol.parse.TimeRange;
 import protocol.translated.util.QueryBuilder;
 
@@ -11,6 +12,7 @@ import protocol.translated.util.QueryBuilder;
  */
 public class NCSSProtocol extends TranslatedProtocol
 {
+    
     public NCSSProtocol(CollectiveProtocol query)
     {
 	super(query);
@@ -21,6 +23,12 @@ public class NCSSProtocol extends TranslatedProtocol
     {
 	return ConfigReader.getInstace().getNcssUrlName();
     }
+    
+    @Override
+    protected String getFileNameExtension()
+    {
+	return null;
+    }
 
     /**
      * Forms the query based on the Netcdf Subset Service Reference:
@@ -29,14 +37,14 @@ public class NCSSProtocol extends TranslatedProtocol
     @Override
     protected void translateQuery(CollectiveProtocol protocol, QueryBuilder query)
     {
-	NumericRange latRange = protocol.getLatitudeRange();
-	NumericRange lonRange = protocol.getLongitudeRange();
+	SpatialRange latRange = protocol.getLatitudeRange();
+	SpatialRange lonRange = protocol.getLongitudeRange();
 	
 	// create the bounding box
-	query.add("north", latRange.getEnd());
-	query.add("east", lonRange.getStart());
-	query.add("south", latRange.getStart());
-	query.add("west", lonRange.getEnd());
+	query.add("north", latRange.getEndCoordinate());
+	query.add("east", lonRange.getStartCoordinate());
+	query.add("south", latRange.getStartCoordinate());
+	query.add("west", lonRange.getEndCoordinate());
 	
 	// add all variables
 	if (protocol.hasVariablesDefined()) {
@@ -44,7 +52,7 @@ public class NCSSProtocol extends TranslatedProtocol
 	}
 	
 	// take the minimum stride
-	int horizontalStride = Math.min(latRange.getStep(), lonRange.getStep());
+	int horizontalStride = Math.min(latRange.getStride(), lonRange.getStride());
 	query.add("horizStride", horizontalStride);
 	
 	if (protocol.hasHightRange()) {
@@ -54,17 +62,20 @@ public class NCSSProtocol extends TranslatedProtocol
 		query.add("vertCoord", hightRange.getStart());
 	    } else {
 		// The range has multiple values -> vertical stride
-		query.add("vertStride", hightRange.getStep());
+		query.add("vertStride", hightRange.getStride());
 	    }
 	}
 	
 	// add the time specification if defined
 	if (protocol.hasTimeRangeDefined()) {
 	    TimeRange timeRange = protocol.getTimeRange();
-	    query.add("time_start", timeRange.getStart());
-	    query.add("time_end", timeRange.getEnd());
+	    query.add("time_start", timeRange.getStartTime());
+	    query.add("time_end", timeRange.getEndTime());
 	    query.add("time_stride", timeRange.getStride());
 	}
+	
+	// add the output format
+	query.add("accept", ConfigReader.getInstace().getNcssOutputFormat());
     }
 
 }

@@ -1,8 +1,9 @@
 package protocol.parse;
 
-public class NumericRange
+public class NumericRange implements Range
 {
-	private static final int STD_STRIDE = 1;
+	public static final int STD_STRIDE = 1;
+	public static final int STD_START = 0;
 	
 	private Number start;
 	private int step;
@@ -31,12 +32,18 @@ public class NumericRange
 		return start;
 	}
 	
-	public int getStep() {
+	public int getStride() {
 		return step;
 	}
 	
 	public Number getEnd() {
 		return end;
+	}
+	
+	@Override
+	public NumericRange getSelection()
+	{
+    		return this;
 	}
 	
 	/**
@@ -62,6 +69,10 @@ public class NumericRange
 		// Remove the brackets
 		String trimmedRange = textualRange.substring(1, textualRange.length() - 1);
 		String[] vars = trimmedRange.split(":", -1);
+		return parse(vars);
+	}
+	
+	public static NumericRange parse(String[] vars) {
 		if (vars.length != 3) {
 			throw new IllegalArgumentException("A range must contain 3 variables to be valid but had " + vars.length);
 		}
@@ -69,11 +80,12 @@ public class NumericRange
 		int y = (vars[1].isEmpty())? STD_STRIDE : Integer.parseInt(vars[1]);
 		Number x,z;
 		// can both values be represented as integer or as float?
-		if (isInteger(vars[0]) && (vars[2].isEmpty() || isInteger(vars[2]))) {
-		    x = Integer.parseInt(vars[0]);
+		if ((vars[0].isEmpty() || isInteger(vars[0]))
+			&& (vars[2].isEmpty() || isInteger(vars[2]))) {
+		    x = (vars[0].isEmpty())? STD_START : Integer.parseInt(vars[0]);
 		    z = (vars[2].isEmpty())? x : Integer.parseInt(vars[2]);
 		} else {
-		    x = Double.parseDouble(vars[0]);
+		    x = (vars[0].isEmpty())? new Integer(STD_START).doubleValue() : Double.parseDouble(vars[0]);
 		    z = (vars[2].isEmpty())? x : Double.parseDouble(vars[2]);
 		}
 		

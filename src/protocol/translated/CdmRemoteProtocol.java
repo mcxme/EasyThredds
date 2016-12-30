@@ -3,6 +3,7 @@ package protocol.translated;
 import config.ConfigReader;
 import protocol.CollectiveProtocol;
 import protocol.parse.NumericRange;
+import protocol.parse.SpatialRange;
 import protocol.parse.TimeRange;
 import protocol.translated.util.QueryBuilder;
 
@@ -18,6 +19,12 @@ public class CdmRemoteProtocol extends TranslatedProtocol
     protected String getProtocolUrlAbbrevation()
     {
 	return ConfigReader.getInstace().getCdmRemoteUrlName();
+    }    
+    
+    @Override
+    protected String getFileNameExtension()
+    {
+	return null;
     }
 
     @Override
@@ -28,20 +35,20 @@ public class CdmRemoteProtocol extends TranslatedProtocol
 	
 	if (protocol.hasTimeRangeDefined()) {
 	    TimeRange timeRange = protocol.getTimeRange();
-	    query.add("time_start", timeRange.getStart());
-	    query.add("time_end", timeRange.getEnd());
+	    query.add("time_start", timeRange.getStartTime());
+	    query.add("time_end", timeRange.getEndTime());
 	}
 	
 	if (protocol.hasLatitudeRange()) {
-	    NumericRange latRange = protocol.getLatitudeRange();
-	    query.add("north", latRange.getEnd());
-	    query.add("south", latRange.getStart());
+	    SpatialRange latRange = protocol.getLatitudeRange();
+	    query.add("north", latRange.getEndCoordinate());
+	    query.add("south", latRange.getStartCoordinate());
 	}
 	
 	if (protocol.hasLongitudeRange()) {
-	    NumericRange lonRange = protocol.getLongitudeRange();
-	    query.add("east", lonRange.getStart());
-	    query.add("west", lonRange.getEnd());
+	    SpatialRange lonRange = protocol.getLongitudeRange();
+	    query.add("east", lonRange.getStartCoordinate());
+	    query.add("west", lonRange.getEndCoordinate());
 	}
     }
 
