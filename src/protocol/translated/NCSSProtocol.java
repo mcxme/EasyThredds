@@ -17,6 +17,13 @@ public class NCSSProtocol extends TranslatedProtocol
     {
 	super(query);
     }
+    
+
+    @Override
+    public String getProtocolName() {
+	return "NCSS";
+    }
+    
 
     @Override
     protected String getProtocolUrlAbbrevation()
@@ -41,10 +48,10 @@ public class NCSSProtocol extends TranslatedProtocol
 	SpatialRange lonRange = protocol.getLongitudeRange();
 	
 	// create the bounding box
-	query.add("north", latRange.getEndCoordinate());
-	query.add("east", lonRange.getStartCoordinate());
 	query.add("south", latRange.getStartCoordinate());
-	query.add("west", lonRange.getEndCoordinate());
+	query.add("north", latRange.getEndCoordinate());
+	query.add("west", lonRange.getStartCoordinate());
+	query.add("east", lonRange.getEndCoordinate());
 	
 	// add all variables
 	if (protocol.hasVariablesDefined()) {

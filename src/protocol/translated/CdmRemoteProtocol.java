@@ -22,6 +22,11 @@ public class CdmRemoteProtocol extends TranslatedProtocol
     }    
     
     @Override
+    public String getProtocolName() {
+	return "CdmRemote";
+    }
+    
+    @Override
     protected String getFileNameExtension()
     {
 	return null;

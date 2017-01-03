@@ -1,4 +1,4 @@
-package service;
+package resource;
 
 import java.net.URI;
 import java.util.List;
@@ -21,14 +21,14 @@ import javax.ws.rs.core.UriInfo;
 
 import config.ConfigReader;
 import protocol.CollectiveProtocol;
-import protocol.ProtocolPicker;
 import protocol.translated.TranslatedProtocol;
+import service.ProtocolPicker;
 
 @Path("/translate")
-public class ProtocolTranslatorService
+public class ProtocolTranslatorResource
 {
     private ConfigReader config;
-    private final static Logger LOGGER = Logger.getLogger(ProtocolTranslatorService.class.getName());
+    private final static Logger LOGGER = Logger.getLogger(ProtocolTranslatorResource.class.getSimpleName());
 
     @PostConstruct
     public void init()
@@ -57,7 +57,7 @@ public class ProtocolTranslatorService
 		    datasetToString(datasetSegments),
 		    queryToString(info));
 	    
-	    TranslatedProtocol protocol = ProtocolPicker.pickBest(query);
+	    TranslatedProtocol protocol = ProtocolPicker.pickNext(query);
 	    URI translatedUri = protocol.getTranslatedUrl();
 	    LOGGER.info(translatedUri.toString());
 	    response = Response.seeOther(translatedUri);	    

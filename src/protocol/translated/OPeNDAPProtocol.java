@@ -20,6 +20,11 @@ public class OPeNDAPProtocol extends DapProtocol
     }
     
     @Override
+    public String getProtocolName() {
+	return "OPeNDAP";
+    }
+    
+    @Override
     protected String getFileNameExtension()
     {
 	return FILE_EXTENSION;

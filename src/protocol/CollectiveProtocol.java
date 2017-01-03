@@ -13,7 +13,7 @@ public class CollectiveProtocol extends Protocol
 {
 	public static final String LATITUDE_VARIABLE = "lat";
 	public static final String LONGITUDE_VARIABLE = "lon";
-	public static final String HIGHT_VARIABLE = "hig";
+	public static final String HIGHT_VARIABLE = "lev";
 	public static final String VAR_VARIABLE = "var";
 	public static final String TIME_VARIABLE = "time";
 	

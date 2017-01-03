@@ -11,7 +11,7 @@ public abstract class Protocol
 	}
 	
 	public Protocol(Protocol other) {
-	    if (other.dataset == null || other.baseUrl == null) {
+	    if (other == null || other.dataset == null || other.baseUrl == null) {
 		throw new IllegalArgumentException("Invalid protocol: the dataset and base URL have to be set");
 	    }
 	    

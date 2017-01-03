@@ -22,6 +22,8 @@ public abstract class TranslatedProtocol extends Protocol
      */
     protected abstract String getProtocolUrlAbbrevation();
     
+    public abstract String getProtocolName();
+    
     /**
      * Returns a file extension for the data file required by the protocol
      */

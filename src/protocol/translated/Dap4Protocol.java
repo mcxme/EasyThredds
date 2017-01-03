@@ -21,4 +21,11 @@ public class Dap4Protocol extends DapProtocol
     {
 	return ConfigReader.getInstace().getDap4UrlName();
     }
+    
+
+    @Override
+    public String getProtocolName() {
+	return "DAP4";
+    }
+    
 }
