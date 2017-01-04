@@ -23,8 +23,9 @@ import config.ConfigReader;
 import protocol.CollectiveProtocol;
 import protocol.translated.TranslatedProtocol;
 import service.ProtocolPicker;
+import service.ProtocolPicker.Protocol;
 
-@Path("/translate")
+@Path("")
 public class ProtocolTranslatorResource
 {
     private ConfigReader config;
@@ -45,10 +46,46 @@ public class ProtocolTranslatorResource
     }
 
     @GET
-    @Path("{dataset: .*}")
+    @Path("ncss/translate/{dataset: .*}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response translateNcss(@Context UriInfo info, @PathParam("dataset") List<PathSegment> datasetSegments)
+    {
+	return processProtocol(info, datasetSegments, Protocol.Ncss);
+    }
+    
+    @GET
+    @Path("cdmremote/translate/{dataset: .*}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response translateCdmRemote(@Context UriInfo info, @PathParam("dataset") List<PathSegment> datasetSegments)
+    {
+	return processProtocol(info, datasetSegments, Protocol.CdmRemote);
+    }
+    
+    @GET
+    @Path("opendap/translate/{dataset: .*}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response translateOpenDap(@Context UriInfo info, @PathParam("dataset") List<PathSegment> datasetSegments)
+    {
+	return processProtocol(info, datasetSegments, Protocol.OpenDap);
+    }
+    
+    @GET
+    @Path("dap4/translate/{dataset: .*}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response translateDap4(@Context UriInfo info, @PathParam("dataset") List<PathSegment> datasetSegments)
+    {
+	return processProtocol(info, datasetSegments, Protocol.Dap4);
+    }
+    
+    @GET
+    @Path("translate/{dataset: .*}")
     @Produces(MediaType.TEXT_PLAIN)
     public Response translate(@Context UriInfo info, @PathParam("dataset") List<PathSegment> datasetSegments)
     {
+	return processProtocol(info, datasetSegments, Protocol.Next);
+    }
+    
+    private Response processProtocol(UriInfo info, List<PathSegment> datasetSegments, Protocol protocol) {
 	ResponseBuilder response;
 	try {
 	    // extract the query from the request
@@ -57,8 +94,8 @@ public class ProtocolTranslatorResource
 		    datasetToString(datasetSegments),
 		    queryToString(info));
 	    
-	    TranslatedProtocol protocol = ProtocolPicker.pickNext(query);
-	    URI translatedUri = protocol.getTranslatedUrl();
+	    TranslatedProtocol translated = ProtocolPicker.pickByName(protocol, query);
+	    URI translatedUri = translated.getTranslatedUrl();
 	    LOGGER.info(translatedUri.toString());
 	    response = Response.seeOther(translatedUri);	    
 //	    response = Response.ok(translatedUri.toString());

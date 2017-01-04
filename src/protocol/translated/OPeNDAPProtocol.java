@@ -27,6 +27,6 @@ public class OPeNDAPProtocol extends DapProtocol
     @Override
     protected String getFileNameExtension()
     {
-	return FILE_EXTENSION;
+	return null; //FILE_EXTENSION;
     }
 }

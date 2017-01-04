@@ -15,6 +15,15 @@ public class ProtocolPicker
     private static int counter = 0;
     public static int N_PROTOCOLS = 4;
     
+    public enum Protocol {
+	CdmRemote,
+	Dap4,
+	OpenDap,
+	Ncss,
+	Next,
+	Random
+    }
+    
     /**
      * Chooses any of the implemented protocols that should work best for the given query.
      * Possible protocols: OPeNDAP, NCSS, CmdRemote
@@ -37,6 +46,22 @@ public class ProtocolPicker
     public static String getProtocolNameByIndex(int index) {
 	TranslatedProtocol dummy = pickByIndex(index, new CollectiveProtocol("", "", ""));
 	return dummy.getProtocolName();
+    }
+    
+    public static TranslatedProtocol pickByName(Protocol protocol, CollectiveProtocol query) {
+	int index;
+	switch (protocol) {
+	case OpenDap: index = 0; break;
+	case CdmRemote: index = 1; break;
+	case Ncss: index = 2; break;
+	case Dap4: index = 3; break;
+	case Next: return pickNext(query);
+	case Random: return pickRandom(query);
+	default:
+	    throw new UnsupportedOperationException("Unknown protocol " + protocol);
+	}
+	
+	return pickByIndex(index, query);
     }
     
     public static TranslatedProtocol pickByIndex(int index, CollectiveProtocol query) {
