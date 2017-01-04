@@ -40,6 +40,10 @@ public class NumericRange implements Range
 		return end;
 	}
 	
+	public boolean hasDefaultStride() {
+	    return this.step == STD_STRIDE;
+	}
+	
 	@Override
 	public NumericRange getSelection()
 	{

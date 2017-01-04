@@ -35,26 +35,70 @@ public class CdmRemoteProtocol extends TranslatedProtocol
     @Override
     protected void translateQuery(CollectiveProtocol protocol, QueryBuilder query)
     {
+	TimeRange timeRange = protocol.getTimeRange();
+	SpatialRange latRange = protocol.getLatitudeRange();
+	SpatialRange lonRange = protocol.getLongitudeRange();
+	NumericRange lvlRange = protocol.getHightRange();
+
 	query.add("req", "data");
-	query.add("var", protocol.getVariables());
+	if (protocol.getVariables().isEmpty()) {
+	    throw new IllegalArgumentException("at least one variable has to be defined");
+	}
+	
+	query.append("&var=");
+	for (String var : protocol.getVariables()) {
+	    // a(time, lev, lat, lon);b;c
+	    query.append(var);
+	    query.append("(");
+	    if (protocol.hasTimeRangeDefined()) {
+		query.append(textualRange(timeRange.getSelection()));
+		query.append(",");
+	    }
+	    if (protocol.hasHightRange()) {
+		query.append(textualRange(lvlRange));
+		query.append(",");
+	    }
+	    if (protocol.hasLatitudeRange()) {
+		query.append(textualRange(latRange.getSelection()));
+		query.append(",");
+	    }
+	    if (protocol.hasLongitudeRange()) {
+		query.append(textualRange(lonRange.getSelection()));
+		query.append(",");
+	    }
+	    
+	    query.removeLastChar();
+	    query.append(")");
+	    query.append(";");
+	}
+	query.removeLastChar();
 	
 	if (protocol.hasTimeRangeDefined()) {
-	    TimeRange timeRange = protocol.getTimeRange();
 	    query.add("time_start", timeRange.getStartTime());
 	    query.add("time_end", timeRange.getEndTime());
 	}
 	
 	if (protocol.hasLatitudeRange()) {
-	    SpatialRange latRange = protocol.getLatitudeRange();
 	    query.add("north", latRange.getEndCoordinate());
 	    query.add("south", latRange.getStartCoordinate());
 	}
 	
 	if (protocol.hasLongitudeRange()) {
-	    SpatialRange lonRange = protocol.getLongitudeRange();
 	    query.add("east", lonRange.getStartCoordinate());
 	    query.add("west", lonRange.getEndCoordinate());
 	}
+	
+	query.add("accept", ConfigReader.getInstace().getCdmRemoteOutputFormat());
+    }
+    
+    private String textualRange(NumericRange range) {
+	assert (range != null);
+	String out = "" + range.getStart() + ":";
+	if (!range.hasDefaultStride()) {
+	    out += range.getStride() + ":";
+	}
+	out += range.getEnd();
+	return out;
     }
 
 }
