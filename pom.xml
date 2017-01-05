@@ -9,15 +9,20 @@
 	<properties>
 		<jersey.version>1.19.3</jersey.version>
 		<slf4jVersion>1.7.22</slf4jVersion>
-		<netcdfJavaVersion>4.3.23</netcdfJavaVersion>
+		<netcdfJavaVersion>4.6.7</netcdfJavaVersion>
 	</properties>
 
-	<repositories>
-		<repository>
+<repositories>
+<!-- 		<repository>
 			<id>unidata-releases</id>
 			<name>Unidata Releases</name>
 			<url>https://artifacts.unidata.ucar.edu/content/repositories/unidata-releases/</url>
-		</repository>
+		</repository> -->
+		<repository>
+		          <id>boundless</id>
+          <name>Boundless Maven Repository</name>
+          <url>http://repo.boundlessgeo.com/main</url>
+        </repository>
 	</repositories>
 
 	<build>
@@ -79,14 +84,6 @@
 			<version>2.9.6</version>
 		</dependency>
 
-		<!-- NetCdf Library -->
-		<dependency>
-			<groupId>edu.ucar</groupId>
-			<artifactId>netcdf</artifactId>
-			<version>${netcdfJavaVersion}</version>
-			<scope>compile</scope>
-		</dependency>
-
 		<!-- For Logging (and recommended for NetCdf) -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -102,12 +99,40 @@
 			<version>1.0.19</version>
 		</dependency>
 
-		<!-- For NetCdf Library to make remote calls -->
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient</artifactId>
-			<version>4.5.2</version>
-		</dependency>
+<!-- https://mvnrepository.com/artifact/edu.ucar/cdm -->
+<dependency>
+    <groupId>edu.ucar</groupId>
+    <artifactId>cdm</artifactId>
+    <version>4.6.7</version>
+</dependency>
+
+<!-- https://mvnrepository.com/artifact/edu.ucar/netcdf4 -->
+<dependency>
+    <groupId>edu.ucar</groupId>
+    <artifactId>netcdf4</artifactId>
+    <version>4.6.7</version>
+</dependency>
+
+<!-- https://mvnrepository.com/artifact/edu.ucar/opendap -->
+<dependency>
+    <groupId>edu.ucar</groupId>
+    <artifactId>opendap</artifactId>
+    <version>4.6.7</version>
+</dependency>
+
+<!-- https://mvnrepository.com/artifact/edu.ucar/dap4 -->
+<dependency>
+    <groupId>edu.ucar</groupId>
+    <artifactId>dap4</artifactId>
+    <version>4.6.7</version>
+</dependency>
+
+<!-- https://mvnrepository.com/artifact/edu.ucar/httpservices -->
+<dependency>
+    <groupId>edu.ucar</groupId>
+    <artifactId>httpservices</artifactId>
+    <version>4.6.7</version>
+</dependency>
 
 		<dependency>
 			<groupId>junit</groupId>

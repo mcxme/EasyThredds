@@ -20,6 +20,7 @@ import org.jfree.ui.ApplicationFrame;
 import config.ConfigReader;
 import protocol.CollectiveProtocol;
 import protocol.translated.TranslatedProtocol;
+import reader.IReader;
 import service.ProtocolPicker;
 
 public class PerformanceComparison
@@ -27,7 +28,7 @@ public class PerformanceComparison
     
     private static final String TEST_DATASET = "RC1SD-base-08/cloud";
     private static final String THREDDS = ConfigReader.getInstace().getThreddsUrl();
-    private static final int REPETITIONS = 100;
+    private static final int REPETITIONS = 1;
 
     public static void main(String[] args)
     {
@@ -93,9 +94,8 @@ public class PerformanceComparison
     
     private static long measurePerformanceMillis(TranslatedProtocol translated) {
 	long start = System.nanoTime();
-	URI uri = translated.getTranslatedNetCdfUrl();
-	try (NetCdfReader reader = new NetCdfReader(uri.toString())) {
-	    reader.iterateData();
+	try (IReader reader = translated.getReader()) {
+	    reader.iterateAllData();
 	} catch (Exception e) {
 	    throw new IllegalStateException("Failed to measure the execution time", e);
 	}

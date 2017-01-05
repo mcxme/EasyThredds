@@ -6,6 +6,7 @@ import java.net.URISyntaxException;
 import protocol.CollectiveProtocol;
 import protocol.Protocol;
 import protocol.translated.util.QueryBuilder;
+import reader.IReader;
 
 public abstract class TranslatedProtocol extends Protocol
 {
@@ -35,6 +36,16 @@ public abstract class TranslatedProtocol extends Protocol
      * Translates the given protocol using the query builder.
      */
     protected abstract void translateQuery(CollectiveProtocol protocol, QueryBuilder query);
+    
+    protected abstract IReader readerFactory();
+    
+    public IReader getReader() {
+	IReader reader = readerFactory();
+	String uri = getTranslatedHttpUrl().toString();
+	String[] parts = uri.split("\\?");
+	reader.setUri(parts[0], parts[1]);
+	return reader;
+    }
 
     public URI getTranslatedNetCdfUrl() {
 	URI http = getTranslatedHttpUrl();

@@ -2,6 +2,8 @@ package protocol.translated;
 
 import config.ConfigReader;
 import protocol.CollectiveProtocol;
+import reader.IReader;
+import reader.OPeNDAPReader;
 
 public class OPeNDAPProtocol extends DapProtocol
 {
@@ -30,8 +32,14 @@ public class OPeNDAPProtocol extends DapProtocol
     }
     
     @Override
+    protected IReader readerFactory()
+    {
+	return new OPeNDAPReader();
+    }
+    
+    @Override
     protected String getFileNameExtension()
     {
-	return null; //FILE_EXTENSION;
+	return null;//FILE_EXTENSION;
     }
 }

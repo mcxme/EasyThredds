@@ -6,6 +6,8 @@ import protocol.parse.NumericRange;
 import protocol.parse.SpatialRange;
 import protocol.parse.TimeRange;
 import protocol.translated.util.QueryBuilder;
+import reader.CdmRemoteReader;
+import reader.IReader;
 
 public class CdmRemoteProtocol extends TranslatedProtocol
 {
@@ -20,6 +22,12 @@ public class CdmRemoteProtocol extends TranslatedProtocol
     {
 	return ConfigReader.getInstace().getCdmRemoteUrlName();
     }    
+    
+    @Override
+    protected IReader readerFactory()
+    {
+	return new CdmRemoteReader();
+    }
     
     @Override
     public String getProtocolName() {
