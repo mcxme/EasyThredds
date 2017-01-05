@@ -25,6 +25,11 @@ public class OPeNDAPProtocol extends DapProtocol
     }
     
     @Override
+    protected String getNetCdfName() {
+	return "dods";
+    }
+    
+    @Override
     protected String getFileNameExtension()
     {
 	return null; //FILE_EXTENSION;

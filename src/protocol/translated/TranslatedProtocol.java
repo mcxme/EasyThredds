@@ -22,6 +22,8 @@ public abstract class TranslatedProtocol extends Protocol
      */
     protected abstract String getProtocolUrlAbbrevation();
     
+    protected abstract String getNetCdfName();
+    
     public abstract String getProtocolName();
     
     /**
@@ -34,7 +36,19 @@ public abstract class TranslatedProtocol extends Protocol
      */
     protected abstract void translateQuery(CollectiveProtocol protocol, QueryBuilder query);
 
-    public URI getTranslatedUrl()
+    public URI getTranslatedNetCdfUrl() {
+	URI http = getTranslatedHttpUrl();
+	String protocol = getNetCdfName();
+	String replaced = http.toString().replaceFirst("http", protocol);
+	try {
+	    return new URI(replaced);
+	} catch (URISyntaxException e){
+	    e.printStackTrace();
+	    return null;
+	}
+    }
+    
+    public URI getTranslatedHttpUrl()
     {
 	QueryBuilder translated = new QueryBuilder();
 	translateQuery(query, translated);

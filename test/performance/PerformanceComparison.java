@@ -1,9 +1,12 @@
 package performance;
 
 import java.awt.Font;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import javax.ws.rs.core.UriInfo;
 
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -14,6 +17,7 @@ import org.jfree.chart.renderer.category.BoxAndWhiskerRenderer;
 import org.jfree.data.statistics.DefaultBoxAndWhiskerCategoryDataset;
 import org.jfree.ui.ApplicationFrame;
 
+import config.ConfigReader;
 import protocol.CollectiveProtocol;
 import protocol.translated.TranslatedProtocol;
 import service.ProtocolPicker;
@@ -21,8 +25,8 @@ import service.ProtocolPicker;
 public class PerformanceComparison
 {
     
-    private static final String TEST_DATASET = "";
-    private static final String THREDDS = "";
+    private static final String TEST_DATASET = "RC1SD-base-08/cloud";
+    private static final String THREDDS = ConfigReader.getInstace().getThreddsUrl();
     private static final int REPETITIONS = 100;
 
     public static void main(String[] args)
@@ -75,7 +79,6 @@ public class PerformanceComparison
         frame.setExtendedState(frame.getExtendedState() | frame.MAXIMIZED_BOTH);
         frame.pack();
         frame.setVisible(true);
-        
     }
        
     private static long[] measurePerformanceMillis(int nRepetitions,
@@ -89,8 +92,13 @@ public class PerformanceComparison
     }
     
     private static long measurePerformanceMillis(TranslatedProtocol translated) {
-	// TODO measure time of protocol execurtion
-	Random rand = new Random(System.nanoTime());
-	return Math.abs(rand.nextLong()) % 1000;
+	long start = System.nanoTime();
+	URI uri = translated.getTranslatedNetCdfUrl();
+	try (NetCdfReader reader = new NetCdfReader(uri.toString())) {
+	    reader.iterateData();
+	} catch (Exception e) {
+	    throw new IllegalStateException("Failed to measure the execution time", e);
+	}
+	return System.nanoTime() - start;
     }
 }

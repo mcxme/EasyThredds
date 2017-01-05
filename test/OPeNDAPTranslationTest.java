@@ -18,7 +18,7 @@ public class OPeNDAPTranslationTest
 			STD_DATASET,
 			query);
 		OPeNDAPProtocol openDap = new OPeNDAPProtocol(collective);
-		String translated = openDap.getTranslatedUrl().toString();
+		String translated = openDap.getTranslatedHttpUrl().toString();
 		System.out.println("OPeNDAP: " + translated);
 	}
 	

@@ -51,9 +51,9 @@ public class ProtocolPicker
     public static TranslatedProtocol pickByName(Protocol protocol, CollectiveProtocol query) {
 	int index;
 	switch (protocol) {
-	case OpenDap: index = 0; break;
-	case CdmRemote: index = 1; break;
-	case Ncss: index = 2; break;
+	case CdmRemote: index = 0; break;
+	case Ncss: index = 1; break;
+	case OpenDap: index = 2; break;
 	case Dap4: index = 3; break;
 	case Next: return pickNext(query);
 	case Random: return pickRandom(query);
@@ -68,11 +68,11 @@ public class ProtocolPicker
 	TranslatedProtocol translated = null;
 	switch (index) {
 	case 0:
-	    translated = new OPeNDAPProtocol(query); break;
-	case 1:
 	    translated = new CdmRemoteProtocol(query); break;
-	case 2:
+	case 1:
 	    translated = new NCSSProtocol(query); break;
+	case 2:
+	    translated = new OPeNDAPProtocol(query); break;
 	case 3:
 	    translated = new Dap4Protocol(query); break;
 	default:

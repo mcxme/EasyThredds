@@ -18,12 +18,15 @@ public class NCSSProtocol extends TranslatedProtocol
 	super(query);
     }
     
-
     @Override
     public String getProtocolName() {
 	return "NCSS";
     }
     
+    @Override
+    protected String getNetCdfName() {
+	throw new UnsupportedOperationException("Not implemented");
+    }
 
     @Override
     protected String getProtocolUrlAbbrevation()

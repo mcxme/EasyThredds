@@ -27,6 +27,12 @@ public class CdmRemoteProtocol extends TranslatedProtocol
     }
     
     @Override
+    protected String getNetCdfName() {
+	return "cdmremote";
+//	throw new UnsupportedOperationException("Not implemented");
+    }
+    
+    @Override
     protected String getFileNameExtension()
     {
 	return null;

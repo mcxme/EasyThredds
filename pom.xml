@@ -8,7 +8,17 @@
 
 	<properties>
 		<jersey.version>1.19.3</jersey.version>
+		<slf4jVersion>1.7.22</slf4jVersion>
+		<netcdfJavaVersion>4.3.23</netcdfJavaVersion>
 	</properties>
+
+	<repositories>
+		<repository>
+			<id>unidata-releases</id>
+			<name>Unidata Releases</name>
+			<url>https://artifacts.unidata.ucar.edu/content/repositories/unidata-releases/</url>
+		</repository>
+	</repositories>
 
 	<build>
 		<sourceDirectory>src</sourceDirectory>
@@ -69,11 +79,34 @@
 			<version>2.9.6</version>
 		</dependency>
 
+		<!-- NetCdf Library -->
+		<dependency>
+			<groupId>edu.ucar</groupId>
+			<artifactId>netcdf</artifactId>
+			<version>${netcdfJavaVersion}</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<!-- For Logging (and recommended for NetCdf) -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-jdk14</artifactId>
+			<version>${slf4jVersion}</version>
+			<scope>runtime</scope>
+		</dependency>
+
 		<!-- JFreeChart for comparison plots -->
 		<dependency>
-		    <groupId>org.jfree</groupId>
-		    <artifactId>jfreechart</artifactId>
-		    <version>1.0.19</version>
+			<groupId>org.jfree</groupId>
+			<artifactId>jfreechart</artifactId>
+			<version>1.0.19</version>
+		</dependency>
+
+		<!-- For NetCdf Library to make remote calls -->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.5.2</version>
 		</dependency>
 
 		<dependency>

@@ -95,7 +95,7 @@ public class ProtocolTranslatorResource
 		    queryToString(info));
 	    
 	    TranslatedProtocol translated = ProtocolPicker.pickByName(protocol, query);
-	    URI translatedUri = translated.getTranslatedUrl();
+	    URI translatedUri = translated.getTranslatedHttpUrl();
 	    LOGGER.info(translatedUri.toString());
 	    response = Response.seeOther(translatedUri);	    
 //	    response = Response.ok(translatedUri.toString());
