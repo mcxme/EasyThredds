@@ -4,5 +4,8 @@ public interface IReader extends AutoCloseable
 {
     void setUri(String baseUri, String query);
     
-    void iterateAllData();
+    /**
+     * Fully iterates the data set and returns the size in bytes
+     */
+    long iterateAllData();
 }

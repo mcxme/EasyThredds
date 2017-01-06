@@ -29,10 +29,12 @@ public class CdmRemoteReader implements IReader {
     }
     
     @Override
-    public void iterateAllData()
+    public long iterateAllData()
     {
 	try {
-	    while (stream.read() != -1) {}
+	    long bytes = 0L;
+	    while (stream.read() != -1) { bytes += 1L;}
+	    return bytes;
 	} catch (IOException e) {
 	    throw new IllegalArgumentException("COuld not read the input stream", e);
 	}

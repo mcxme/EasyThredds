@@ -12,7 +12,7 @@ import ucar.nc2.NetcdfFile;
 import ucar.nc2.Variable;
 import ucar.nc2.dataset.NetcdfDataset;
 
-public class OPeNDAPReader implements IReader
+public class Dap4Reader implements IReader
 {
     private NetcdfFile dataset;
     
@@ -21,12 +21,12 @@ public class OPeNDAPReader implements IReader
     {
 	try {
 	    URL dodsUrl = new URL(baseUri + "?" + query);
-	    String ddsBase = baseUri.replace(".dods", ".dds");
+	    String ddsBase = baseUri.replace(".dap", ".dds");
 	    URL ddsUrl = new URL(ddsBase + "?" + query);
 	    
-	    String fileName = "opendapFile.dods";
+	    String fileName = "dap4File.dap";
 	    File downloadedFile = new File(fileName);
-	    File dodsFile = new File(fileName + ".dods");
+	    File dodsFile = new File(fileName + ".dap");
 	    File ddsFile = new File(fileName + ".dds");
 	    FileUtils.copyURLToFile(dodsUrl, dodsFile);
 	    FileUtils.copyURLToFile(ddsUrl, ddsFile);

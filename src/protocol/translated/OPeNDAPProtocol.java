@@ -8,7 +8,7 @@ import reader.OPeNDAPReader;
 public class OPeNDAPProtocol extends DapProtocol
 {
     
-    public static final String FILE_EXTENSION = "ascii";
+    public static final String FILE_EXTENSION = "dods";
 
     public OPeNDAPProtocol(CollectiveProtocol query)
     {
@@ -40,6 +40,6 @@ public class OPeNDAPProtocol extends DapProtocol
     @Override
     protected String getFileNameExtension()
     {
-	return null;//FILE_EXTENSION;
+	return FILE_EXTENSION;
     }
 }

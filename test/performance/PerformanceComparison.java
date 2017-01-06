@@ -1,6 +1,7 @@
 package performance;
 
 import java.awt.Font;
+import java.awt.Frame;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -77,7 +78,7 @@ public class PerformanceComparison
         // create the frame
         ApplicationFrame frame = new ApplicationFrame("Protocol Performance");
         frame.setContentPane(chartPanel);
-        frame.setExtendedState(frame.getExtendedState() | frame.MAXIMIZED_BOTH);
+        frame.setExtendedState(frame.getExtendedState() | Frame.MAXIMIZED_BOTH);
         frame.pack();
         frame.setVisible(true);
     }
