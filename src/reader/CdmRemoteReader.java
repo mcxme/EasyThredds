@@ -36,7 +36,7 @@ public class CdmRemoteReader implements IReader {
 	    while (stream.read() != -1) { bytes += 1L;}
 	    return bytes;
 	} catch (IOException e) {
-	    throw new IllegalArgumentException("COuld not read the input stream", e);
+	    throw new IllegalArgumentException("Could not read the input stream", e);
 	}
     }
 }

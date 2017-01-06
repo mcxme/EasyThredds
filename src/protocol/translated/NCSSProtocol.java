@@ -7,6 +7,7 @@ import protocol.parse.SpatialRange;
 import protocol.parse.TimeRange;
 import protocol.translated.util.QueryBuilder;
 import reader.IReader;
+import reader.NCSSReader;
 
 /**
  * Adapter class for the NetCdf Subset Service (NCSS) 
@@ -38,7 +39,7 @@ public class NCSSProtocol extends TranslatedProtocol
     @Override
     protected IReader readerFactory()
     {
-	throw new UnsupportedOperationException("not implemented");
+	return new NCSSReader();
     }
     
     @Override

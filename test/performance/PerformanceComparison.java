@@ -95,11 +95,14 @@ public class PerformanceComparison
     
     private static long measurePerformanceMillis(TranslatedProtocol translated) {
 	long start = System.nanoTime();
+	long size = 0;
 	try (IReader reader = translated.getReader()) {
-	    reader.iterateAllData();
+	    size = reader.iterateAllData();
 	} catch (Exception e) {
 	    throw new IllegalStateException("Failed to measure the execution time", e);
 	}
-	return System.nanoTime() - start;
+	long millis = (System.nanoTime() - start) / (1_000_000);
+	System.out.println(translated.getProtocolName() + " - " + millis + "ms for " + size + " bytes");
+	return millis;
     }
 }

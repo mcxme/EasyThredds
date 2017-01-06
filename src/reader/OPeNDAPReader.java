@@ -6,60 +6,42 @@ import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
 
-import ucar.ma2.Array;
-import ucar.ma2.IndexIterator;
 import ucar.nc2.NetcdfFile;
-import ucar.nc2.Variable;
 import ucar.nc2.dataset.NetcdfDataset;
 
-public class OPeNDAPReader implements IReader
+public class OPeNDAPReader extends NetCdfReader
 {
-    private NetcdfFile dataset;
+    private File dodsFile;
+    private File ddsFile;
     
     @Override
-    public void setUri(String baseUri, String query)
+    public void close() throws Exception {
+	if (dodsFile != null) {
+	    dodsFile.delete();
+	}
+	if (ddsFile != null) {
+	    ddsFile.delete();
+	}
+	
+	super.close();
+    }
+
+    @Override
+    protected NetcdfFile buildNetCdfFile(String baseUri, String query)
     {
 	try {
 	    URL dodsUrl = new URL(baseUri + "?" + query);
 	    String ddsBase = baseUri.replace(".dods", ".dds");
 	    URL ddsUrl = new URL(ddsBase + "?" + query);
-	    
 	    String fileName = "opendapFile.dods";
 	    File downloadedFile = new File(fileName);
-	    File dodsFile = new File(fileName + ".dods");
-	    File ddsFile = new File(fileName + ".dds");
+	    dodsFile = new File(fileName + ".dods");
+	    ddsFile = new File(fileName + ".dds");
 	    FileUtils.copyURLToFile(dodsUrl, dodsFile);
 	    FileUtils.copyURLToFile(ddsUrl, ddsFile);
-	    dataset = NetcdfDataset.openDataset("file:" + downloadedFile.getAbsolutePath());
+	    return NetcdfDataset.openDataset("file:" + downloadedFile.getAbsolutePath());
 	} catch (IOException e) {
-	    e.printStackTrace();
+	    throw new IllegalArgumentException("Could not build the NetCdf File", e);
 	}
-    }
-
-    @Override
-    public void close() throws Exception {
-	if (dataset != null) {
-	    dataset.close();
-	}
-    }
-    
-    @Override
-    public long iterateAllData()
-    {
-	long bytes = 0L;
-	for (Variable var : dataset.getVariables()) {
-	    try {
-		Array data = var.read();
-		IndexIterator it = data.getIndexIterator();
-		while (it.hasNext()) {
-		    it.getByteNext();
-		    bytes += 1;
-		}
-	    } catch (IOException e) {
-		e.printStackTrace();
-		throw new IllegalArgumentException("Could not read the variabe " + var.getFullName(), e);
-	    }
-	}
-        return bytes;
     }
 }

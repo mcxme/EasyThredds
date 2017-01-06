@@ -12,54 +12,38 @@ import ucar.nc2.NetcdfFile;
 import ucar.nc2.Variable;
 import ucar.nc2.dataset.NetcdfDataset;
 
-public class Dap4Reader implements IReader
+public class Dap4Reader extends NetCdfReader
 {
-    private NetcdfFile dataset;
+    private File dapFile;
+    private File ddsFile;
     
     @Override
-    public void setUri(String baseUri, String query)
-    {
+    protected NetcdfFile buildNetCdfFile(String baseUri, String query) {
 	try {
-	    URL dodsUrl = new URL(baseUri + "?" + query);
-	    String ddsBase = baseUri.replace(".dap", ".dds");
-	    URL ddsUrl = new URL(ddsBase + "?" + query);
+	    URL dodsUrl = new URL(baseUri + ".dap?" + query);
+	    URL ddsUrl = new URL(baseUri + ".dds?" + query);
 	    
 	    String fileName = "dap4File.dap";
 	    File downloadedFile = new File(fileName);
-	    File dodsFile = new File(fileName + ".dap");
-	    File ddsFile = new File(fileName + ".dds");
-	    FileUtils.copyURLToFile(dodsUrl, dodsFile);
+	    dapFile = new File(fileName + ".dap");
+	    ddsFile = new File(fileName + ".dds");
+	    FileUtils.copyURLToFile(dodsUrl, dapFile);
 	    FileUtils.copyURLToFile(ddsUrl, ddsFile);
-	    dataset = NetcdfDataset.openDataset("file:" + downloadedFile.getAbsolutePath());
+	    return NetcdfDataset.openDataset("file:" + downloadedFile.getAbsolutePath());
 	} catch (IOException e) {
-	    e.printStackTrace();
-	}
-    }
-
-    @Override
-    public void close() throws Exception {
-	if (dataset != null) {
-	    dataset.close();
+	    throw new IllegalArgumentException("Could not build the NetCdf file", e);
 	}
     }
     
     @Override
-    public long iterateAllData()
-    {
-	long bytes = 0L;
-	for (Variable var : dataset.getVariables()) {
-	    try {
-		Array data = var.read();
-		IndexIterator it = data.getIndexIterator();
-		while (it.hasNext()) {
-		    it.getByteNext();
-		    bytes += 1;
-		}
-	    } catch (IOException e) {
-		e.printStackTrace();
-		throw new IllegalArgumentException("Could not read the variabe " + var.getFullName(), e);
-	    }
+    public void close() throws Exception {
+	if (ddsFile != null) {
+	    ddsFile.delete();
 	}
-        return bytes;
+	if (dapFile != null) {
+	    dapFile.delete();
+	}
+	
+	super.close();
     }
 }
