@@ -9,20 +9,20 @@
 	<properties>
 		<jersey.version>1.19.3</jersey.version>
 		<slf4jVersion>1.7.22</slf4jVersion>
-		<netcdfJavaVersion>4.6.7</netcdfJavaVersion>
+		<netcdfJavaVersion>4.6.8</netcdfJavaVersion>
 	</properties>
 
-<repositories>
-<!-- 		<repository>
+	<repositories>
+		<repository>
 			<id>unidata-releases</id>
 			<name>Unidata Releases</name>
 			<url>https://artifacts.unidata.ucar.edu/content/repositories/unidata-releases/</url>
-		</repository> -->
+		</repository>
 		<repository>
-		          <id>boundless</id>
-          <name>Boundless Maven Repository</name>
-          <url>http://repo.boundlessgeo.com/main</url>
-        </repository>
+			<id>boundless</id>
+			<name>Boundless Maven Repository</name>
+			<url>http://repo.boundlessgeo.com/main</url>
+		</repository>
 	</repositories>
 
 	<build>
@@ -99,88 +99,90 @@
 			<version>1.0.19</version>
 		</dependency>
 
-<!-- https://mvnrepository.com/artifact/edu.ucar/cdm -->
-<dependency>
-    <groupId>edu.ucar</groupId>
-    <artifactId>cdm</artifactId>
-    <version>4.6.7</version>
-</dependency>
+		<!-- https://mvnrepository.com/artifact/edu.ucar/cdm -->
+		<dependency>
+			<groupId>edu.ucar</groupId>
+			<artifactId>cdm</artifactId>
+			<version>${netcdfJavaVersion}</version>
+		</dependency>
 
-<!-- https://mvnrepository.com/artifact/edu.ucar/netcdf4 -->
-<dependency>
-    <groupId>edu.ucar</groupId>
-    <artifactId>netcdf4</artifactId>
-    <version>4.6.7</version>
-</dependency>
+		<!-- https://mvnrepository.com/artifact/edu.ucar/netcdf4 -->
+		<dependency>
+			<groupId>edu.ucar</groupId>
+			<artifactId>netcdf4</artifactId>
+			<version>${netcdfJavaVersion}</version>
+		</dependency>
 
-<!-- https://mvnrepository.com/artifact/edu.ucar/opendap -->
-<dependency>
-    <groupId>edu.ucar</groupId>
-    <artifactId>opendap</artifactId>
-    <version>4.6.7</version>
-</dependency>
+		<!-- https://mvnrepository.com/artifact/edu.ucar/opendap -->
+		<dependency>
+			<groupId>edu.ucar</groupId>
+			<artifactId>opendap</artifactId>
+			<version>${netcdfJavaVersion}</version>
+		</dependency>
 
-<!-- https://mvnrepository.com/artifact/edu.ucar/dap4 -->
-<dependency>
-    <groupId>edu.ucar</groupId>
-    <artifactId>dap4</artifactId>
-    <version>4.6.7</version>
-</dependency>
+		<!-- https://mvnrepository.com/artifact/edu.ucar/dap4 -->
+		<dependency>
+			<groupId>edu.ucar</groupId>
+			<artifactId>dap4</artifactId>
+			<version>${netcdfJavaVersion}</version>
+		</dependency>
 
-<!-- https://mvnrepository.com/artifact/edu.ucar/httpservices -->
-<dependency>
-    <groupId>edu.ucar</groupId>
-    <artifactId>httpservices</artifactId>
-    <version>4.6.7</version>
-</dependency>
+		<!-- https://mvnrepository.com/artifact/edu.ucar/httpservices -->
+		<dependency>
+			<groupId>edu.ucar</groupId>
+			<artifactId>httpservices</artifactId>
+			<version>${netcdfJavaVersion}</version>
+		</dependency>
 
-<!-- https://mvnrepository.com/artifact/edu.ucar/d4core -->
-<dependency>
-    <groupId>edu.ucar</groupId>
-    <artifactId>d4core</artifactId>
-    <version>4.6.7</version>
-</dependency>
+		<!-- https://mvnrepository.com/artifact/edu.ucar/d4core -->
+		<dependency>
+			<groupId>edu.ucar</groupId>
+			<artifactId>d4core</artifactId>
+			<version>${netcdfJavaVersion}</version>
+		</dependency>
 
-<!-- https://mvnrepository.com/artifact/edu.ucar/d4shared -->
-<dependency>
-    <groupId>edu.ucar</groupId>
-    <artifactId>d4shared</artifactId>
-    <version>4.6.7</version>
-</dependency>
+		<!-- https://mvnrepository.com/artifact/edu.ucar/d4shared -->
+		<dependency>
+			<groupId>edu.ucar</groupId>
+			<artifactId>d4shared</artifactId>
+			<version>${netcdfJavaVersion}</version>
+		</dependency>
 
-<!-- https://mvnrepository.com/artifact/edu.ucar/d4servletshared -->
-<dependency>
-    <groupId>edu.ucar</groupId>
-    <artifactId>d4servletshared</artifactId>
-    <version>4.6.7</version>
-</dependency>
+		<!-- https://mvnrepository.com/artifact/edu.ucar/d4servletshared -->
+		<dependency>
+			<groupId>edu.ucar</groupId>
+			<artifactId>d4servletshared</artifactId>
+			<version>${netcdfJavaVersion}</version>
+		</dependency>
 
-<!-- https://mvnrepository.com/artifact/edu.ucar/d4cdmclient -->
-<dependency>
-    <groupId>edu.ucar</groupId>
-    <artifactId>d4cdmclient</artifactId>
-    <version>4.6.7</version>
-</dependency>
+		<!-- https://mvnrepository.com/artifact/edu.ucar/d4cdmclient -->
+		<dependency>
+			<groupId>edu.ucar</groupId>
+			<artifactId>d4cdmclient</artifactId>
+			<version>${netcdfJavaVersion}</version>
+		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/edu.ucar/d4cdmclient -->
+		<dependency>
+			<groupId>edu.ucar</groupId>
+			<artifactId>d4cdmclient</artifactId>
+			<version>${netcdfJavaVersion}</version>
+		</dependency>
 
-<!-- https://mvnrepository.com/artifact/edu.ucar/d4servlet -->
-<dependency>
-    <groupId>edu.ucar</groupId>
-    <artifactId>d4servlet</artifactId>
-    <version>4.5.3</version>
-</dependency>
+		<!-- https://mvnrepository.com/artifact/edu.ucar/netcdfAll -->
+		<dependency>
+			<groupId>edu.ucar</groupId>
+			<artifactId>netcdfAll</artifactId>
+			<version>${netcdfJavaVersion}</version>
+		</dependency>
 
-
-
-
-
-<!-- For easy file downloads -->
-<!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
-<dependency>
-    <groupId>commons-io</groupId>
-    <artifactId>commons-io</artifactId>
-    <version>2.5</version>
-</dependency>
+		<!-- For easy file downloads -->
+		<!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.5</version>
+		</dependency>
 
 		<dependency>
 			<groupId>junit</groupId>

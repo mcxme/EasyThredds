@@ -33,12 +33,15 @@ public abstract class NetCdfReader implements IReader
     {
 	long bytes = 0L;
 	for (Variable var : dataset.getVariables()) {
+	    if (var.isCoordinateVariable()) continue;
+	    
 	    try {
 		Array data = var.read();
+		int dataByteSize = data.getDataType().getSize();
 		IndexIterator it = data.getIndexIterator();
 		while (it.hasNext()) {
-		    it.getByteNext();
-		    bytes += 1;
+		    Object val = it.next();
+		    bytes += dataByteSize;
 		}
 	    } catch (IOException e) {
 		e.printStackTrace();

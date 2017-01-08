@@ -94,6 +94,8 @@ public class PerformanceComparison
     }
     
     private static long measurePerformanceMillis(TranslatedProtocol translated) {
+	System.out.println("---- " + translated.getProtocolName() + "\t----");
+	System.out.println("\tquery: " + translated.getTranslatedHttpUrl().toString());
 	long start = System.nanoTime();
 	long size = 0;
 	try (IReader reader = translated.getReader()) {
@@ -102,7 +104,8 @@ public class PerformanceComparison
 	    throw new IllegalStateException("Failed to measure the execution time", e);
 	}
 	long millis = (System.nanoTime() - start) / (1_000_000);
-	System.out.println(translated.getProtocolName() + " - " + millis + "ms for " + size + " bytes");
+	System.out.println("\ttime: " + millis + "ms");
+	System.out.println("\tsize: " + size + " bytes");
 	return millis;
     }
 }

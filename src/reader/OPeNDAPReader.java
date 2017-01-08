@@ -39,7 +39,7 @@ public class OPeNDAPReader extends NetCdfReader
 	    ddsFile = new File(fileName + ".dds");
 	    FileUtils.copyURLToFile(dodsUrl, dodsFile);
 	    FileUtils.copyURLToFile(ddsUrl, ddsFile);
-	    return NetcdfDataset.openDataset("file:" + downloadedFile.getAbsolutePath());
+	    return NetcdfDataset.openFile("file:" + downloadedFile.getAbsolutePath(), null);
 	} catch (IOException e) {
 	    throw new IllegalArgumentException("Could not build the NetCdf File", e);
 	}

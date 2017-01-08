@@ -16,9 +16,9 @@ public class ProtocolPicker
     public static int N_PROTOCOLS = 4;
     
     public enum Protocol {
-	Ncss,
-	OpenDap,
 	CdmRemote,
+	OpenDap,
+	Ncss,
 	Dap4,
 	Next,
 	Random
