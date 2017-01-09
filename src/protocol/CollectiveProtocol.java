@@ -8,6 +8,7 @@ import java.util.List;
 import protocol.parse.NumericRange;
 import protocol.parse.SpatialRange;
 import protocol.parse.TimeRange;
+import protocol.translated.util.QueryBuilder;
 
 public class CollectiveProtocol extends Protocol
 {
@@ -114,5 +115,17 @@ public class CollectiveProtocol extends Protocol
 	
 	public boolean hasTimeRangeDefined() {
 	    return timeRange != null;
+	}
+	
+	@Override
+	public String toString()
+	{
+	    QueryBuilder query = new QueryBuilder();
+	    query.add(VAR_VARIABLE, variables);
+	    query.add(LONGITUDE_VARIABLE, lonRange);
+	    query.add(LATITUDE_VARIABLE, latRange);
+	    query.add(HIGHT_VARIABLE, hightRange);
+	    query.add(TIME_VARIABLE, timeRange);
+	    return query.toString();
 	}
 }

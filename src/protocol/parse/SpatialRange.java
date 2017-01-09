@@ -38,6 +38,16 @@ public class SpatialRange implements Range
     }
     
 	@Override
+	public String toString() {
+	    return RANGE_START + startCoordinate
+		    + SEPARATOR + selection.getStart()
+		    + SEPARATOR + selection.getStride()
+		    + SEPARATOR + selection.getEnd()
+		    + SEPARATOR + endCoordinate
+		    + RANGE_END;
+	}
+    
+	@Override
 	public NumericRange getSelection()
 	{
 		return selection;

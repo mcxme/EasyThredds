@@ -1,8 +1,10 @@
 package performance;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Frame;
 import java.net.URI;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -29,7 +31,7 @@ public class PerformanceComparison
     
     private static final String TEST_DATASET = "RC1SD-base-08/cloud";
     private static final String THREDDS = ConfigReader.getInstace().getThreddsUrl();
-    private static final int REPETITIONS = 1;
+    private static final int REPETITIONS = 10;
 
     public static void main(String[] args)
     {
@@ -50,24 +52,35 @@ public class PerformanceComparison
 	final DefaultBoxAndWhiskerCategoryDataset dataset = new DefaultBoxAndWhiskerCategoryDataset();
 	for (CollectiveProtocol collective : collectiveProtocols) {
 	    for (int i = 0; i < ProtocolPicker.N_PROTOCOLS; i++) {
-        	TranslatedProtocol translated = ProtocolPicker.pickByIndex(i, collective);
-        	long[] measuredMillis = measurePerformanceMillis(nRepetitions, translated);
-        	List<Long> convertedMillis = new ArrayList<Long>(measuredMillis.length);
-        	for (int j = 0; j < measuredMillis.length; j++) { convertedMillis.add(measuredMillis[j]); }
-        	dataset.add(convertedMillis, collective.toString(), translated.getProtocolName());
+        	try {
+        	    TranslatedProtocol translated = ProtocolPicker.pickByIndex(i, collective);
+        	    double[] measuredMillis = measurePerformanceMillis(nRepetitions, translated);
+        	    List<Double> convertedMillis = new ArrayList<Double>(measuredMillis.length);
+        	    for (int j = 0; j < measuredMillis.length; j++) { convertedMillis.add(measuredMillis[j]); }
+        	    dataset.add(convertedMillis, collective.toString(), translated.getProtocolName());
+        	} catch (Exception e) {
+        	    e.printStackTrace();
+        	}
 	    }
 	}
 	
 	// create the boxplot
         final CategoryAxis xAxis = new CategoryAxis("Protocol");
-        final NumberAxis yAxis = new NumberAxis("Time");
+        final NumberAxis yAxis = new NumberAxis("Performance [kB/s]");
         yAxis.setAutoRangeIncludesZero(false);
         final BoxAndWhiskerRenderer renderer = new BoxAndWhiskerRenderer();
-        renderer.setFillBox(false);
+        renderer.setFillBox(true);
+        renderer.setUseOutlinePaintForWhiskers(true);
+        renderer.setSeriesPaint(0, Color.CYAN);
+        renderer.setSeriesOutlinePaint(0, Color.BLACK);
+        renderer.setSeriesPaint(1, Color.GREEN);
+        renderer.setSeriesOutlinePaint(1, Color.BLACK);
+        renderer.setArtifactPaint(Color.GRAY);
+        renderer.setMaximumBarWidth(0.10);
         final CategoryPlot plot = new CategoryPlot(dataset, xAxis, yAxis, renderer);
 
         final JFreeChart chart = new JFreeChart(
-            "Box-and-Whisker Demo",
+            "Performance for different queries using different protocols",
             new Font("SansSerif", Font.BOLD, 14),
             plot,
             true
@@ -83,9 +96,9 @@ public class PerformanceComparison
         frame.setVisible(true);
     }
        
-    private static long[] measurePerformanceMillis(int nRepetitions,
+    private static double[] measurePerformanceMillis(int nRepetitions,
 	    TranslatedProtocol translatedProtocol) {
-	long[] performance = new long[nRepetitions];
+	double[] performance = new double[nRepetitions];
 	for (int i = 0; i < nRepetitions; i++) {
 	    performance[i] = measurePerformanceMillis(translatedProtocol);
 	}
@@ -93,7 +106,7 @@ public class PerformanceComparison
 	return performance;
     }
     
-    private static long measurePerformanceMillis(TranslatedProtocol translated) {
+    private static double measurePerformanceMillis(TranslatedProtocol translated) {
 	System.out.println("---- " + translated.getProtocolName() + "\t----");
 	System.out.println("\tquery: " + translated.getTranslatedHttpUrl().toString());
 	long start = System.nanoTime();
@@ -104,8 +117,10 @@ public class PerformanceComparison
 	    throw new IllegalStateException("Failed to measure the execution time", e);
 	}
 	long millis = (System.nanoTime() - start) / (1_000_000);
+	double relativePerformance = (double) size / millis;
 	System.out.println("\ttime: " + millis + "ms");
 	System.out.println("\tsize: " + size + " bytes");
-	return millis;
+	System.out.println("\t-> " + String.format("%.2f", relativePerformance) + " kB/s");
+	return relativePerformance;
     }
 }

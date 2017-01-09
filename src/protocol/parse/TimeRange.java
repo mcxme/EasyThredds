@@ -2,6 +2,8 @@ package protocol.parse;
 
 import java.util.Arrays;
 
+import javax.swing.JPopupMenu.Separator;
+
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -62,7 +64,12 @@ public class TimeRange implements Range
 	
 	@Override
 	public String toString() {
-	    throw new UnsupportedOperationException("not implemented");
+	    return RANGE_START + startTime
+		    + SEPARATOR + selection.getStart()
+		    + SEPARATOR + selection.getStride()
+		    + SEPARATOR + selection.getEnd()
+		    + SEPARATOR + endTime
+		    + RANGE_END;
 	}
 	
 	/**
