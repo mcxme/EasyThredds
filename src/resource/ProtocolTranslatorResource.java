@@ -22,6 +22,7 @@ import javax.ws.rs.core.UriInfo;
 import config.ConfigReader;
 import protocol.CollectiveProtocol;
 import protocol.translated.TranslatedProtocol;
+import protocol.translated.util.VariableReader;
 import service.ProtocolPicker;
 import service.ProtocolPicker.Protocol;
 
@@ -36,6 +37,7 @@ public class ProtocolTranslatorResource
     {
 	LOGGER.info("Initializing...");
 	this.config = ConfigReader.getInstace();
+	VariableReader.getInstance();
     }
 
     @PreDestroy

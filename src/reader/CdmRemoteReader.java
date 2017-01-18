@@ -66,4 +66,18 @@ public class CdmRemoteReader implements IReader {
 	
 	return bytes;
     }
+
+    @Override
+    public float[] readFloatArray(String variableName)
+    {
+	throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public long[] readLongArray(String variableName)
+    {
+	throw new UnsupportedOperationException("Not implemented");
+    }
+    
+    
 }

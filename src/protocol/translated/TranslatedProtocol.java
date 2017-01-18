@@ -59,12 +59,7 @@ public abstract class TranslatedProtocol extends Protocol
 	}
     }
     
-    public URI getTranslatedHttpUrl()
-    {
-	QueryBuilder translated = new QueryBuilder();
-	translateQuery(query, translated);
-	
-	// format: base/abbr/data/set.ext?query
+    protected String getDatasetBaseUrl() {
 	StringBuilder builder = new StringBuilder();
 	builder.append(getBaseUrl());
 	builder.append("/");
@@ -76,7 +71,17 @@ public abstract class TranslatedProtocol extends Protocol
 	    builder.append(".");
 	    builder.append(extension);
 	}
-		
+	return builder.toString();
+    }
+    
+    public URI getTranslatedHttpUrl()
+    {
+	QueryBuilder translated = new QueryBuilder();
+	translateQuery(query, translated);
+	
+	// format: base/abbr/data/set.ext?query
+	StringBuilder builder = new StringBuilder();
+	builder.append(getDatasetBaseUrl());
 	builder.append("?");
 	builder.append(translated);
 	

@@ -8,4 +8,8 @@ public interface IReader extends AutoCloseable
      * Fully iterates the data set and returns the size in bytes
      */
     long iterateAllData();
+    
+    float[] readFloatArray(String variableName);
+    
+    long[] readLongArray(String variableName);
 }

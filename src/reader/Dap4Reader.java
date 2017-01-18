@@ -6,6 +6,8 @@ import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
 
+import com.amazonaws.services.kms.model.UnsupportedOperationException;
+
 import ucar.ma2.Array;
 import ucar.ma2.IndexIterator;
 import ucar.nc2.NetcdfFile;

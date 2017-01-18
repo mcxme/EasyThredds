@@ -6,6 +6,8 @@ import protocol.parse.NumericRange;
 import protocol.parse.SpatialRange;
 import protocol.parse.TimeRange;
 import protocol.translated.util.QueryBuilder;
+import protocol.translated.util.VariableReader;
+import reader.IReader;
 
 public abstract class DapProtocol extends TranslatedProtocol
 {
@@ -17,6 +19,8 @@ public abstract class DapProtocol extends TranslatedProtocol
     @Override
     protected void translateQuery(CollectiveProtocol protocol, QueryBuilder query)
     {
+	String datasetKey = getDataset();
+	VariableReader variableReader = loadDimensionData(protocol);
 	SpatialRange lonRange = protocol.getLongitudeRange();
 	SpatialRange latRange = protocol.getLatitudeRange();
 	NumericRange zRange = protocol.getHightRange();
@@ -26,21 +30,37 @@ public abstract class DapProtocol extends TranslatedProtocol
 	for (String var : protocol.getVariables()) {
 	    query.append(var);
 	    if (protocol.hasTimeRangeDefined()) {
-		query.append(timeRange.getSelection());
+		NumericRange timeIndexRange = variableReader.getTimeIndexRange(datasetKey, timeRange);
+		query.append(timeIndexRange);
 	    }
 	    if (protocol.hasHightRange()) {
-		query.append(zRange);
+		NumericRange lvlIndexRange = variableReader.getAltitudeIndexRange(datasetKey, zRange);
+		query.append(lvlIndexRange);
 	    }
 	    if (protocol.hasLatitudeRange()) {
-		query.append(latRange.getSelection());
+		NumericRange latIndexRange = variableReader.getLatitudeIndexRange(datasetKey, latRange);
+		query.append(latIndexRange);
 	    }
 	    if (protocol.hasLongitudeRange()) {
-		query.append(lonRange.getSelection());
+		NumericRange lonIndexRange = variableReader.getLongitudeIndexRange(datasetKey, lonRange);
+		query.append(lonIndexRange);
 	    }
 	    
 	    query.append(",");
 	}
 	
 	query.removeLastChar();
+    }
+    
+    private VariableReader loadDimensionData(CollectiveProtocol protocol) {
+	VariableReader variableReader = VariableReader.getInstance();
+	String datasetKey = getDataset();
+	if (!variableReader.hasDataset(datasetKey)) {
+	    IReader reader = readerFactory();
+	    reader.setUri(getDatasetBaseUrl(), "lon,lat,lev,time");
+	    variableReader.addDataset(datasetKey, reader);
+	}
+	
+	return variableReader;
     }
 }

@@ -50,5 +50,43 @@ public abstract class NetCdfReader implements IReader
 	}
         return bytes;
     }
+    
+    @Override
+    public float[] readFloatArray(String variableName)
+    {
+        try {
+            Variable var = dataset.findVariable(variableName);
+            if (var == null) {
+        	throw new IllegalArgumentException("No variable was found with the name " + variableName);
+            } else if (!var.getDataType().isNumeric()) {
+        	throw new IllegalArgumentException("The variable '" + variableName + "' is not numeric");
+            } else if (!var.getDataType().isFloatingPoint()) {
+        	throw new IllegalArgumentException("The variable '" + variableName + "' is not a floating point");
+            }
+            
+	    return (float[]) var.read().copyTo1DJavaArray();
+	} catch (IOException e) {
+	    throw new IllegalArgumentException("Could not put the variable " + variableName + " into a 1D double array", e);
+	}
+    }
+    
+    @Override
+    public long[] readLongArray(String variableName)
+    {
+        try {
+            Variable var = dataset.findVariable(variableName);
+            if (var == null) {
+        	throw new IllegalArgumentException("No variable was found with the name " + variableName);
+            } else if (!var.getDataType().isNumeric()) {
+        	throw new IllegalArgumentException("The variable '" + variableName + "' is not numeric");
+            } else if (var.getDataType().isFloatingPoint()) {
+        	throw new IllegalArgumentException("The variable '" + variableName + "' is a floating point");
+            }
+            
+	    return (long[]) var.read().copyTo1DJavaArray();
+	} catch (IOException e) {
+	    throw new IllegalArgumentException("Could not put the variable " + variableName + " into a 1D long array", e);
+	}
+    }
 
 }

@@ -31,7 +31,7 @@ public class PerformanceComparison
     
     private static final String TEST_DATASET = "RC1SD-base-08/cloud";
     private static final String THREDDS = ConfigReader.getInstace().getThreddsUrl();
-    private static final int REPETITIONS = 10;
+    private static final int REPETITIONS = 50;
 
     public static void main(String[] args)
     {
