@@ -13,6 +13,11 @@ public class DimensionArray
     private float[] lonData;
     private float[] lvlData;
     private double[] timeData;
+    
+    private IReader latReader;
+    private IReader lonReader;
+    private IReader levReader;
+    private IReader timeReader;
 
     public DimensionArray(IReader reader)
     {
@@ -24,6 +29,11 @@ public class DimensionArray
 	    lvlData = reader.readFloatArray(ALTITUDE_VARIABLE);
 	if (reader.hasVariableWithName(TIME_VARIABLE))
 	    timeData = reader.readDoubleArray(TIME_VARIABLE);
+	
+	latReader = reader;
+	lonReader = reader;
+	levReader = reader;
+	timeReader = reader;
     }
     
     public DimensionArray(IReader latReader, IReader lonReader, IReader lvlReader, IReader timeReader) {
@@ -42,8 +52,28 @@ public class DimensionArray
 	if (timeReader != null && timeReader.hasVariableWithName(TIME_VARIABLE)) {
 	    timeData = timeReader.readDoubleArray(TIME_VARIABLE);
 	}
+	
+	this.latReader = latReader;
+	this.lonReader = lonReader;
+	this.levReader = lvlReader;
+	this.timeReader = timeReader;
     }
 
+    public void close() throws Exception {
+	if (latReader != null) {
+	    latReader.close();
+	}
+	if (lonReader != null && lonReader != latReader) {
+	    lonReader.close();
+	}
+	if (levReader != null && levReader != lonReader && levReader != latReader) {
+	    levReader.close();
+	}
+	if (timeReader != null && timeReader != levReader && timeReader != lonReader && timeReader != latReader) {
+	    timeReader.close();
+	}
+    }
+    
     public float[] getLongitudeData()
     {
 	return lonData;

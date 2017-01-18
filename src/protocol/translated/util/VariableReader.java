@@ -1,6 +1,8 @@
 package protocol.translated.util;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import protocol.parse.NumericRange;
@@ -24,6 +26,23 @@ public class VariableReader
 	}
 	
 	return instance;
+    }
+    
+    public synchronized void close() {
+	List<Throwable> errors = new LinkedList<>();
+	
+	for (DimensionArray dims : datasets.values()) {
+	    try {
+		dims.close();
+	    } catch (Throwable t) {
+		errors.add(t);
+	    }
+	}
+	
+	if (!errors.isEmpty()) {
+	    // if there was any error return the first one
+	    throw new IllegalStateException(errors.get(0));
+	}
     }
     
     public synchronized void clear() {

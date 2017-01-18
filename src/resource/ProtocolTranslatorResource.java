@@ -16,7 +16,6 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
-import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
 import config.ConfigReader;
@@ -45,6 +44,7 @@ public class ProtocolTranslatorResource
     {
 	LOGGER.info("Closing...");
 	this.config.close();
+	VariableReader.getInstance().close();
     }
 
     @GET
