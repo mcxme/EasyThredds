@@ -89,7 +89,6 @@ public class ProtocolTranslatorResource
     
     private Response processProtocol(UriInfo info, List<PathSegment> datasetSegments, Protocol protocol) {
 	ResponseBuilder response;
-	try {
 	    // extract the query from the request
 	    CollectiveProtocol query = new CollectiveProtocol(
 		    this.config.getThreddsUrl(),
@@ -101,9 +100,7 @@ public class ProtocolTranslatorResource
 	    LOGGER.info(translatedUri.toString());
 	    response = Response.seeOther(translatedUri);	    
 //	    response = Response.ok(translatedUri.toString());
-	} catch (IllegalStateException | IllegalArgumentException e) {
-	    response = Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage());
-	}
+
 
 	return response.build();
     }

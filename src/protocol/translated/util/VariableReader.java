@@ -34,11 +34,10 @@ public class VariableReader
 	return datasets.containsKey(datasetBaseUrl);
     }
     
-    public synchronized void addDataset(String datasetBaseUrl, IReader reader) {
+    public synchronized void addDataset(String datasetBaseUrl, DimensionArray dims) {
 	if (hasDataset(datasetBaseUrl))
 	    throw new IllegalArgumentException("Already stored data for the given dataset");
 	
-	DimensionArray dims = new DimensionArray(reader);
 	datasets.put(datasetBaseUrl, dims);
     }
     
@@ -54,8 +53,8 @@ public class VariableReader
 	    throw new IllegalStateException("The dataset does not have a longitude dimension");
 	}
 	
-	float[] latData = dims.getLongitudeData();
-	return VariableIndexUtil.getIndexRange(valueRange, latData);
+	float[] lonData = dims.getLongitudeData();
+	return VariableIndexUtil.getIndexRange(valueRange, lonData);
     }
     
     public synchronized NumericRange getLatitudeIndexRange(String datasetBaseUrl, SpatialRange valueRange) {
@@ -71,7 +70,8 @@ public class VariableReader
 	}
 	
 	float[] latData = dims.getLatitudeData();
-	return VariableIndexUtil.getIndexRange(valueRange, latData);
+	NumericRange indexRange = VariableIndexUtil.getIndexRange(valueRange, latData);
+	return indexRange;
     }
 
     public synchronized NumericRange getTimeIndexRange(String datasetBaseUrl, TimeRange valueRange) {
@@ -86,8 +86,8 @@ public class VariableReader
 	    throw new IllegalStateException("The dataset does not have a  dimension");
 	}
 	
-	long[] latData = dims.getTimeData();
-	return VariableIndexUtil.getIndexRange(valueRange, latData);
+	double[] timeData = dims.getTimeData();
+	return VariableIndexUtil.getIndexRange(valueRange, timeData);
     }
     
     public synchronized NumericRange getAltitudeIndexRange(String datasetBaseUrl, NumericRange valueRange) {
@@ -102,7 +102,7 @@ public class VariableReader
 	    throw new IllegalStateException("The dataset does not have an altitude dimension");
 	}
 	
-	float[] latData = dims.getAltitudeData();
-	return VariableIndexUtil.getIndexRange(valueRange, latData);
+	float[] lvlData = dims.getAltitudeData();
+	return VariableIndexUtil.getIndexRange(valueRange, lvlData);
     }
 }

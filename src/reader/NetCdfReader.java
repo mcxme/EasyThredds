@@ -20,12 +20,18 @@ public abstract class NetCdfReader implements IReader
 	}
     }
     
-    protected abstract NetcdfFile buildNetCdfFile(String baseUri, String query);
+    protected abstract NetcdfFile buildNetCdfFile(String baseUri, String query, String identifier);
 
     @Override
     public void setUri(String baseUri, String query)
     {
-	dataset = buildNetCdfFile(baseUri, query);
+	setUri(baseUri, query, "");
+    }
+    
+    @Override
+    public void setUri(String baseUri, String query, String baseNameIdentifier)
+    {
+	dataset = buildNetCdfFile(baseUri, query, baseNameIdentifier);
     }
 
     @Override
@@ -64,7 +70,8 @@ public abstract class NetCdfReader implements IReader
         	throw new IllegalArgumentException("The variable '" + variableName + "' is not a floating point");
             }
             
-	    return (float[]) var.read().copyTo1DJavaArray();
+            Array values = var.read();
+	    return (float[]) values.copyTo1DJavaArray();
 	} catch (IOException e) {
 	    throw new IllegalArgumentException("Could not put the variable " + variableName + " into a 1D double array", e);
 	}
@@ -87,6 +94,32 @@ public abstract class NetCdfReader implements IReader
 	} catch (IOException e) {
 	    throw new IllegalArgumentException("Could not put the variable " + variableName + " into a 1D long array", e);
 	}
+    }
+    
+    @Override
+    public double[] readDoubleArray(String variableName)
+    {
+        try {
+            Variable var = dataset.findVariable(variableName);
+            if (var == null) {
+        	throw new IllegalArgumentException("No variable was found with the name " + variableName);
+            } else if (!var.getDataType().isNumeric()) {
+        	throw new IllegalArgumentException("The variable '" + variableName + "' is not numeric");
+            } else if (!var.getDataType().isFloatingPoint()) {
+        	throw new IllegalArgumentException("The variable '" + variableName + "' is a floating point");
+            }
+            
+            Array values = var.read();
+	    return (double[]) values.copyTo1DJavaArray();
+	} catch (IOException e) {
+	    throw new IllegalArgumentException("Could not put the variable " + variableName + " into a 1D long array", e);
+	}
+    }
+    
+    @Override
+    public boolean hasVariableWithName(String name)
+    {
+	return dataset.findVariable(name) != null;
     }
 
 }

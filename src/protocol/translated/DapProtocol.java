@@ -5,6 +5,7 @@ import protocol.CollectiveProtocol;
 import protocol.parse.NumericRange;
 import protocol.parse.SpatialRange;
 import protocol.parse.TimeRange;
+import protocol.translated.util.DimensionArray;
 import protocol.translated.util.QueryBuilder;
 import protocol.translated.util.VariableReader;
 import reader.IReader;
@@ -51,16 +52,23 @@ public abstract class DapProtocol extends TranslatedProtocol
 	
 	query.removeLastChar();
     }
-    
-    private VariableReader loadDimensionData(CollectiveProtocol protocol) {
+
+    private VariableReader loadDimensionData(CollectiveProtocol protocol)
+    {
 	VariableReader variableReader = VariableReader.getInstance();
 	String datasetKey = getDataset();
 	if (!variableReader.hasDataset(datasetKey)) {
 	    IReader reader = readerFactory();
-	    reader.setUri(getDatasetBaseUrl(), "lon,lat,lev,time");
-	    variableReader.addDataset(datasetKey, reader);
+	    reader.setUri(getDatasetBaseUrl(), "lon,lat,lev", datasetKey + "-lon-lat-lev");
+	    // second call required as NetCdf library is confused when the time
+	    // dimension is requested along with the longitude, lattude and
+	    // altitude
+	    IReader timeReader = readerFactory();
+	    timeReader.setUri(getDatasetBaseUrl(), "time", datasetKey + "-time");
+	    DimensionArray dims = new DimensionArray(reader, reader, reader, timeReader);
+	    variableReader.addDataset(datasetKey, dims);
 	}
-	
+
 	return variableReader;
     }
 }

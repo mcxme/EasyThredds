@@ -20,7 +20,7 @@ public class Dap4Reader extends NetCdfReader
     private File ddsFile;
     
     @Override
-    protected NetcdfFile buildNetCdfFile(String baseUri, String query) {
+    protected NetcdfFile buildNetCdfFile(String baseUri, String query, String indentifier) {
 	try {
 	    URL dodsUrl = new URL(baseUri + ".dap?" + query);
 	    URL ddsUrl = new URL(baseUri + ".dds?" + query);

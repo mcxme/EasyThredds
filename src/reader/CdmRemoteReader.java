@@ -25,6 +25,12 @@ public class CdmRemoteReader implements IReader {
     }
 
     @Override
+    public void setUri(String baseUri, String query, String baseNameIdentifier)
+    {
+	setUri(baseUri, query);
+    }
+    
+    @Override
     public void setUri(String baseUri, String query)
     {
 	try {
@@ -79,5 +85,15 @@ public class CdmRemoteReader implements IReader {
 	throw new UnsupportedOperationException("Not implemented");
     }
     
+    @Override
+    public double[] readDoubleArray(String variableName)
+    {
+	throw new UnsupportedOperationException("Not implemented");
+    }
     
+    @Override
+    public boolean hasVariableWithName(String name)
+    {
+	throw new UnsupportedOperationException("Not implemented");
+    }
 }

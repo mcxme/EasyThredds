@@ -15,11 +15,11 @@ public class NCSSReader extends NetCdfReader
     private File ncFile;
     
     @Override
-    protected NetcdfFile buildNetCdfFile(String baseUri, String query)
+    protected NetcdfFile buildNetCdfFile(String baseUri, String query, String identifier)
     {
 	try {
 	    URL ncUrl = new URL(baseUri + "?" + query);
-	    String fileName = "ncssFile.nc";
+	    String fileName = "ncssFile-" + identifier + ".nc";
 	    ncFile = new File(fileName);
 	    FileUtils.copyURLToFile(ncUrl, ncFile);
 	    return NetcdfFile.open("file:" + ncFile.getAbsolutePath());

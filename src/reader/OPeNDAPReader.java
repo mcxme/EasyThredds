@@ -27,13 +27,13 @@ public class OPeNDAPReader extends NetCdfReader
     }
 
     @Override
-    protected NetcdfFile buildNetCdfFile(String baseUri, String query)
+    protected NetcdfFile buildNetCdfFile(String baseUri, String query, String identifier)
     {
 	try {
 	    URL dodsUrl = new URL(baseUri + "?" + query);
 	    String ddsBase = baseUri.replace(".dods", ".dds");
 	    URL ddsUrl = new URL(ddsBase + "?" + query);
-	    String fileName = "opendapFile.dods";
+	    String fileName = "opendapFile-" + identifier + ".dods";
 	    File downloadedFile = new File(fileName);
 	    dodsFile = new File(fileName + ".dods");
 	    ddsFile = new File(fileName + ".dds");
