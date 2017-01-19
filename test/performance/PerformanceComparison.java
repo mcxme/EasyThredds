@@ -3,13 +3,8 @@ package performance;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Frame;
-import java.net.URI;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-
-import javax.ws.rs.core.UriInfo;
 
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -32,7 +27,7 @@ public class PerformanceComparison
     
     private static final String TEST_DATASET = "RC1SD-base-08/cloud";
     private static final String THREDDS = ConfigReader.getInstace().getThreddsUrl();
-    private static final int REPETITIONS = 50;
+    private static final int REPETITIONS = 3;
 
     public static void main(String[] args)
     {
@@ -44,9 +39,14 @@ public class PerformanceComparison
 	for (int i = 0; i < args.length; i++) {
 	    input.add(new CollectiveProtocol(THREDDS, TEST_DATASET, args[i]));
 	}
-	
+
+	try {
 	plotPerformance(REPETITIONS, input);
-	VariableReader.getInstance().close();
+	} catch (Exception e) {
+	    throw new IllegalStateException("Failed to measure the performance", e);
+	} finally {
+	    VariableReader.getInstance().close();
+	}
     }
     
     public static void plotPerformance(int nRepetitions, List<CollectiveProtocol> collectiveProtocols) {
@@ -110,7 +110,6 @@ public class PerformanceComparison
     
     private static double measurePerformanceMillis(TranslatedProtocol translated) {
 	System.out.println("---- " + translated.getProtocolName() + "\t----");
-	System.out.println("\tquery: " + translated.getTranslatedHttpUrl().toString());
 	long start = System.nanoTime();
 	long size = 0;
 	try (IReader reader = translated.getReader()) {
@@ -120,6 +119,7 @@ public class PerformanceComparison
 	}
 	long millis = (System.nanoTime() - start) / (1_000_000);
 	double relativePerformance = (double) size / millis;
+	System.out.println("\tquery: " + translated.getTranslatedHttpUrl().toString());
 	System.out.println("\ttime: " + millis + "ms");
 	System.out.println("\tsize: " + size + " bytes");
 	System.out.println("\t-> " + String.format("%.2f", relativePerformance) + " kB/s");

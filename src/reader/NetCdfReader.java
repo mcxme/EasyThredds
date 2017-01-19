@@ -9,7 +9,9 @@ import ucar.nc2.Variable;
 
 public abstract class NetCdfReader implements IReader
 {
-
+    protected static final String BASE_DIRECTORY = "netCdfFiles";
+    
+    
     private NetcdfFile dataset;
     
     @Override

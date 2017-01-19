@@ -19,8 +19,11 @@ public class NCSSReader extends NetCdfReader
     {
 	try {
 	    URL ncUrl = new URL(baseUri + "?" + query);
-	    String fileName = "ncssFile-" + identifier + ".nc";
-	    ncFile = new File(fileName);
+	    String fileName = (identifier.isEmpty() || identifier == null)? "defaultNcss" : identifier;
+	    String filePath = BASE_DIRECTORY + File.separator
+		    + "ncssFiles" + File.separator
+		    + fileName + ".nc";
+	    ncFile = new File(filePath);
 	    FileUtils.copyURLToFile(ncUrl, ncFile);
 	    return NetcdfFile.open("file:" + ncFile.getAbsolutePath());
 	} catch (IOException e) {

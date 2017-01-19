@@ -31,12 +31,21 @@ public class OPeNDAPReader extends NetCdfReader
     {
 	try {
 	    URL dodsUrl = new URL(baseUri + "?" + query);
-	    String ddsBase = baseUri.replace(".dods", ".dds");
+	    String ddsBase = baseUri;
+	    if (baseUri.contains(".dods")) {
+		ddsBase = baseUri.replace(".dods", ".dds");
+	    } else if (!baseUri.contains(".dds")) {
+		ddsBase = baseUri + ".dds";
+	    }
+	    
 	    URL ddsUrl = new URL(ddsBase + "?" + query);
-	    String fileName = "opendapFile-" + identifier + ".dods";
-	    File downloadedFile = new File(fileName);
-	    dodsFile = new File(fileName + ".dods");
-	    ddsFile = new File(fileName + ".dds");
+	    String fileName = (identifier.isEmpty() || identifier == null)? "defaultOpendap" : identifier;
+	    String filePath = BASE_DIRECTORY + File.separator +
+		    "opendapFiles" + File.separator
+		    + fileName + ".dods";
+	    File downloadedFile = new File(filePath);
+	    dodsFile = new File(filePath + ".dods");
+	    ddsFile = new File(filePath + ".dds");
 	    FileUtils.copyURLToFile(dodsUrl, dodsFile);
 	    FileUtils.copyURLToFile(ddsUrl, ddsFile);
 	    return NetcdfDataset.openFile("file:" + downloadedFile.getAbsolutePath(), null);

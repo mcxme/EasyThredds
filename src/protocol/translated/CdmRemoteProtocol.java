@@ -64,8 +64,9 @@ public class CdmRemoteProtocol extends TranslatedProtocol
 	    // a(time, lev, lat, lon);b;c
 	    query.append(var);
 	    query.append("(");
+	    // TODO: remove lvl ranges
 	    if (protocol.hasTimeRangeDefined()) {
-		query.append(textualRange(timeRange.getSelection()));
+		query.append(textualRange(lvlRange));
 		query.append(",");
 	    }
 	    if (protocol.hasHightRange()) {
@@ -73,11 +74,11 @@ public class CdmRemoteProtocol extends TranslatedProtocol
 		query.append(",");
 	    }
 	    if (protocol.hasLatitudeRange()) {
-		query.append(textualRange(latRange.getSelection()));
+		query.append(textualRange(lvlRange));
 		query.append(",");
 	    }
 	    if (protocol.hasLongitudeRange()) {
-		query.append(textualRange(lonRange.getSelection()));
+		query.append(textualRange(lvlRange));
 		query.append(",");
 	    }
 	    

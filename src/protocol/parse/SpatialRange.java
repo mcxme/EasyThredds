@@ -2,7 +2,7 @@ package protocol.parse;
 
 import java.util.Arrays;
 
-public class SpatialRange implements Range
+public class SpatialRange extends Range
 {
 	public static final String SEPARATOR = ";";
 	public static final String RANGE_START = "[";
@@ -10,19 +10,19 @@ public class SpatialRange implements Range
     
     private double startCoordinate;
     private double endCoordinate;
-    private NumericRange selection;
     
-    public SpatialRange(double startCoordinate, double endCoordinate, NumericRange selection)
+    public SpatialRange(double startCoordinate, double endCoordinate, int stride)
     {
-	if (selection == null) {
-	    throw new IllegalArgumentException("A selection is required");
-	} else if (startCoordinate > endCoordinate) {
+	super(stride);
+	
+	if (startCoordinate > endCoordinate) {
 	    throw new IllegalArgumentException("The start coordinate is smaller than the end coordinate");
+	} else if (stride < 1) {
+	    
 	}
 	
 	this.startCoordinate = startCoordinate;
 	this.endCoordinate = endCoordinate;
-	this.selection = selection;
     }
     
     public double getStartCoordinate() {
@@ -33,37 +33,23 @@ public class SpatialRange implements Range
 	return this.endCoordinate;
     }
     
-    public int getStride() {
-	return this.selection.getStride();
-    }
-    
 	@Override
 	public String toString() {
 	    return RANGE_START + startCoordinate
-		    + SEPARATOR + selection.getStart()
-		    + SEPARATOR + selection.getStride()
-		    + SEPARATOR + selection.getEnd()
+		    + SEPARATOR + stride
 		    + SEPARATOR + endCoordinate
 		    + RANGE_END;
 	}
     
-	@Override
-	public NumericRange getSelection()
-	{
-		return selection;
-	}
     
 	/**
 	 * Parses the textual representation of a spatial range.
 	 * Input format:
-	 * start coordinate | start index | stride | end index | end coordinate
-	 * [sC ;  sI  ;    x    ;  eI ; eC]
+	 * start coordinate | stride | end coordinate
+	 * [start           ;    x   ;   end]
 	 * 
-	 * A default stride is selected if the stride is omitted: [sC;sI;;eI;eC]
-	 * If no end time is provided the end time is set equal to the start time: [sC;sI;;eI;]
-	 * If no end point is provided the end point index is set equal to the start point index: [sC;sI;;;]
-	 * If no start index is provided zero is assumed: [sC;;;;]
-	 * If neither a start index nor an end index are provided the according separators can be omitted: [sC;x;eC]
+	 * A default stride is selected if the stride is omitted: [s;;e]
+	 * If no end coordinate is provided the end coordinate is set equal to the start coordinate: [s;x;]
 	 */
 	public static SpatialRange parse(String textual) {
 		if (!textual.startsWith(RANGE_START) || !textual.endsWith(RANGE_END)) {
@@ -72,30 +58,19 @@ public class SpatialRange implements Range
 		
 		String noBrackets = textual.substring(1, textual.length() - 1);
 		String[] parts = noBrackets.split(SEPARATOR, -1);
-		if (parts.length == 3) {
-		    String[] noBracketsExtended = new String[5];
-		    Arrays.fill(noBracketsExtended, "");
-		    noBracketsExtended[0] = parts[0];
-		    noBracketsExtended[2] = parts[1];
-		    noBracketsExtended[4] = parts[2];
-		    parts = noBracketsExtended;
-		}
-
 		return parse(parts);
 	}
 	
 	public static SpatialRange parse(String[] parts) {
-		if (parts.length != 5) {
-		    throw new IllegalArgumentException("A time range has to be specified as 5 parts: [s;i;x;j;e]");
+		if (parts.length != 3) {
+		    throw new IllegalArgumentException("A time range has to be specified as 3 parts: [s;x;e]");
 		}
 
 		double startCoordinate = Double.parseDouble(parts[0]);
-		double endCoordinate = (parts[4].isEmpty())? startCoordinate : Double.parseDouble(parts[4]);
+		double endCoordinate = (parts[2].isEmpty())? startCoordinate : Double.parseDouble(parts[2]);
+		int stride = parseStride(parts[1]);
 		
-		String[] selectionSubParts = Arrays.copyOfRange(parts, 1, 4);
-		NumericRange selection = NumericRange.parse(selectionSubParts);
-		
-		return new SpatialRange(startCoordinate, endCoordinate, selection);
+		return new SpatialRange(startCoordinate, endCoordinate, stride);
 	}
     
 }
