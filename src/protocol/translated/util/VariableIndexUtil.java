@@ -25,8 +25,19 @@ public class VariableIndexUtil
 	
 	int startIndex = findIndex(values, startCoordinate);
 	int endIndex = findIndex(values, endCoordinate);
-	if (endIndex >= values.length) endIndex -= 1;
+	// ensure that the start index is smaller than the end index
+	if (startIndex > endIndex) {
+	    int tmp = startIndex;
+	    startIndex = endIndex;
+	    endIndex = tmp;
+	}
 	
+	// ensure that the end is not an invalid index
+	if (endIndex >= values.length) {
+	    endIndex -= 1;
+	}
+	
+	// validate that the range is valid
 	if (startIndex >= values.length
 		|| (endIndex == 0 && values[0] > endCoordinate)) {
 	    throw new IllegalArgumentException("The given spatial range ("
@@ -107,14 +118,19 @@ public class VariableIndexUtil
 	    throw new IllegalArgumentException("Empty array");
 	}
 	
+	boolean ascending = array[0] < array[array.length - 1];
+	return findIndex(array, value, ascending);
+    }
+    
+    private static int findIndex(float[] array, float value, boolean ascending) {
 	int startIndex = 0;
 	int endIndex = array.length;
 	while (startIndex < endIndex) {
 	    int middleIndex = (startIndex + endIndex) / 2;
 	    double middleValue = array[middleIndex];
-	    if (value < middleValue) {
+	    if ((ascending && value < middleValue) || (!ascending && value > middleValue)) {
 		endIndex = middleIndex;
-	    } else if (value > middleValue) {
+	    } else if ((ascending && value > middleValue) || (!ascending && value < middleValue)) {
 		startIndex = middleIndex + 1;
 	    } else {
 		startIndex = middleIndex;
@@ -127,14 +143,23 @@ public class VariableIndexUtil
     }
     
     private static int findIndex(double[] array, double value) {
+	if (array.length == 0) {
+	    throw new IllegalArgumentException("Empty array");
+	}
+	
+	boolean ascending = array[0] < array[array.length - 1];
+	return findIndex(array, value, ascending);
+    }
+    
+    private static int findIndex(double[] array, double value, boolean ascending) {
 	int startIndex = 0;
 	int endIndex = array.length;
 	while (startIndex < endIndex) {
 	    int middleIndex = (startIndex + endIndex) / 2;
 	    double middleValue = array[middleIndex];
-	    if (value < middleValue) {
+	    if ((ascending && value < middleValue) || (!ascending && value > middleValue)) {
 		endIndex = middleIndex;
-	    } else if (value > middleValue) {
+	    } else if ((ascending && value > middleValue) || (!ascending && value < middleValue)) {
 		startIndex = middleIndex + 1;
 	    } else {
 		startIndex = middleIndex;

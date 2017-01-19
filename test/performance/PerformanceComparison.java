@@ -23,6 +23,7 @@ import org.jfree.ui.ApplicationFrame;
 import config.ConfigReader;
 import protocol.CollectiveProtocol;
 import protocol.translated.TranslatedProtocol;
+import protocol.translated.util.VariableReader;
 import reader.IReader;
 import service.ProtocolPicker;
 
@@ -45,6 +46,7 @@ public class PerformanceComparison
 	}
 	
 	plotPerformance(REPETITIONS, input);
+	VariableReader.getInstance().close();
     }
     
     public static void plotPerformance(int nRepetitions, List<CollectiveProtocol> collectiveProtocols) {
