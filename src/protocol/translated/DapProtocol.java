@@ -1,6 +1,5 @@
 package protocol.translated;
 
-import config.ConfigReader;
 import protocol.CollectiveProtocol;
 import protocol.parse.NumericRange;
 import protocol.parse.SpatialRange;
@@ -57,15 +56,43 @@ public abstract class DapProtocol extends TranslatedProtocol
     {
 	VariableReader variableReader = VariableReader.getInstance();
 	String datasetKey = getDataset();
+	// need to fetch the dataset?
 	if (!variableReader.hasDataset(datasetKey)) {
-	    IReader reader = readerFactory();
-	    reader.setUri(getDatasetBaseUrl(), "lon,lat,lev", datasetKey + "-lon-lat-lev");
+	    
+	    // first request longitude, latitude and level in a single request
+	    String requestedSpatialDims = "";
+	    if (protocol.hasLongitudeRange())
+		requestedSpatialDims += "lon,";
+	    if (protocol.hasLatitudeRange())
+		requestedSpatialDims += "lat,";
+	    if (protocol.hasHightRange())
+		requestedSpatialDims += "lev,";
+	    
+	    requestedSpatialDims = requestedSpatialDims.substring(0, requestedSpatialDims.length() - 1);
+	    IReader latReader = null;
+	    IReader lonReader = null;
+	    IReader lvlReader = null;
+	    if (!requestedSpatialDims.isEmpty()) {
+    		IReader reader = readerFactory();
+    		reader.setUri(getDatasetBaseUrl(), requestedSpatialDims, datasetKey + "-spatial");
+        	    if (protocol.hasLongitudeRange())
+        		lonReader = reader;
+        	    if (protocol.hasLatitudeRange())
+        		latReader = reader;
+        	    if (protocol.hasHightRange())
+        		lvlReader = reader;
+	    }
+	    
 	    // second call required as NetCdf library is confused when the time
-	    // dimension is requested along with the longitude, lattude and
+	    // dimension is requested along with the longitude, latitude and
 	    // altitude
-	    IReader timeReader = readerFactory();
-	    timeReader.setUri(getDatasetBaseUrl(), "time", datasetKey + "-time");
-	    DimensionArray dims = new DimensionArray(reader, reader, reader, timeReader);
+	    IReader timeReader = null;
+	    if (protocol.hasTimeRangeDefined()) {
+		timeReader = readerFactory();
+		timeReader.setUri(getDatasetBaseUrl(), "time", datasetKey + "-time");
+	    }
+	    
+	    DimensionArray dims = new DimensionArray(latReader, lonReader, lvlReader, timeReader);
 	    variableReader.addDataset(datasetKey, dims);
 	}
 

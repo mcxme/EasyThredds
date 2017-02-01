@@ -27,7 +27,7 @@ public class PerformanceComparison
     
     private static final String TEST_DATASET = "RC1SD-base-08/cloud";
     private static final String THREDDS = ConfigReader.getInstace().getThreddsUrl();
-    private static final int REPETITIONS = 3;
+    private static final int REPETITIONS = 2;
 
     public static void main(String[] args)
     {
@@ -120,8 +120,8 @@ public class PerformanceComparison
 	long millis = (System.nanoTime() - start) / (1_000_000);
 	double relativePerformance = (double) size / millis;
 	System.out.println("\tquery: " + translated.getTranslatedHttpUrl().toString());
-	System.out.println("\ttime: " + millis + "ms");
-	System.out.println("\tsize: " + size + " bytes");
+	System.out.println("\ttime: " + millis + "ms (" + ((double) millis / (1000 * 60)) + " min)");
+	System.out.println("\tsize: " + size + " bytes (" + ((double)size / (1024 * 1024)) + " MB)");
 	System.out.println("\t-> " + String.format("%.2f", relativePerformance) + " kB/s");
 	return relativePerformance;
     }

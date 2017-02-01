@@ -62,28 +62,29 @@ public class CdmRemoteProtocol extends TranslatedProtocol
 	query.append("&var=");
 	for (String var : protocol.getVariables()) {
 	    // a(time, lev, lat, lon);b;c
-	    query.append(var);
-	    query.append("(");
-	    // TODO: remove lvl ranges
-	    if (protocol.hasTimeRangeDefined()) {
-		query.append(textualRange(lvlRange));
-		query.append(",");
-	    }
-	    if (protocol.hasHightRange()) {
-		query.append(textualRange(lvlRange));
-		query.append(",");
-	    }
-	    if (protocol.hasLatitudeRange()) {
-		query.append(textualRange(lvlRange));
-		query.append(",");
-	    }
-	    if (protocol.hasLongitudeRange()) {
-		query.append(textualRange(lvlRange));
-		query.append(",");
-	    }
-	    
-	    query.removeLastChar();
-	    query.append(")");
+	    query.add(var, "(30681,46,63,127)");
+//	    query.append(var);
+//	    query.append("(");
+//	    // TODO: remove lvl ranges
+//	    if (protocol.hasTimeRangeDefined()) {
+//		query.append(textualRange(lvlRange));
+//		query.append(",");
+//	    }
+//	    if (protocol.hasHightRange()) {
+//		query.append(textualRange(lvlRange));
+//		query.append(",");
+//	    }
+//	    if (protocol.hasLatitudeRange()) {
+//		query.append(textualRange(lvlRange));
+//		query.append(",");
+//	    }
+//	    if (protocol.hasLongitudeRange()) {
+//		query.append(textualRange(lvlRange));
+//		query.append(",");
+//	    }
+//	    
+//	    query.removeLastChar();
+//	    query.append(")");
 	    query.append(";");
 	}
 	query.removeLastChar();

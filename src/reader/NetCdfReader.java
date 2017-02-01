@@ -6,6 +6,7 @@ import ucar.ma2.Array;
 import ucar.ma2.IndexIterator;
 import ucar.nc2.NetcdfFile;
 import ucar.nc2.Variable;
+import ucar.nc2.time.CalendarDateUnit;
 
 public abstract class NetCdfReader implements IReader
 {
