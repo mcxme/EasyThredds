@@ -45,6 +45,12 @@ public class CdmRemoteProtocol extends TranslatedProtocol
     {
 	return null;
     }
+    
+    @Override
+    public boolean canTranslate(CollectiveProtocol collectiveProtocol)
+    {
+	return true;
+    }
 
     @Override
     protected void translateQuery(CollectiveProtocol protocol, QueryBuilder query)

@@ -16,4 +16,6 @@ public interface IReader extends AutoCloseable
     double[] readDoubleArray(String variableName);    
     long[] readLongArray(String variableName);
     
+    int[] variableShape(String variableName);
+    int singleDimVariableLength(String variableName);
 }

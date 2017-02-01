@@ -40,6 +40,12 @@ public class NumericRange extends Range
 	    return "[" + start + ":" + stride + ":" + end + "]";
 	}
 	
+	@Override
+	public boolean isPoint()
+	{
+	    return start.equals(end);
+	}
+	
 	/**
 	 * Parses a range in the format '[x:y:z]' where x<z define the bounds of the range and y the step size:
 	 * [x, x + y, x + 2y, ..., z]

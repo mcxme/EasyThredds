@@ -50,6 +50,12 @@ public class TimeRange extends Range
 		    + RANGE_END;
 	}
 	
+	@Override
+	public boolean isPoint()
+	{
+	    return startTime.equals(endTime);
+	}
+	
 	/**
 	 * Parses the textual representation of a time range.
 	 * Input format:

@@ -96,4 +96,16 @@ public class CdmRemoteReader implements IReader {
     {
 	throw new UnsupportedOperationException("Not implemented");
     }
+    
+    @Override
+    public int singleDimVariableLength(String variableName)
+    {
+	throw new UnsupportedOperationException("Not implemented");
+    }
+    
+    @Override
+    public int[] variableShape(String variableName)
+    {
+	throw new UnsupportedOperationException("Not implemented");
+    }
 }

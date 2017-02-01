@@ -21,6 +21,7 @@ import protocol.translated.TranslatedProtocol;
 import protocol.translated.util.VariableReader;
 import reader.IReader;
 import service.ProtocolPicker;
+import util.CleanUtil;
 
 public class PerformanceComparison
 {
@@ -46,6 +47,7 @@ public class PerformanceComparison
 	    throw new IllegalStateException("Failed to measure the performance", e);
 	} finally {
 	    VariableReader.getInstance().close();
+	    CleanUtil.cleanAuxFiles();
 	}
     }
     

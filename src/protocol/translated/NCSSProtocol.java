@@ -15,6 +15,8 @@ import reader.NCSSReader;
 public class NCSSProtocol extends TranslatedProtocol
 {
     
+    public static final boolean MAKE_OUTPUT_CF_COMPLIANT = true;
+    
     public NCSSProtocol(CollectiveProtocol query)
     {
 	super(query);
@@ -48,6 +50,21 @@ public class NCSSProtocol extends TranslatedProtocol
 	return null;
     }
 
+    @Override
+    public boolean canTranslate(CollectiveProtocol protocol)
+    {
+	SpatialRange latRange = protocol.getLatitudeRange();
+	SpatialRange lonRange = protocol.getLongitudeRange();
+	
+	// TODO fetch altitude range to determine whether the entire range is traversed
+
+	if (latRange.getStride() != lonRange.getStride()) {
+	    return false;
+	}
+	
+	return true;
+    }
+    
     /**
      * Forms the query based on the Netcdf Subset Service Reference:
      * {@link http://www.unidata.ucar.edu/software/thredds/current/tds/reference/NetcdfSubsetServiceReference.html}
@@ -58,20 +75,27 @@ public class NCSSProtocol extends TranslatedProtocol
 	SpatialRange latRange = protocol.getLatitudeRange();
 	SpatialRange lonRange = protocol.getLongitudeRange();
 	
-	// create the bounding box
-	query.add("south", latRange.getStartCoordinate());
-	query.add("north", latRange.getEndCoordinate());
-	query.add("west", lonRange.getStartCoordinate());
-	query.add("east", lonRange.getEndCoordinate());
-	
 	// add all variables
 	if (protocol.hasVariablesDefined()) {
 	    query.add("var", protocol.getVariables());
 	}
 	
-	// take the minimum stride
-	int horizontalStride = Math.min(latRange.getStride(), lonRange.getStride());
-	query.add("horizStride", horizontalStride);
+	if (latRange.isPoint() && lonRange.isPoint()) {
+	    // create the request point
+	    query.add("longitude", lonRange.getStartCoordinate());
+	    query.add("latitude", latRange.getStartCoordinate());
+	} else {
+	    // create the bounding box
+	    query.add("south", latRange.getStartCoordinate());
+	    query.add("north", latRange.getEndCoordinate());
+	    query.add("west", lonRange.getStartCoordinate());
+	    query.add("east", lonRange.getEndCoordinate());
+	    
+	    // take the minimum spatial stride
+	    int horizontalStride = Math.min(latRange.getStride(), lonRange.getStride());
+	    query.add("horizStride", horizontalStride);
+	}
+	
 	
 	if (protocol.hasHightRange()) {
 	    NumericRange hightRange = protocol.getHightRange();
@@ -87,13 +111,19 @@ public class NCSSProtocol extends TranslatedProtocol
 	// add the time specification if defined
 	if (protocol.hasTimeRangeDefined()) {
 	    TimeRange timeRange = protocol.getTimeRange();
-	    query.add("time_start", timeRange.getStartTime());
-	    query.add("time_end", timeRange.getEndTime());
-	    query.add("time_stride", timeRange.getStride());
+	    if (timeRange.isPoint()) {
+		query.add("time", timeRange.getStartTime());
+	    } else {
+		query.add("time_start", timeRange.getStartTime());
+		query.add("time_end", timeRange.getEndTime());
+		query.add("time_stride", timeRange.getStride());
+	    }
 	}
 	
 	// add the output format
 	query.add("accept", ConfigReader.getInstace().getNcssOutputFormat());
+	// enforce CF compliance
+	query.add("addLatLon", MAKE_OUTPUT_CF_COMPLIANT);
     }
 
 }

@@ -10,7 +10,7 @@ import ucar.nc2.time.CalendarDateUnit;
 
 public abstract class NetCdfReader implements IReader
 {
-    protected static final String BASE_DIRECTORY = "netCdfFiles";
+    public static final String BASE_DIRECTORY = "netCdfFiles";
     
     
     private NetcdfFile dataset;
@@ -118,6 +118,34 @@ public abstract class NetCdfReader implements IReader
 	    throw new IllegalArgumentException("Could not put the variable " + variableName + " into a 1D long array", e);
 	}
     }
+    
+    @Override
+    public int[] variableShape(String variableName)
+    {
+	try {
+            Variable var = dataset.findVariable(variableName);
+            if (var == null) {
+        	throw new IllegalArgumentException("No variable was found with the name " + variableName);
+            }
+            
+            Array values = var.read();
+            return values.getShape();
+	} catch (IOException e) {
+	    throw new IllegalArgumentException("Could not retrieve the size of the variable " + variableName, e);
+	}
+    }
+    
+    @Override
+    public int singleDimVariableLength(String variableName)
+    {
+        int[] dims = variableShape(variableName);
+        if (dims.length > 1) {
+            throw new IllegalArgumentException("The variable has more than one dimension");
+        }
+        
+        return dims[0];
+    }
+    
     
     @Override
     public boolean hasVariableWithName(String name)

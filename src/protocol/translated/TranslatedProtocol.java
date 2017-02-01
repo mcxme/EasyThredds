@@ -37,7 +37,12 @@ public abstract class TranslatedProtocol extends Protocol
      */
     protected abstract void translateQuery(CollectiveProtocol protocol, QueryBuilder query);
     
+    /**
+     * Provides a reader for the current protocol 
+     */
     protected abstract IReader readerFactory();
+    
+    public abstract boolean canTranslate(CollectiveProtocol collectiveProtocol);
     
     public IReader getReader() {
 	IReader reader = readerFactory();
@@ -90,5 +95,10 @@ public abstract class TranslatedProtocol extends Protocol
 	} catch (URISyntaxException e) {
 	    throw new IllegalStateException(e);
 	}
+    }
+    
+    @Override
+    public String toString() {
+	return getTranslatedHttpUrl().toString();
     }
 }

@@ -52,6 +52,12 @@ public abstract class DapProtocol extends TranslatedProtocol
 	query.removeLastChar();
     }
 
+    @Override
+    public boolean canTranslate(CollectiveProtocol collectiveProtocol)
+    {
+	return true;
+    }
+    
     private VariableReader loadDimensionData(CollectiveProtocol protocol)
     {
 	VariableReader variableReader = VariableReader.getInstance();

@@ -33,6 +33,12 @@ public class SpatialRange extends Range
 	return this.endCoordinate;
     }
     
+    @Override
+    public boolean isPoint()
+    {
+	return startCoordinate == endCoordinate;
+    }
+    
 	@Override
 	public String toString() {
 	    return RANGE_START + startCoordinate

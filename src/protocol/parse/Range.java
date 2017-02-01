@@ -14,6 +14,8 @@ public abstract class Range
 	this.stride = stride;
     }
     
+    public abstract boolean isPoint();
+    
     public int getStride() {
 	return stride;
     }
