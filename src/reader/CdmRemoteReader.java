@@ -14,6 +14,7 @@ public class CdmRemoteReader implements IReader {
     
     private Array dataArray;
     private InputStream ncStream;
+    private String variableName;
     
     public CdmRemoteReader() { }
     
@@ -24,6 +25,10 @@ public class CdmRemoteReader implements IReader {
 	}
     }
 
+    public void setVariable(String variableName) {
+	this.variableName = variableName;
+    }
+    
     @Override
     public void setUri(String baseUri, String query, String baseNameIdentifier)
     {
@@ -76,25 +81,29 @@ public class CdmRemoteReader implements IReader {
     @Override
     public float[] readFloatArray(String variableName)
     {
-	throw new UnsupportedOperationException("Not implemented");
+	return (float[]) dataArray.copyTo1DJavaArray();
     }
 
     @Override
     public long[] readLongArray(String variableName)
     {
-	throw new UnsupportedOperationException("Not implemented");
+	return (long[]) dataArray.copyTo1DJavaArray();
     }
     
     @Override
     public double[] readDoubleArray(String variableName)
     {
-	throw new UnsupportedOperationException("Not implemented");
+	return (double[]) dataArray.copyTo1DJavaArray();
     }
     
     @Override
     public boolean hasVariableWithName(String name)
     {
-	throw new UnsupportedOperationException("Not implemented");
+	if (variableName == null) {
+	    throw new IllegalStateException("No variable was set");
+	}
+	
+	return variableName.equals(name);
     }
     
     @Override
@@ -106,6 +115,6 @@ public class CdmRemoteReader implements IReader {
     @Override
     public int[] variableShape(String variableName)
     {
-	throw new UnsupportedOperationException("Not implemented");
+	return dataArray.getShape();
     }
 }

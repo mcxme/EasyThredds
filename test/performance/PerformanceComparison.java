@@ -42,7 +42,7 @@ public class PerformanceComparison
 	}
 
 	try {
-	plotPerformance(REPETITIONS, input);
+	    plotPerformance(REPETITIONS, input);
 	} catch (Exception e) {
 	    throw new IllegalStateException("Failed to measure the performance", e);
 	} finally {
@@ -62,6 +62,7 @@ public class PerformanceComparison
         	    List<Double> convertedMillis = new ArrayList<Double>(measuredMillis.length);
         	    for (int j = 0; j < measuredMillis.length; j++) { convertedMillis.add(measuredMillis[j]); }
         	    dataset.add(convertedMillis, collective.toString(), translated.getProtocolName());
+        	    CleanUtil.cleanAuxFiles();
         	} catch (Exception e) {
         	    e.printStackTrace();
         	}
@@ -70,7 +71,7 @@ public class PerformanceComparison
 	
 	// create the boxplot
         final CategoryAxis xAxis = new CategoryAxis("Protocol");
-        final NumberAxis yAxis = new NumberAxis("Performance [kB/s]");
+        final NumberAxis yAxis = new NumberAxis("Time ms");
         yAxis.setAutoRangeIncludesZero(false);
         final BoxAndWhiskerRenderer renderer = new BoxAndWhiskerRenderer();
         renderer.setFillBox(true);
@@ -125,6 +126,6 @@ public class PerformanceComparison
 	System.out.println("\ttime: " + millis + "ms (" + ((double) millis / (1000 * 60)) + " min)");
 	System.out.println("\tsize: " + size + " bytes (" + ((double)size / (1024 * 1024)) + " MB)");
 	System.out.println("\t-> " + String.format("%.2f", relativePerformance) + " kB/s");
-	return relativePerformance;
+	return millis;
     }
 }

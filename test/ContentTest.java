@@ -18,7 +18,7 @@ public class ContentTest
     private static final String TEST_DATASET = "RC1SD-base-08/cloud";
     private static final String THREDDS = ConfigReader.getInstace().getThreddsUrl();
     private static final String VARIABLE = "aclc";
-    private static final String QUERY = "var=" + VARIABLE + "&lev=[0:1:50000]&lat=[12.4;1;17.8]&lon=[4.0;;18.9]&time=[20/08/1992-20:00:00;1;22/02/1999-12:00:00]";
+    private static final String QUERY = "var=" + VARIABLE + "&lev=[0:5:50000]&lat=[12.4;1;17.8]&lon=[4.0;;18.9]&time=[20/08/1992-20:00:00;1;22/02/1999-12:00:00]";
     
     @AfterClass
     public static void cleanUp() {
