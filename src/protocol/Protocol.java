@@ -27,11 +27,11 @@ public abstract class Protocol
 		this.baseUrl = baseUrl;
 	}
 	
-	protected String getDataset() {
+	public String getDataset() {
 		return this.dataset;
 	}
 	
-	protected String getBaseUrl() {
+	public String getBaseUrl() {
 		return this.baseUrl;
 	}
 }
