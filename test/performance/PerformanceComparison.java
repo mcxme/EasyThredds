@@ -22,6 +22,7 @@ import protocol.translated.util.VariableReader;
 import reader.IReader;
 import service.ProtocolPicker;
 import util.CleanUtil;
+import util.MeasureUtil;
 
 public class PerformanceComparison
 {
@@ -58,7 +59,7 @@ public class PerformanceComparison
 	    for (int i = 0; i < ProtocolPicker.N_PROTOCOLS; i++) {
         	try {
         	    TranslatedProtocol translated = ProtocolPicker.pickByIndex(i, collective);
-        	    double[] measuredMillis = measurePerformanceMillis(nRepetitions, translated);
+        	    double[] measuredMillis = MeasureUtil.measurePerformanceMillis(nRepetitions, translated);
         	    List<Double> convertedMillis = new ArrayList<Double>(measuredMillis.length);
         	    for (int j = 0; j < measuredMillis.length; j++) { convertedMillis.add(measuredMillis[j]); }
         	    dataset.add(convertedMillis, collective.toString(), translated.getProtocolName());
@@ -99,33 +100,5 @@ public class PerformanceComparison
         frame.setExtendedState(frame.getExtendedState() | Frame.MAXIMIZED_BOTH);
         frame.pack();
         frame.setVisible(true);
-    }
-       
-    private static double[] measurePerformanceMillis(int nRepetitions,
-	    TranslatedProtocol translatedProtocol) {
-	double[] performance = new double[nRepetitions];
-	for (int i = 0; i < nRepetitions; i++) {
-	    performance[i] = measurePerformanceMillis(translatedProtocol);
-	}
-	
-	return performance;
-    }
-    
-    private static double measurePerformanceMillis(TranslatedProtocol translated) {
-	System.out.println("---- " + translated.getProtocolName() + "\t----");
-	long start = System.nanoTime();
-	long size = 0;
-	try (IReader reader = translated.getReader()) {
-	    size = reader.iterateAllData();
-	} catch (Exception e) {
-	    throw new IllegalStateException("Failed to measure the execution time", e);
-	}
-	long millis = (System.nanoTime() - start) / (1_000_000);
-	double relativePerformance = (double) size / millis;
-	System.out.println("\tquery: " + translated.getTranslatedHttpUrl().toString());
-	System.out.println("\ttime: " + millis + "ms (" + ((double) millis / (1000 * 60)) + " min)");
-	System.out.println("\tsize: " + size + " bytes (" + ((double)size / (1024 * 1024)) + " MB)");
-	System.out.println("\t-> " + String.format("%.2f", relativePerformance) + " kB/s");
-	return millis;
     }
 }

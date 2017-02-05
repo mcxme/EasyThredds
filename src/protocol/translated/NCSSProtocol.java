@@ -5,7 +5,9 @@ import protocol.CollectiveProtocol;
 import protocol.parse.NumericRange;
 import protocol.parse.SpatialRange;
 import protocol.parse.TimeRange;
+import protocol.translated.util.DimensionArray;
 import protocol.translated.util.QueryBuilder;
+import protocol.translated.util.VariableReader;
 import reader.IReader;
 import reader.NCSSReader;
 
@@ -14,7 +16,6 @@ import reader.NCSSReader;
  */
 public class NCSSProtocol extends TranslatedProtocol
 {
-    
     public static final boolean MAKE_OUTPUT_CF_COMPLIANT = true;
     
     public NCSSProtocol(CollectiveProtocol query)
@@ -55,11 +56,23 @@ public class NCSSProtocol extends TranslatedProtocol
     {
 	SpatialRange latRange = protocol.getLatitudeRange();
 	SpatialRange lonRange = protocol.getLongitudeRange();
-	
-	// TODO fetch altitude range to determine whether the entire range is traversed
 
-	if (latRange.getStride() != lonRange.getStride()) {
+	// NCSS cannot differentiate longitude and latitude strides
+	if (protocol.hasLongitudeRange() && protocol.hasLatitudeRange()
+		&& (latRange.getStride() != lonRange.getStride()))
+	{
 	    return false;
+	}
+
+	// NCSS cannot specify altitude ranges but is only capable of traversing
+	// the entire range (stride is possible)
+	if (protocol.hasHightRange())
+	{
+	    VariableReader reader = loadDimensionData(protocol);
+	    if (reader.isFullAltitudeRange(getDatasetBaseUrl(), protocol.getHightRange()))
+	    {
+		return false;
+	    }
 	}
 	
 	return true;
@@ -124,6 +137,49 @@ public class NCSSProtocol extends TranslatedProtocol
 	query.add("accept", ConfigReader.getInstace().getNcssOutputFormat());
 	// enforce CF compliance
 	query.add("addLatLon", MAKE_OUTPUT_CF_COMPLIANT);
+    }
+    
+    private VariableReader loadDimensionData(CollectiveProtocol protocol)
+    {
+	VariableReader variableReader = VariableReader.getInstance();
+	String datasetKey = getDataset();
+	// need to fetch the dataset?
+	if (!variableReader.hasDataset(datasetKey)) {
+	    
+	    // first request longitude, latitude and level in a single request
+	    String requestedSpatialDims = "";
+	    if (protocol.hasTimeRangeDefined())
+		requestedSpatialDims += "time,";
+	    if (protocol.hasLongitudeRange())
+		requestedSpatialDims += "lon,";
+	    if (protocol.hasLatitudeRange())
+		requestedSpatialDims += "lat,";
+	    if (protocol.hasHightRange())
+		requestedSpatialDims += "lev,";
+	    
+	    requestedSpatialDims = requestedSpatialDims.substring(0, requestedSpatialDims.length() - 1);
+	    IReader latReader = null;
+	    IReader lonReader = null;
+	    IReader lvlReader = null;
+	    IReader timeReader = null;
+	    if (!requestedSpatialDims.isEmpty()) {
+    		IReader reader = readerFactory();
+    		reader.setUri(getDatasetBaseUrl(), requestedSpatialDims, datasetKey + "-dims");
+        	    if (protocol.hasLongitudeRange())
+        		lonReader = reader;
+        	    if (protocol.hasLatitudeRange())
+        		latReader = reader;
+        	    if (protocol.hasHightRange())
+        		lvlReader = reader;
+        	    if (protocol.hasTimeRangeDefined())
+        		timeReader = reader;
+	    }
+	    
+	    DimensionArray dims = new DimensionArray(latReader, lonReader, lvlReader, timeReader);
+	    variableReader.addDataset(datasetKey, dims);
+	}
+
+	return variableReader;
     }
 
 }

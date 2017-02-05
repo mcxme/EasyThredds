@@ -30,6 +30,18 @@ public class CollectiveProtocol extends Protocol
 		parseInput(query);
 	}
 	
+	public CollectiveProtocol(String baseUrl, String dataset,
+		SpatialRange lonRange, SpatialRange latRange,
+		NumericRange lvlRange, TimeRange timeRange,
+		List<String> variables) {
+	    super(dataset, baseUrl);
+	    this.variables = variables;
+	    this.latRange = latRange;
+	    this.lonRange = lonRange;
+	    this.timeRange = timeRange;
+	    this.hightRange = lvlRange;
+	}
+	
 	private void parseInput(String query) {
 		// input format:
 		// foo=[x:y:z]&var=a,b,c where
