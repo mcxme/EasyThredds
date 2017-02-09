@@ -1,6 +1,6 @@
 package protocol.translated.util;
 
-import reader.IReader;
+import protocol.reader.IReader;
 
 public class DimensionArray
 {

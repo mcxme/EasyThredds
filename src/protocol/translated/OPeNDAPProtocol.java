@@ -2,8 +2,8 @@ package protocol.translated;
 
 import config.ConfigReader;
 import protocol.CollectiveProtocol;
-import reader.IReader;
-import reader.OPeNDAPReader;
+import protocol.reader.IReader;
+import protocol.reader.OPeNDAPReader;
 
 public class OPeNDAPProtocol extends DapProtocol
 {

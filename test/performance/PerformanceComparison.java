@@ -17,9 +17,9 @@ import org.jfree.ui.ApplicationFrame;
 
 import config.ConfigReader;
 import protocol.CollectiveProtocol;
+import protocol.reader.IReader;
 import protocol.translated.TranslatedProtocol;
 import protocol.translated.util.VariableReader;
-import reader.IReader;
 import service.ProtocolPicker;
 import util.CleanUtil;
 import util.MeasureUtil;

@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
 
-import reader.NetCdfReader;
+import protocol.reader.NetCdfReader;
 
 public class CleanUtil
 {

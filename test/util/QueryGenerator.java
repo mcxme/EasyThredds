@@ -36,24 +36,24 @@ public class QueryGenerator
     private static final double MAX_LONGITUDE = 360.0;
     
 
-    private static final int MIN_DIMS = 2;
+    private static final int MIN_DIMS = 1;
     private static final int MAX_DIMS = 4;
     
-    // 4D dataset
+    // 4D dataset: time, altitude, longitude, latitude
     private static final String TEST_DATASET_4D = "RC1SD-base-08/cloud";
-    private static final String[] VARIABLE_4D = new String[] {"aclc"};
+    private static final String[] VARIABLE_4D = new String[] {"aclc", "rainflux", "snowflux"};
     
-    // 3D dataset
-    private static final String TEST_DATASET_3D = "RC1SD-base-08/cloud";
-    private static final String[] VARIABLE_3D = new String[] {"aclc"};
+    // 3D dataset: time, longitude, latitude
+    private static final String TEST_DATASET_3D = "RC1SD-base-08/ECHAM5";
+    private static final String[] VARIABLE_3D = new String[] {"tsw", "glac", "alake", "sized"};
     
-    // 2D dataset
-    private static final String TEST_DATASET_2D = "RC1SD-base-08/cloud";
-    private static final String[] VARIABLE_2D = new String[] {"aclc"};
+    // 2D dataset: time, altitude
+    private static final String TEST_DATASET_2D = "RC1SD-base-08/ECHAM5";
+    private static final String[] VARIABLE_2D = new String[] {"dhyam", "dhybm"};
     
-    // TODO 1D dataset
-    private static final String TEST_DATASET_1D = null;
-    private static final String[] VARIABLE_1D = new String[] {null};
+    // 1D dataset: time
+    private static final String TEST_DATASET_1D = "RC1SD-base-08/orbit";
+    private static final String[] VARIABLE_1D = new String[] {"dec", "ra"};
 
     // avoid instantiation
     private QueryGenerator() {}
@@ -73,16 +73,25 @@ public class QueryGenerator
 	TimeRange timeRange = null;
 	
 	switch (dims) {
-	case 2:
+	case 4:
+	    timeRange = getRandTimeRange();
+	    lvlRange = getRandAltitudeRange();
 	    latRange = getRandLatitudeRange();
 	    lonRange = getRandLongitudeRange();
 	case 3:
+	    timeRange = getRandTimeRange();
+	    latRange = getRandLatitudeRange();
+	    lonRange = getRandLongitudeRange();
+	    break;
+	case 2:
+	    timeRange = getRandTimeRange();
 	    lvlRange = getRandAltitudeRange();
-	case 4:
+	    break;
+	case 1:
 	    timeRange = getRandTimeRange();
 	    break;
 	    default:
-		throw new UnsupportedOperationException("Can only handle 2D, 3D and 4D");
+		throw new UnsupportedOperationException("Can only handle 1D, 2D, 3D and 4D");
 	}
 
 	return new CollectiveProtocol(THREDDS, dataset, lonRange, latRange, lvlRange, timeRange, variables);

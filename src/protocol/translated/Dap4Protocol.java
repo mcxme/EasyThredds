@@ -2,8 +2,8 @@ package protocol.translated;
 
 import config.ConfigReader;
 import protocol.CollectiveProtocol;
-import reader.Dap4Reader;
-import reader.IReader;
+import protocol.reader.Dap4Reader;
+import protocol.reader.IReader;
 
 public class Dap4Protocol extends DapProtocol
 {

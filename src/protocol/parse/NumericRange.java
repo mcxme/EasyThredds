@@ -17,13 +17,6 @@ public class NumericRange extends Range
 		this.end = end;
 	}
 	
-	/**
-	 * Returns true if the range comprises a single value only 
-	 */
-	public boolean isSingleValue() {
-	    return start.equals(end);
-	}
-
 	public Number getStart() {
 		return start;
 	}

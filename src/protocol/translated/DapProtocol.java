@@ -4,10 +4,10 @@ import protocol.CollectiveProtocol;
 import protocol.parse.NumericRange;
 import protocol.parse.SpatialRange;
 import protocol.parse.TimeRange;
+import protocol.reader.IReader;
 import protocol.translated.util.DimensionArray;
 import protocol.translated.util.QueryBuilder;
 import protocol.translated.util.VariableReader;
-import reader.IReader;
 
 public abstract class DapProtocol extends TranslatedProtocol
 {
@@ -20,7 +20,7 @@ public abstract class DapProtocol extends TranslatedProtocol
     protected void translateQuery(CollectiveProtocol protocol, QueryBuilder query)
     {
 	String datasetKey = getDataset();
-	VariableReader variableReader = loadDimensionData(protocol);
+	VariableReader variableReader = getDimensionData(protocol);
 	SpatialRange lonRange = protocol.getLongitudeRange();
 	SpatialRange latRange = protocol.getLatitudeRange();
 	NumericRange zRange = protocol.getHightRange();
@@ -58,50 +58,44 @@ public abstract class DapProtocol extends TranslatedProtocol
 	return true;
     }
     
-    private VariableReader loadDimensionData(CollectiveProtocol protocol)
+    @Override
+    protected DimensionArray downloadDimensionData(CollectiveProtocol protocol)
     {
-	VariableReader variableReader = VariableReader.getInstance();
-	String datasetKey = getDataset();
-	// need to fetch the dataset?
-	if (!variableReader.hasDataset(datasetKey)) {
-	    
-	    // first request longitude, latitude and level in a single request
-	    String requestedSpatialDims = "";
+	// first request longitude, latitude and level in a single request
+	String requestedSpatialDims = "";
+	if (protocol.hasLongitudeRange())
+	    requestedSpatialDims += "lon,";
+	if (protocol.hasLatitudeRange())
+	    requestedSpatialDims += "lat,";
+	if (protocol.hasHightRange())
+	    requestedSpatialDims += "lev,";
+
+	requestedSpatialDims = requestedSpatialDims.substring(0, requestedSpatialDims.length() - 1);
+	IReader latReader = null;
+	IReader lonReader = null;
+	IReader lvlReader = null;
+	if (!requestedSpatialDims.isEmpty())
+	{
+	    IReader reader = readerFactory();
+	    reader.setUri(getDatasetBaseUrl(), requestedSpatialDims, getDataset() + "-spatial");
 	    if (protocol.hasLongitudeRange())
-		requestedSpatialDims += "lon,";
+		lonReader = reader;
 	    if (protocol.hasLatitudeRange())
-		requestedSpatialDims += "lat,";
+		latReader = reader;
 	    if (protocol.hasHightRange())
-		requestedSpatialDims += "lev,";
-	    
-	    requestedSpatialDims = requestedSpatialDims.substring(0, requestedSpatialDims.length() - 1);
-	    IReader latReader = null;
-	    IReader lonReader = null;
-	    IReader lvlReader = null;
-	    if (!requestedSpatialDims.isEmpty()) {
-    		IReader reader = readerFactory();
-    		reader.setUri(getDatasetBaseUrl(), requestedSpatialDims, datasetKey + "-spatial");
-        	    if (protocol.hasLongitudeRange())
-        		lonReader = reader;
-        	    if (protocol.hasLatitudeRange())
-        		latReader = reader;
-        	    if (protocol.hasHightRange())
-        		lvlReader = reader;
-	    }
-	    
-	    // second call required as NetCdf library is confused when the time
-	    // dimension is requested along with the longitude, latitude and
-	    // altitude
-	    IReader timeReader = null;
-	    if (protocol.hasTimeRangeDefined()) {
-		timeReader = readerFactory();
-		timeReader.setUri(getDatasetBaseUrl(), "time", datasetKey + "-time");
-	    }
-	    
-	    DimensionArray dims = new DimensionArray(latReader, lonReader, lvlReader, timeReader);
-	    variableReader.addDataset(datasetKey, dims);
+		lvlReader = reader;
 	}
 
-	return variableReader;
+	// second call required as NetCdf library is confused when the time
+	// dimension is requested along with the longitude, latitude and
+	// altitude
+	IReader timeReader = null;
+	if (protocol.hasTimeRangeDefined())
+	{
+	    timeReader = readerFactory();
+	    timeReader.setUri(getDatasetBaseUrl(), "time", getDataset() + "-time");
+	}
+
+	return new DimensionArray(latReader, lonReader, lvlReader, timeReader);
     }
 }

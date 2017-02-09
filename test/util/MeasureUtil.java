@@ -1,7 +1,7 @@
 package util;
 
+import protocol.reader.IReader;
 import protocol.translated.TranslatedProtocol;
-import reader.IReader;
 
 public class MeasureUtil
 {

@@ -5,8 +5,10 @@ import java.net.URISyntaxException;
 
 import protocol.CollectiveProtocol;
 import protocol.Protocol;
+import protocol.reader.IReader;
+import protocol.translated.util.DimensionArray;
 import protocol.translated.util.QueryBuilder;
-import reader.IReader;
+import protocol.translated.util.VariableReader;
 
 public abstract class TranslatedProtocol extends Protocol
 {
@@ -64,7 +66,7 @@ public abstract class TranslatedProtocol extends Protocol
 	}
     }
     
-    protected String getDatasetBaseUrl() {
+    public String getDatasetBaseUrl() {
 	StringBuilder builder = new StringBuilder();
 	builder.append(getBaseUrl());
 	builder.append("/");
@@ -100,5 +102,20 @@ public abstract class TranslatedProtocol extends Protocol
     @Override
     public String toString() {
 	return getTranslatedHttpUrl().toString();
+    }
+    
+    protected abstract DimensionArray downloadDimensionData(CollectiveProtocol protocol);
+    
+    protected VariableReader getDimensionData(CollectiveProtocol protocol)
+    {
+	VariableReader variableReader = VariableReader.getInstance();
+	String datasetKey = getDataset();
+	// need to fetch the dataset?
+	if (!variableReader.hasDataset(datasetKey)) {
+	    DimensionArray dims = downloadDimensionData(protocol);
+	    variableReader.addDataset(datasetKey, dims);
+	}
+
+	return variableReader;
     }
 }

@@ -5,11 +5,11 @@ import protocol.CollectiveProtocol;
 import protocol.parse.NumericRange;
 import protocol.parse.SpatialRange;
 import protocol.parse.TimeRange;
+import protocol.reader.CdmRemoteReader;
+import protocol.reader.IReader;
 import protocol.translated.util.DimensionArray;
 import protocol.translated.util.QueryBuilder;
 import protocol.translated.util.VariableReader;
-import reader.CdmRemoteReader;
-import reader.IReader;
 
 public class CdmRemoteProtocol extends TranslatedProtocol
 {
@@ -62,7 +62,7 @@ public class CdmRemoteProtocol extends TranslatedProtocol
 	SpatialRange lonRange = protocol.getLongitudeRange();
 	NumericRange lvlRange = protocol.getHightRange();
 	
-	VariableReader variableReader = loadDimensionData(protocol);
+	VariableReader variableReader = getDimensionData(protocol);
 	String datasetKey = getDataset();
 
 	query.add("req", "data");
@@ -128,39 +128,31 @@ public class CdmRemoteProtocol extends TranslatedProtocol
 		range.getStride());
     }
 
-    private VariableReader loadDimensionData(CollectiveProtocol protocol)
+    @Override
+    protected DimensionArray downloadDimensionData(CollectiveProtocol protocol)
     {
-	VariableReader variableReader = VariableReader.getInstance();
-	String datasetKey = getDataset();
-	// need to fetch the dataset?
-	if (!variableReader.hasDataset(datasetKey)) {
-	    
 	    IReader latReader = null;
 	    IReader lonReader = null;
 	    IReader lvlReader = null;
 	    IReader timeReader = null;
 	    
 	    if (protocol.hasLatitudeRange()) {
-		latReader = singleVarReader("lat", datasetKey);
+		latReader = singleVarReader("lat", getDataset());
 	    }
 	    
 	    if (protocol.hasLongitudeRange()) {
-		lonReader = singleVarReader("lon", datasetKey);
+		lonReader = singleVarReader("lon", getDataset());
 	    }
 	    
 	    if (protocol.hasHightRange()) {
-		lvlReader = singleVarReader("lev", datasetKey);
+		lvlReader = singleVarReader("lev", getDataset());
 	    }
 	    
 	    if (protocol.hasTimeRangeDefined()) {
-		timeReader = singleVarReader("time", datasetKey);
+		timeReader = singleVarReader("time", getDataset());
 	    }
 	    
-	    DimensionArray dims = new DimensionArray(latReader, lonReader, lvlReader, timeReader);
-	    variableReader.addDataset(datasetKey, dims);
-	}
-
-	return variableReader;
+	    return new DimensionArray(latReader, lonReader, lvlReader, timeReader);
     }
     
     private IReader singleVarReader(String variableName, String datasetKey) {

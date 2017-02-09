@@ -1,4 +1,4 @@
-package reader;
+package protocol.reader;
 
 public interface IReader extends AutoCloseable
 {

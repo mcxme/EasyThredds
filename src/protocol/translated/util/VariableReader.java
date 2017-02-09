@@ -8,7 +8,7 @@ import java.util.Map;
 import protocol.parse.NumericRange;
 import protocol.parse.SpatialRange;
 import protocol.parse.TimeRange;
-import reader.IReader;
+import protocol.reader.IReader;
 import ucar.nc2.NetcdfFile;
 
 public class VariableReader
@@ -217,5 +217,11 @@ public class VariableReader
 	// the first value and the last value are outside of the available one
 	return valueRange.getStart().floatValue() <= lvlData[0]
 		&& valueRange.getEnd().floatValue() >= lvlData[lvlData.length - 1];
+    }
+    
+    public synchronized boolean isSingleAltitudeLevel(String datasetBaseUrl, NumericRange valueRange)
+    {
+	NumericRange indexRange = getAltitudeIndexRange(datasetBaseUrl, valueRange);
+	return indexRange.isPoint();
     }
 }

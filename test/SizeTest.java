@@ -4,8 +4,8 @@ import org.junit.Test;
 
 import config.ConfigReader;
 import protocol.CollectiveProtocol;
+import protocol.reader.IReader;
 import protocol.translated.TranslatedProtocol;
-import reader.IReader;
 import service.ProtocolPicker;
 import service.ProtocolPicker.Protocol;
 import util.CleanUtil;

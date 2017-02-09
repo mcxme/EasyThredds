@@ -27,7 +27,9 @@ public class CollectiveProtocol extends Protocol
 	public CollectiveProtocol(String baseUrl, String dataset, String query) {
 	    	super(dataset, baseUrl);
 	    	this.variables = new ArrayList<String>();
-		parseInput(query);
+	    	if (query != null) {
+	    	    parseInput(query);
+	    	}
 	}
 	
 	public CollectiveProtocol(String baseUrl, String dataset,

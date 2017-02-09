@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.commons.math3.stat.descriptive.moment.Mean;
 
 import com.amazonaws.services.kms.model.UnsupportedOperationException;
+import com.vdurmont.etaprinter.ETAPrinter;
 
 import protocol.CollectiveProtocol;
 import protocol.translated.TranslatedProtocol;
@@ -18,9 +19,11 @@ import util.QueryGenerator;
 public class RandomPerformanceComparison
 {
     
-    private static final int N_QUERIES = 1_000;
-    private static final int N_REPETITIONS = 1_000;
+    private static final int N_QUERIES = 5;//1_000;
+    private static final int N_REPETITIONS = 1;//1_000;
     private static final boolean PREFETCH_ALLOWED = true;
+    
+    private static int lastProgress = -1;
 
     public static void main(String[] args)
     {
@@ -28,7 +31,8 @@ public class RandomPerformanceComparison
 	for (int i = 0; i < N_QUERIES; i++) {
 	    protocols.add(QueryGenerator.getRandCollective());
 	}
-	
+
+	System.out.println("generated " + protocols.size() + " queries");
 	measureBest(protocols);
 	CleanUtil.cleanAuxFiles();
     }
@@ -39,13 +43,19 @@ public class RandomPerformanceComparison
 	int opendapBest = 0;
 	int cdmremoteBest = 0;
 	
+	// all queries are measured for each of the three protocols
+	ETAPrinter eta = ETAPrinter.init("queries", protocols.size() * 3);
+	
 	for (CollectiveProtocol collective : protocols) {
 	    TranslatedProtocol ncss = ProtocolPicker.pickByName(Protocol.Ncss, collective);
 	    double ncssPerformance = measureAveragePerformance(ncss);
+	    eta.update(1);
 	    TranslatedProtocol opendap = ProtocolPicker.pickByName(Protocol.CdmRemote, collective);
 	    double opendapPerformance = measureAveragePerformance(opendap);
+	    eta.update(1);
 	    TranslatedProtocol cdmremote = ProtocolPicker.pickByName(Protocol.OpenDap, collective);
 	    double cdmremotePerformance = measureAveragePerformance(cdmremote);
+	    eta.update(1);
 
 	    switch (getBest(ncssPerformance, opendapPerformance, cdmremotePerformance)) {
 	    case Ncss: ncssBest += 1; break;
@@ -77,5 +87,4 @@ public class RandomPerformanceComparison
 	    return Protocol.CdmRemote;
 	}
     }
-    
 }
