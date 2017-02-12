@@ -39,7 +39,7 @@ public class QueryGenerator
     private static final double MAX_LONGITUDE = 360.0;
     
 
-    public static final int MIN_DIMS = 3;
+    public static final int MIN_DIMS = 4;
     public static final int MAX_DIMS = 4;
     
     // 4D dataset: time, altitude, longitude, latitude
@@ -190,7 +190,7 @@ public class QueryGenerator
 		end = tmp;
 	    }
 	    
-	    lvlRange = new NumericRange(minLvl + start, stride, minLvl + end);
+	    lvlRange = new NumericRange(minLvl + start, minLvl + end, stride);
 	}
 	
 	return lvlRange;

@@ -12,9 +12,9 @@ import service.ProtocolPicker.Protocol;
 public class SelectByWeightedPerformanceNode implements DecisionNode
 {
     private static final double FLOATING_WEIGHT = 0.3;
-    private static final double INITIAL_NCSS_PERFORMANCE = 1.0;
-    private static final double INITIAL_OPENDAP_PERFORMANCE = 1.0;
-    private static final double INITIAL_CDMREMOTE_PERFORMANCE = 1.0;
+    private static final double INITIAL_NCSS_PERFORMANCE = 0.0;
+    private static final double INITIAL_OPENDAP_PERFORMANCE = 0.0;
+    private static final double INITIAL_CDMREMOTE_PERFORMANCE = 0.0;
     
     
     private static Map<Protocol, Double> protocolPerformance;
@@ -30,6 +30,14 @@ public class SelectByWeightedPerformanceNode implements DecisionNode
 		    protocolPerformance.put(Protocol.CdmRemote, INITIAL_CDMREMOTE_PERFORMANCE);
 		}
 	    }
+	}
+    }
+    
+    public static double getPerformance(Protocol protocol) {
+	initProtocolPerformance();
+	synchronized (protocolPerformance)
+	{
+	    return protocolPerformance.get(protocol);
 	}
     }
     
@@ -62,7 +70,7 @@ public class SelectByWeightedPerformanceNode implements DecisionNode
     public DecisionNode decide(Set<Protocol> protocols)
     {
 	Protocol best = Protocol.None;
-	double bestPerformance = 0.0;
+	double bestPerformance = -1.0;
 
 	initProtocolPerformance();
 	synchronized (protocolPerformance)

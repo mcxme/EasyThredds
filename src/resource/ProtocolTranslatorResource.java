@@ -24,6 +24,7 @@ import protocol.translated.TranslatedProtocol;
 import protocol.translated.util.VariableReader;
 import service.ProtocolPicker;
 import service.ProtocolPicker.Protocol;
+import service.TranslationService;
 
 @Path("")
 public class ProtocolTranslatorResource
@@ -84,23 +85,32 @@ public class ProtocolTranslatorResource
     @Produces(MediaType.TEXT_PLAIN)
     public Response translate(@Context UriInfo info, @PathParam("dataset") List<PathSegment> datasetSegments)
     {
-	return processProtocol(info, datasetSegments, Protocol.Next);
+	return processProtocol(info, datasetSegments, Protocol.None);
     }
     
-    private Response processProtocol(UriInfo info, List<PathSegment> datasetSegments, Protocol protocol) {
-	ResponseBuilder response;
-	    // extract the query from the request
-	    CollectiveProtocol query = new CollectiveProtocol(
-		    this.config.getThreddsUrl(),
-		    datasetToString(datasetSegments),
-		    queryToString(info));
-	    
-	    TranslatedProtocol translated = ProtocolPicker.pickByName(protocol, query);
-	    URI translatedUri = translated.getTranslatedHttpUrl();
-	    LOGGER.info(translatedUri.toString());
-	    response = Response.seeOther(translatedUri);	    
-//	    response = Response.ok(translatedUri.toString());
+    @GET
+    @Path("stats")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response getStats()
+    {
+	String stats = TranslationService.getStats();
+	return Response.ok(stats).build();
+    }
+    
+    private Response processProtocol(UriInfo info, List<PathSegment> datasetSegments, Protocol protocol)
+    {
+	// extract the query from the request
+	CollectiveProtocol query = new CollectiveProtocol(this.config.getThreddsUrl(), datasetToString(datasetSegments), queryToString(info));
 
+	URI translatedUri;
+	if (protocol == Protocol.None) {
+	    translatedUri = TranslationService.translate(query);
+	} else {
+	    translatedUri = TranslationService.translate(query, protocol);
+	}
+	
+	LOGGER.info(translatedUri.toString());
+	ResponseBuilder response = Response.seeOther(translatedUri);
 
 	return response.build();
     }

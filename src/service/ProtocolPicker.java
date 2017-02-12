@@ -48,7 +48,7 @@ public class ProtocolPicker
     }
     
     private static int counter = 0;
-    
+
     // do not allow instantiation
     private ProtocolPicker() {}
     
@@ -87,12 +87,18 @@ public class ProtocolPicker
 	return dummy.getProtocolName();
     }
     
-    public static TranslatedProtocol pickByName(Protocol protocol, CollectiveProtocol query) {
+    public static synchronized TranslatedProtocol pickByName(Protocol protocol, CollectiveProtocol query) {
 	TranslatedProtocol translated = null;
 	switch (protocol) {
-	case CdmRemote: translated = new CdmRemoteProtocol(query); break;
-	case Ncss: translated = new NCSSProtocol(query); break;
-	case OpenDap: translated = new OPeNDAPProtocol(query); break;
+	case CdmRemote:
+	    translated = new CdmRemoteProtocol(query);
+	    break;
+	case Ncss:
+	    translated = new NCSSProtocol(query);
+	    break;
+	case OpenDap:
+	    translated = new OPeNDAPProtocol(query);
+	    break;
 	case Dap4: translated = new Dap4Protocol(query); break;
 	case Next: return pickNext(query);
 	case Random: return pickRandom(query);

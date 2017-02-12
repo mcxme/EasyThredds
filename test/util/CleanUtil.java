@@ -39,5 +39,8 @@ public class CleanUtil
 	cleanPerformanceData();
     }
     
-    
+    public static void main(String[] args)
+    {
+	cleanAll();
+    }
 }

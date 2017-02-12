@@ -14,7 +14,7 @@ import service.ProtocolPicker.Protocol;
 
 public class ProtocolSupportsQueryNode implements DecisionNode
 {
-    private static final double SAMPLE_RANDOM_PROTOCOL_PROBABILITY = 0.05;
+    private static final double SAMPLE_RANDOM_PROTOCOL_PROBABILITY = 0.1;
     
     private CollectiveProtocol collective;
     
