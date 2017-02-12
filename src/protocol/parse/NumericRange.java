@@ -7,9 +7,13 @@ public class NumericRange extends Range
 	private Number start;
 	private Number end;
 	
-	public NumericRange(Number start, int stride, Number end) {
+	public NumericRange(Number start, Number end) {
+	    this(start, end, Range.STD_STRIDE);
+	}
+	
+	public NumericRange(Number start, Number end, int stride) {
 	    super(stride);
-		if (end.doubleValue() < start.doubleValue()) {
+		if (end.doubleValue() <= start.doubleValue()) {
 			throw new IllegalArgumentException("The range has to be defined as: start <= end");
 		}
 		
@@ -23,6 +27,10 @@ public class NumericRange extends Range
 	
 	public Number getEnd() {
 		return end;
+	}
+	
+	public int getIntExtent() {
+	    return end.intValue() - start.intValue();
 	}
 	
 	/**
@@ -62,19 +70,19 @@ public class NumericRange extends Range
 			throw new IllegalArgumentException("A range must contain 3 variables to be valid but had " + vars.length);
 		}
 		
-		Number x,z;
+		Number x,y;
 		// can both values be represented as integer or as float?
 		if ((vars[0].isEmpty() || isInteger(vars[0]))
 			&& (vars[2].isEmpty() || isInteger(vars[2]))) {
 		    x = (vars[0].isEmpty())? STD_START : Integer.parseInt(vars[0]);
-		    z = (vars[2].isEmpty())? x : Integer.parseInt(vars[2]);
+		    y = (vars[2].isEmpty())? x : Integer.parseInt(vars[2]);
 		} else {
 		    x = (vars[0].isEmpty())? new Integer(STD_START).doubleValue() : Double.parseDouble(vars[0]);
-		    z = (vars[2].isEmpty())? x : Double.parseDouble(vars[2]);
+		    y = (vars[2].isEmpty())? x : Double.parseDouble(vars[2]);
 		}
 		
-		int y = parseStride(vars[1]);
-		return new NumericRange(x,y,z);
+		int stride = parseStride(vars[1]);
+		return new NumericRange(x,y,stride);
 	}
 	
 	private static boolean isInteger(String textualNumeric) {

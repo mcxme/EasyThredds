@@ -47,7 +47,7 @@ public class VariableIndexUtil
 		+ values[values.length - 1] + "])");
 	}
 	
-	return new NumericRange(startIndex, range.getStride(), endIndex);
+	return new NumericRange(startIndex, endIndex, range.getStride());
     }
     
     public static NumericRange getIndexRange(NumericRange range, float[] values) {
@@ -65,7 +65,7 @@ public class VariableIndexUtil
 	}
 	
 	
-	return new NumericRange(startIndex, range.getStride(), endIndex);
+	return new NumericRange(startIndex, endIndex, range.getStride());
     }
     
     public static NumericRange getIndexRange(TimeRange range, double[] values) {
@@ -85,7 +85,7 @@ public class VariableIndexUtil
 		+ values[values.length - 1] + "])");
 	}
 	
-	return new NumericRange(startIndex, range.getStride(), endIndex);
+	return new NumericRange(startIndex, endIndex, range.getStride());
     }
     
     public static DateTime timeFromFloatSince1950(double value) {

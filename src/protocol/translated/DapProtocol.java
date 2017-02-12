@@ -20,7 +20,7 @@ public abstract class DapProtocol extends TranslatedProtocol
     protected void translateQuery(CollectiveProtocol protocol, QueryBuilder query)
     {
 	String datasetKey = getDataset();
-	VariableReader variableReader = getDimensionData(protocol);
+	VariableReader variableReader = getDimensionData();
 	SpatialRange lonRange = protocol.getLongitudeRange();
 	SpatialRange latRange = protocol.getLatitudeRange();
 	NumericRange zRange = protocol.getHightRange();

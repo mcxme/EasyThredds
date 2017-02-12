@@ -5,10 +5,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import protocol.CollectiveProtocol;
 import protocol.parse.NumericRange;
 import protocol.parse.SpatialRange;
 import protocol.parse.TimeRange;
 import protocol.reader.IReader;
+import protocol.translated.TranslatedProtocol;
+import service.ProtocolPicker.Protocol;
 import ucar.nc2.NetcdfFile;
 
 public class VariableReader
@@ -37,11 +40,9 @@ public class VariableReader
 
 	for (DimensionArray dims : datasets.values())
 	{
-	    try
-	    {
+	    try {
 		dims.close();
-	    } catch (Throwable t)
-	    {
+	    } catch (Throwable t) {
 		errors.add(t);
 	    }
 	}
@@ -67,23 +68,27 @@ public class VariableReader
     {
 	if (hasDataset(datasetBaseUrl))
 	    throw new IllegalArgumentException("Already stored data for the given dataset");
+	if (datasetBaseUrl.contains("?"))
+	    throw new IllegalArgumentException("The dataset must be provided without a query");
 
 	datasets.put(datasetBaseUrl, dims);
+    }
+    
+    public synchronized DimensionArray getDataset(String datasetBaseUrl) {
+	if (datasetBaseUrl.contains("?"))
+	    throw new IllegalArgumentException("The dataset must be provided without a query");
+
+	DimensionArray dims = this.datasets.get(datasetBaseUrl);
+	if (dims == null)
+	    throw new IllegalStateException("No dimension data has been fetched for the given dataset");
+	
+	return dims;
     }
 
     public synchronized NumericRange getLongitudeIndexRange(String datasetBaseUrl, SpatialRange valueRange)
     {
-	if (datasetBaseUrl.contains("?"))
-	{
-	    throw new IllegalArgumentException("The dataset must be provided without a query");
-	}
-
-	DimensionArray dims = this.datasets.get(datasetBaseUrl);
-	if (dims == null)
-	{
-	    throw new IllegalStateException("No dimension data has been fetched for the given dataset");
-	} else if (!dims.hasLongitudeDimension())
-	{
+	DimensionArray dims = getDataset(datasetBaseUrl);
+	if (!dims.hasLongitudeDimension()) {
 	    throw new IllegalStateException("The dataset does not have a longitude dimension");
 	}
 
@@ -93,16 +98,8 @@ public class VariableReader
 
     public synchronized boolean isFullLongitudeRange(String datasetBaseUrl, SpatialRange valueRange)
     {
-	if (datasetBaseUrl.contains("?"))
-	{
-	    throw new IllegalArgumentException("The dataset must be provided without a query");
-	}
-
-	DimensionArray dims = this.datasets.get(datasetBaseUrl);
-	if (dims == null)
-	{
-	    throw new IllegalStateException("No dimension data has been fetched for the given dataset");
-	} else if (!dims.hasLongitudeDimension())
+	DimensionArray dims = getDataset(datasetBaseUrl);
+	if (!dims.hasLongitudeDimension())
 	{
 	    throw new IllegalStateException("The dataset does not have a longitude dimension");
 	}
@@ -115,17 +112,8 @@ public class VariableReader
 
     public synchronized NumericRange getLatitudeIndexRange(String datasetBaseUrl, SpatialRange valueRange)
     {
-	if (datasetBaseUrl.contains("?"))
-	{
-	    throw new IllegalArgumentException("The dataset must be provided without a query");
-	}
-
-	DimensionArray dims = this.datasets.get(datasetBaseUrl);
-	if (dims == null)
-	{
-	    throw new IllegalStateException("No dimension data has been fetched for the given dataset");
-	} else if (!dims.hasLongitudeDimension())
-	{
+	DimensionArray dims = getDataset(datasetBaseUrl);
+	if (!dims.hasLongitudeDimension()) {
 	    throw new IllegalStateException("The dataset does not have a latitude dimension");
 	}
 
@@ -136,16 +124,8 @@ public class VariableReader
     
     public synchronized boolean isFullLatitudeRange(String datasetBaseUrl, SpatialRange valueRange)
     {
-	if (datasetBaseUrl.contains("?"))
-	{
-	    throw new IllegalArgumentException("The dataset must be provided without a query");
-	}
-
-	DimensionArray dims = this.datasets.get(datasetBaseUrl);
-	if (dims == null)
-	{
-	    throw new IllegalStateException("No dimension data has been fetched for the given dataset");
-	} else if (!dims.hasLongitudeDimension())
+	DimensionArray dims = getDataset(datasetBaseUrl);
+	if (!dims.hasLongitudeDimension())
 	{
 	    throw new IllegalStateException("The dataset does not have a latitude dimension");
 	}
@@ -158,16 +138,8 @@ public class VariableReader
 
     public synchronized NumericRange getTimeIndexRange(String datasetBaseUrl, TimeRange valueRange)
     {
-	if (datasetBaseUrl.contains("?"))
-	{
-	    throw new IllegalArgumentException("The dataset must be provided without a query");
-	}
-
-	DimensionArray dims = this.datasets.get(datasetBaseUrl);
-	if (dims == null)
-	{
-	    throw new IllegalStateException("No dimension data has been fetched for the given dataset");
-	} else if (!dims.hasLongitudeDimension())
+	DimensionArray dims = getDataset(datasetBaseUrl);
+	if (!dims.hasLongitudeDimension())
 	{
 	    throw new IllegalStateException("The dataset does not have a  dimension");
 	}
@@ -178,16 +150,8 @@ public class VariableReader
 
     public synchronized NumericRange getAltitudeIndexRange(String datasetBaseUrl, NumericRange valueRange)
     {
-	if (datasetBaseUrl.contains("?"))
-	{
-	    throw new IllegalArgumentException("The dataset must be provided without a query");
-	}
-
-	DimensionArray dims = this.datasets.get(datasetBaseUrl);
-	if (dims == null)
-	{
-	    throw new IllegalStateException("No dimension data has been fetched for the given dataset");
-	} else if (!dims.hasLongitudeDimension())
+	DimensionArray dims = getDataset(datasetBaseUrl);
+	if (!dims.hasLongitudeDimension())
 	{
 	    throw new IllegalStateException("The dataset does not have an altitude dimension");
 	}
@@ -198,16 +162,8 @@ public class VariableReader
     
     public synchronized boolean isFullAltitudeRange(String datasetBaseUrl, NumericRange valueRange)
     {
-	if (datasetBaseUrl.contains("?"))
-	{
-	    throw new IllegalArgumentException("The dataset must be provided without a query");
-	}
-
-	DimensionArray dims = this.datasets.get(datasetBaseUrl);
-	if (dims == null)
-	{
-	    throw new IllegalStateException("No dimension data has been fetched for the given dataset");
-	} else if (!dims.hasLongitudeDimension())
+	DimensionArray dims = getDataset(datasetBaseUrl);
+	if (!dims.hasLongitudeDimension())
 	{
 	    throw new IllegalStateException("The dataset does not have an altitude dimension");
 	}
@@ -219,9 +175,35 @@ public class VariableReader
 		&& valueRange.getEnd().floatValue() >= lvlData[lvlData.length - 1];
     }
     
-    public synchronized boolean isSingleAltitudeLevel(String datasetBaseUrl, NumericRange valueRange)
+    public boolean isSingleAltitudeLevel(String datasetBaseUrl, NumericRange valueRange)
     {
 	NumericRange indexRange = getAltitudeIndexRange(datasetBaseUrl, valueRange);
 	return indexRange.isPoint();
+    }
+    
+    public synchronized long getEstimatedQuerySelectionItems(CollectiveProtocol protocol) {
+	String datasetBaseUrl = protocol.getDataset();
+	long nItems = 1;
+	if (protocol.hasLatitudeRange()) {
+	    NumericRange latRange = getLatitudeIndexRange(datasetBaseUrl, protocol.getLatitudeRange());
+	    nItems *= latRange.getIntExtent();
+	}
+	
+	if (protocol.hasLongitudeRange()) {
+	    NumericRange lonRange = getLongitudeIndexRange(datasetBaseUrl, protocol.getLongitudeRange());
+	    nItems *= lonRange.getIntExtent();
+	}
+	
+	if (protocol.hasHightRange()) {
+	    NumericRange lvlRange = getAltitudeIndexRange(datasetBaseUrl, protocol.getHightRange());
+	    nItems *= lvlRange.getIntExtent();
+	}
+	
+	if (protocol.hasTimeRangeDefined()) {
+	    NumericRange timeRange = getTimeIndexRange(datasetBaseUrl, protocol.getTimeRange());
+	    nItems *= timeRange.getIntExtent();
+	}
+	
+	return nItems;
     }
 }

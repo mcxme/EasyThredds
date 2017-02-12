@@ -93,6 +93,10 @@ public class CollectiveProtocol extends Protocol
 		return latRange;
 	}
 	
+	public void setLatitudeRange(SpatialRange latRange) {
+	    this.latRange = latRange;
+	}
+	
 	public boolean hasLongitudeRange() {
 	    return lonRange != null;
 	}
@@ -100,6 +104,31 @@ public class CollectiveProtocol extends Protocol
 	public SpatialRange getLongitudeRange()
 	{
 		return lonRange;
+	}
+	
+	public SpatialRange getLatRange()
+	{
+	    return latRange;
+	}
+
+	public void setLongitudeRange(SpatialRange lonRange)
+	{
+	    this.lonRange = lonRange;
+	}
+
+	public void setHightRange(NumericRange hightRange)
+	{
+	    this.hightRange = hightRange;
+	}
+
+	public void setTimeRange(TimeRange timeRange)
+	{
+	    this.timeRange = timeRange;
+	}
+
+	public void setVariables(List<String> variables)
+	{
+	    this.variables = variables;
 	}
 
 	public boolean hasHightRange() {
@@ -121,6 +150,15 @@ public class CollectiveProtocol extends Protocol
 	    }
 	    
 	    return variables;
+	}
+	
+	public int getNDimensions() {
+	    int dims = 0;
+	    if (hasLatitudeRange()) dims += 1;
+	    if (hasLongitudeRange()) dims += 1;
+	    if (hasHightRange()) dims += 1;
+	    if (hasTimeRangeDefined()) dims += 1;
+	    return dims;
 	}
 	
 	public TimeRange getTimeRange() {

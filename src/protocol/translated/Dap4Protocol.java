@@ -4,6 +4,7 @@ import config.ConfigReader;
 import protocol.CollectiveProtocol;
 import protocol.reader.Dap4Reader;
 import protocol.reader.IReader;
+import service.ProtocolPicker.Protocol;
 
 public class Dap4Protocol extends DapProtocol
 {
@@ -16,6 +17,12 @@ public class Dap4Protocol extends DapProtocol
     protected String getFileNameExtension()
     {
 	return null;
+    }
+    
+    @Override
+    public Protocol getType()
+    {
+	return Protocol.Dap4;
     }
     
     @Override

@@ -11,6 +11,10 @@ public class BestProtocolNode implements DecisionNode
     
     public BestProtocolNode(Protocol protocol)
     {
+	if (protocol == Protocol.None || protocol == Protocol.Random) {
+	    throw new IllegalArgumentException("The best protocol has to be a specific one and not random or None");
+	}
+	
 	this.protocol = protocol;
     }
     

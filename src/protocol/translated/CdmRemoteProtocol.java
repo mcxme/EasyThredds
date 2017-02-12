@@ -10,6 +10,7 @@ import protocol.reader.IReader;
 import protocol.translated.util.DimensionArray;
 import protocol.translated.util.QueryBuilder;
 import protocol.translated.util.VariableReader;
+import service.ProtocolPicker.Protocol;
 
 public class CdmRemoteProtocol extends TranslatedProtocol
 {
@@ -29,6 +30,12 @@ public class CdmRemoteProtocol extends TranslatedProtocol
     protected IReader readerFactory()
     {
 	return new CdmRemoteReader();
+    }
+    
+    @Override
+    public Protocol getType()
+    {
+	return Protocol.CdmRemote;
     }
     
     @Override
@@ -62,7 +69,7 @@ public class CdmRemoteProtocol extends TranslatedProtocol
 	SpatialRange lonRange = protocol.getLongitudeRange();
 	NumericRange lvlRange = protocol.getHightRange();
 	
-	VariableReader variableReader = getDimensionData(protocol);
+	VariableReader variableReader = getDimensionData();
 	String datasetKey = getDataset();
 
 	query.add("req", "data");

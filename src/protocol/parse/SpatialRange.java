@@ -11,6 +11,10 @@ public class SpatialRange extends Range
     private double startCoordinate;
     private double endCoordinate;
     
+    public SpatialRange(double startCoordinate, double endCoordinate) {
+	this(startCoordinate, endCoordinate, Range.STD_STRIDE);
+    }
+    
     public SpatialRange(double startCoordinate, double endCoordinate, int stride)
     {
 	super(stride);

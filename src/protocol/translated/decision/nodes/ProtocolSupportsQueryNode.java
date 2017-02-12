@@ -1,6 +1,7 @@
 package protocol.translated.decision.nodes;
 
 import java.util.Iterator;
+import java.util.Random;
 import java.util.Set;
 
 import com.amazonaws.services.kms.model.UnsupportedOperationException;
@@ -13,6 +14,7 @@ import service.ProtocolPicker.Protocol;
 
 public class ProtocolSupportsQueryNode implements DecisionNode
 {
+    private static final double SAMPLE_RANDOM_PROTOCOL_PROBABILITY = 0.05;
     
     private CollectiveProtocol collective;
     
@@ -32,12 +34,15 @@ public class ProtocolSupportsQueryNode implements DecisionNode
 	    }
 	}
 	
+	Random rand = new Random();
 	if (protocols.isEmpty()) {
 	    return new NoSuitableProtocol();
 	} else if (protocols.size() == 1) {
 	    return new BestProtocolNode(protocols);
+	} else if (rand.nextDouble() < SAMPLE_RANDOM_PROTOCOL_PROBABILITY){
+	    return new SelectRandomNode();
 	} else {
-	    throw new java.lang.UnsupportedOperationException("Not implemented");
+	    return new SelectByWeightedPerformanceNode();
 	}
     }
 

@@ -39,6 +39,8 @@ public abstract class TranslatedProtocol extends Protocol
      */
     protected abstract void translateQuery(CollectiveProtocol protocol, QueryBuilder query);
     
+    public abstract service.ProtocolPicker.Protocol getType();
+    
     /**
      * Provides a reader for the current protocol 
      */
@@ -106,16 +108,21 @@ public abstract class TranslatedProtocol extends Protocol
     
     protected abstract DimensionArray downloadDimensionData(CollectiveProtocol protocol);
     
-    protected VariableReader getDimensionData(CollectiveProtocol protocol)
+    protected VariableReader getDimensionData()
     {
 	VariableReader variableReader = VariableReader.getInstance();
 	String datasetKey = getDataset();
 	// need to fetch the dataset?
 	if (!variableReader.hasDataset(datasetKey)) {
-	    DimensionArray dims = downloadDimensionData(protocol);
+	    DimensionArray dims = downloadDimensionData(query);
 	    variableReader.addDataset(datasetKey, dims);
 	}
 
 	return variableReader;
+    }
+    
+    public DimensionArray getDimensionArray() {
+	VariableReader reader = getDimensionData();
+	return reader.getDataset(getDataset());
     }
 }

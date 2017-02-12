@@ -4,6 +4,7 @@ import config.ConfigReader;
 import protocol.CollectiveProtocol;
 import protocol.reader.IReader;
 import protocol.reader.OPeNDAPReader;
+import service.ProtocolPicker.Protocol;
 
 public class OPeNDAPProtocol extends DapProtocol
 {
@@ -41,5 +42,11 @@ public class OPeNDAPProtocol extends DapProtocol
     protected String getFileNameExtension()
     {
 	return FILE_EXTENSION;
+    }
+
+    @Override
+    public Protocol getType()
+    {
+	return Protocol.OpenDap;
     }
 }

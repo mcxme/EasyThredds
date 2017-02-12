@@ -1,5 +1,7 @@
 package protocol.translated.util;
 
+import org.joda.time.DateTime;
+
 import protocol.reader.IReader;
 
 public class DimensionArray
@@ -89,11 +91,43 @@ public class DimensionArray
 	return lvlData;
     }
 
+    public float getAltitudeStart() {
+	if (!hasAltitudeDimension()) {
+	    throw new IllegalStateException("does not have an altitude dimension");
+	}
+	
+	return lvlData[0];
+    }
+
+    public float getAltitudeEnd() {
+	if (!hasAltitudeDimension()) {
+	    throw new IllegalStateException("does not have an altitude dimension");
+	}
+	
+	return lvlData[lvlData.length - 1];
+    }
+
     public double[] getTimeData()
     {
 	return timeData;
     }
 
+    public DateTime getTimeStart() {
+	if (!hasTimeDimension()) {
+	    throw new IllegalStateException("does not have a time dimension");
+	}
+	
+	return VariableIndexUtil.timeFromFloatSince1950(timeData[0]);
+    }
+    
+    public DateTime getTimeEnd() {
+	if (!hasTimeDimension()) {
+	    throw new IllegalStateException("does not have a time dimension");
+	}
+	
+	return VariableIndexUtil.timeFromFloatSince1950(timeData[timeData.length - 1]);
+    }
+    
     public boolean hasTimeDimension()
     {
 	return this.timeData != null;

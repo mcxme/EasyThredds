@@ -1,8 +1,10 @@
 package util;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import org.joda.time.DateTime;
 
@@ -13,6 +15,11 @@ import protocol.CollectiveProtocol;
 import protocol.parse.NumericRange;
 import protocol.parse.SpatialRange;
 import protocol.parse.TimeRange;
+import protocol.translated.TranslatedProtocol;
+import protocol.translated.util.DimensionArray;
+import protocol.translated.util.QueryBuilder;
+import service.ProtocolPicker;
+import service.ProtocolPicker.Protocol;
 
 public class QueryGenerator
 {
@@ -20,12 +27,8 @@ public class QueryGenerator
     
     // altitude properties
     private static final double FULL_ALTITUDE_PROBABILITY = 0.25;
-    private static final int MAX_ALTITUDE_LVL = 100;
-    private static final int MAX_ALTITUDE_STRIDE = 10;
     
     // time properties
-    private static final DateTime MIN_TIME = new DateTime(1990, 1, 1, 0, 0);
-    private static final DateTime MAX_TIME = DateTime.now();
     private static final int MAX_TIME_STRIDE = 100;
     
     // spatial (longitude / latitude) properties
@@ -36,8 +39,8 @@ public class QueryGenerator
     private static final double MAX_LONGITUDE = 360.0;
     
 
-    private static final int MIN_DIMS = 1;
-    private static final int MAX_DIMS = 4;
+    public static final int MIN_DIMS = 3;
+    public static final int MAX_DIMS = 4;
     
     // 4D dataset: time, altitude, longitude, latitude
     private static final String TEST_DATASET_4D = "RC1SD-base-08/cloud";
@@ -58,8 +61,41 @@ public class QueryGenerator
     // avoid instantiation
     private QueryGenerator() {}
     
-    public static CollectiveProtocol getRandCollective() {
+    public static CollectiveProtocol getSingleRandCollective() {
+	return getNRandCollectives(1).iterator().next();
+    }
+    
+    public static Set<CollectiveProtocol> getNRandCollectives(int n) {
+	Set<CollectiveProtocol> randomCollectives = new HashSet<>(n);
 	
+	for (int i = 0; i < n; i++) {
+	    randomCollectives.add(getRandCollective());
+	}
+	
+	CleanUtil.cleanAll();
+	return randomCollectives;
+    }
+    
+    private static DimensionArray downloadData(String dataset, String variable, boolean latLon, boolean lev, boolean time) {
+	QueryBuilder query = new QueryBuilder();
+	query.add("var", variable);
+	CollectiveProtocol collective = new CollectiveProtocol(THREDDS, dataset, query.toString());
+	if (latLon) {
+	    collective.setLatitudeRange(new SpatialRange(0, 1));
+	    collective.setLongitudeRange(new SpatialRange(0, 1));
+	}
+	if (lev) {
+	    collective.setHightRange(new NumericRange(1, 2));
+	}
+	if (time) {
+	    collective.setTimeRange(new TimeRange(DateTime.now(), DateTime.now()));
+	}
+	
+	TranslatedProtocol translated = ProtocolPicker.pickByName(Protocol.OpenDap, collective);
+	return translated.getDimensionArray();
+    }
+    
+    private static CollectiveProtocol getRandCollective() {
 	Random rand = new Random();
 	int dims = MIN_DIMS + rand.nextInt(MAX_DIMS - MIN_DIMS + 1);
 	String dataset = getDataset(dims);
@@ -71,24 +107,30 @@ public class QueryGenerator
 	SpatialRange lonRange = null;
 	NumericRange lvlRange = null;
 	TimeRange timeRange = null;
+	DimensionArray dimData;
 	
 	switch (dims) {
 	case 4:
-	    timeRange = getRandTimeRange();
-	    lvlRange = getRandAltitudeRange();
+	    dimData = downloadData(dataset, variable, true, true, true);
+	    timeRange = getRandTimeRange(dimData);
+	    lvlRange = getRandAltitudeRange(dimData);
 	    latRange = getRandLatitudeRange();
 	    lonRange = getRandLongitudeRange();
+	    break;
 	case 3:
-	    timeRange = getRandTimeRange();
+	    dimData = downloadData(dataset, variable, true, false, true);
+	    timeRange = getRandTimeRange(dimData);
 	    latRange = getRandLatitudeRange();
 	    lonRange = getRandLongitudeRange();
 	    break;
 	case 2:
-	    timeRange = getRandTimeRange();
-	    lvlRange = getRandAltitudeRange();
+	    dimData = downloadData(dataset, variable, false, true, true);
+	    timeRange = getRandTimeRange(dimData);
+	    lvlRange = getRandAltitudeRange(dimData);
 	    break;
 	case 1:
-	    timeRange = getRandTimeRange();
+	    dimData = downloadData(dataset, variable, false, false, true);
+	    timeRange = getRandTimeRange(dimData);
 	    break;
 	    default:
 		throw new UnsupportedOperationException("Can only handle 1D, 2D, 3D and 4D");
@@ -124,39 +166,52 @@ public class QueryGenerator
 	return vars[i];
     }
     
-    private static NumericRange getRandAltitudeRange() {
+    private static NumericRange getRandAltitudeRange(DimensionArray dims) {
+	assert (dims.hasAltitudeDimension());
+	float minLvl = dims.getAltitudeStart();
+	float maxLvl = dims.getAltitudeEnd();
+	return getRandAltitudeRange((int)minLvl, (int)maxLvl);
+    }
+    
+    private static NumericRange getRandAltitudeRange(int minLvl, int maxLvl) {
 	Random rand = new Random();
 	NumericRange lvlRange;
 	
-	int stride = Math.max(1, rand.nextInt(MAX_ALTITUDE_STRIDE));
+	int stride = Math.max(1, rand.nextInt(maxLvl - minLvl));
 	// full altitude range?
 	if (rand.nextDouble() < FULL_ALTITUDE_PROBABILITY) {
-	    lvlRange = new NumericRange(0, stride, MAX_ALTITUDE_LVL);
+	    lvlRange = new NumericRange(minLvl, stride, maxLvl);
 	} else {
-	    int start = rand.nextInt(MAX_ALTITUDE_LVL);
-	    int end = rand.nextInt(MAX_ALTITUDE_LVL);
+	    int start = rand.nextInt(maxLvl - minLvl);
+	    int end = rand.nextInt(maxLvl - minLvl);
 	    if (start > end) {
 		int tmp = start;
 		start = end;
 		end = tmp;
 	    }
 	    
-	    lvlRange = new NumericRange(start, stride, end);
+	    lvlRange = new NumericRange(minLvl + start, stride, minLvl + end);
 	}
 	
 	return lvlRange;
     }
     
-    private static TimeRange getRandTimeRange() {
+    private static TimeRange getRandTimeRange(DimensionArray dims) {
+	assert (dims.hasTimeDimension());
+	DateTime minStart = dims.getTimeStart();
+	DateTime maxEnd = dims.getTimeEnd();
+	return getRandTimeRange(minStart, maxEnd);
+    }
+    
+    private static TimeRange getRandTimeRange(DateTime minStart, DateTime maxEnd) {
 	Random rand = new Random();
+	long startTimestamp = minStart.getMillis();
+	long endTimestamp = maxEnd.getMillis();
+	long randStartOffset = Math.abs(rand.nextLong()) % (endTimestamp - startTimestamp);
+	long randEndOffset = Math.abs(rand.nextLong()) % (endTimestamp - startTimestamp);
 	
-	long startTimestamp = MIN_TIME.getMillis();
-	long endTimestamp = MAX_TIME.getMillis();
-	long randStartOffset = rand.nextLong() % (endTimestamp - startTimestamp);
-	long randEndOffset = rand.nextLong() % (endTimestamp - startTimestamp);
-	
-	DateTime start = new DateTime(randStartOffset);
-	DateTime end = new DateTime(randEndOffset);
+	DateTime start = new DateTime(startTimestamp + randStartOffset);
+	DateTime end = new DateTime(startTimestamp + randEndOffset);
 	if (start.isAfter(end)) {
 	    DateTime tmp = start;
 	    start = end;
@@ -164,6 +219,8 @@ public class QueryGenerator
 	}
 	
 	int stride = Math.max(1, rand.nextInt(MAX_TIME_STRIDE));
+	assert (start.isAfter(minStart) || start.equals(minStart));
+	assert (end.isBefore(endTimestamp) || end.equals(maxEnd));
 	
 	return new TimeRange(start, end, stride);
     }

@@ -31,6 +31,7 @@ import protocol.reader.ncssMeta.NCSSMetaReader;
 import protocol.translated.util.DimensionArray;
 import protocol.translated.util.QueryBuilder;
 import protocol.translated.util.VariableReader;
+import service.ProtocolPicker.Protocol;
 
 /**
  * Adapter class for the NetCdf Subset Service (NCSS) 
@@ -47,6 +48,12 @@ public class NCSSProtocol extends TranslatedProtocol
     @Override
     public String getProtocolName() {
 	return "NCSS";
+    }
+    
+    @Override
+    public Protocol getType()
+    {
+	return Protocol.Ncss;
     }
     
     @Override
@@ -89,7 +96,7 @@ public class NCSSProtocol extends TranslatedProtocol
 	// the entire range (stride is possible) or a single level
 	if (protocol.hasHightRange())
 	{
-	    VariableReader reader = getDimensionData(protocol);
+	    VariableReader reader = getDimensionData();
 	    if (!reader.isFullAltitudeRange(getDataset(), protocol.getHightRange())
 		    && !reader.isSingleAltitudeLevel(getDataset(), protocol.getHightRange()))
 	    {
@@ -107,28 +114,33 @@ public class NCSSProtocol extends TranslatedProtocol
     @Override
     protected void translateQuery(CollectiveProtocol protocol, QueryBuilder query)
     {
+	if (!protocol.hasVariablesDefined()) {
+	    throw new IllegalArgumentException("The query needs to specify variables to be fetched");
+	}
+	
 	SpatialRange latRange = protocol.getLatitudeRange();
 	SpatialRange lonRange = protocol.getLongitudeRange();
 	
-	// add all variables
-	if (protocol.hasVariablesDefined()) {
-	    query.add("var", protocol.getVariables());
-	}
 	
-	if (latRange.isPoint() && lonRange.isPoint()) {
-	    // create the request point
-	    query.add("longitude", lonRange.getStartCoordinate());
-	    query.add("latitude", latRange.getStartCoordinate());
-	} else {
-	    // create the bounding box
-	    query.add("south", latRange.getStartCoordinate());
-	    query.add("north", latRange.getEndCoordinate());
-	    query.add("west", lonRange.getStartCoordinate());
-	    query.add("east", lonRange.getEndCoordinate());
-	    
-	    // take the minimum spatial stride
-	    int horizontalStride = Math.min(latRange.getStride(), lonRange.getStride());
-	    query.add("horizStride", horizontalStride);
+	// add all variables
+	query.add("var", protocol.getVariables());
+	
+	if (protocol.hasLatitudeRange() && protocol.hasLongitudeRange()) {
+	    if (latRange.isPoint() && lonRange.isPoint()) {
+		// create the request point
+		query.add("longitude", lonRange.getStartCoordinate());
+		query.add("latitude", latRange.getStartCoordinate());
+	    } else {
+		// create the bounding box
+		query.add("south", latRange.getStartCoordinate());
+		query.add("north", latRange.getEndCoordinate());
+		query.add("west", lonRange.getStartCoordinate());
+		query.add("east", lonRange.getEndCoordinate());
+
+		// take the minimum spatial stride
+		int horizontalStride = Math.min(latRange.getStride(), lonRange.getStride());
+		query.add("horizStride", horizontalStride);
+	    }
 	}
 	
 	

@@ -20,6 +20,10 @@ public class TimeRange extends Range
 	
 	private DateTime endTime;
 	
+	public TimeRange(DateTime startTime, DateTime endTime) {
+	    this(startTime, endTime, Range.STD_STRIDE);
+	}
+	
 	public TimeRange(DateTime startTime, DateTime endTime, int stride) {
 	    super(stride);
 		if (startTime == null || endTime == null) {
