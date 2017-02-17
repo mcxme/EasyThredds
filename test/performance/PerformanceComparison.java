@@ -29,7 +29,7 @@ public class PerformanceComparison
     
     private static final String TEST_DATASET = "RC1SD-base-08/cloud";
     private static final String THREDDS = ConfigReader.getInstace().getThreddsUrl();
-    private static final int REPETITIONS = 2;
+    private static final int REPETITIONS = 1;
 
     public static void main(String[] args)
     {
@@ -48,7 +48,7 @@ public class PerformanceComparison
 	    throw new IllegalStateException("Failed to measure the performance", e);
 	} finally {
 	    VariableReader.getInstance().close();
-	    CleanUtil.cleanAuxFiles();
+	    CleanUtil.cleanAll();
 	}
     }
     
@@ -59,11 +59,11 @@ public class PerformanceComparison
 	    for (int i = 0; i < ProtocolPicker.N_PROTOCOLS; i++) {
         	try {
         	    TranslatedProtocol translated = ProtocolPicker.pickByIndex(i, collective);
-        	    double[] measuredMillis = MeasureUtil.measurePerformanceMillis(nRepetitions, translated);
+        	    double[] measuredMillis = MeasureUtil.measurePerformanceMillis(nRepetitions, translated, true);
         	    List<Double> convertedMillis = new ArrayList<Double>(measuredMillis.length);
         	    for (int j = 0; j < measuredMillis.length; j++) { convertedMillis.add(measuredMillis[j]); }
         	    dataset.add(convertedMillis, collective.toString(), translated.getProtocolName());
-        	    CleanUtil.cleanAuxFiles();
+        	    CleanUtil.cleanAll();
         	} catch (Exception e) {
         	    e.printStackTrace();
         	}

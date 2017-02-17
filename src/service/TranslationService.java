@@ -47,14 +47,16 @@ public class TranslationService
     }
     
     public static URI translate(CollectiveProtocol in, TranslatedProtocol out) {
+	// TODO time measurement for translation only not suitable
 	// measure the translation time
 	long start = System.currentTimeMillis();
 	URI translated = out.getTranslatedHttpUrl();
 	long totalMillis = System.currentTimeMillis() - start;
-	double totalSeconds = (double) totalMillis / 60.0;
+	double totalSeconds = (double) totalMillis / 1000.0;
 
 	// store the translation performance for later decisions
-	long nEstimatedItems = VariableReader.getInstance().getEstimatedQuerySelectionItems(in);
+	VariableReader vars = out.getDimensionData();
+	long nEstimatedItems = vars.getEstimatedQuerySelectionItems(in);
 	double itemsPerSecond = ((double) nEstimatedItems) / totalSeconds;
 	SelectByWeightedPerformanceNode.addPerformance(out.getType(), itemsPerSecond);
 	
@@ -73,7 +75,7 @@ public class TranslationService
     }
     
     public static String getStats() {
-	String out = "Performance in #items/second (#picked)";
+	String out = "Translation performance in #items/second (#picked)";
 	out += "\nOPeNDAP:\t" + SelectByWeightedPerformanceNode.getPerformance(Protocol.OpenDap)
 		+ " (" + getOpenDapCounter() + ")";
 	out += "\nNCSS:\t\t" + SelectByWeightedPerformanceNode.getPerformance(Protocol.Ncss)

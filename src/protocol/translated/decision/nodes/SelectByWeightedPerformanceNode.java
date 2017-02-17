@@ -12,9 +12,10 @@ import service.ProtocolPicker.Protocol;
 public class SelectByWeightedPerformanceNode implements DecisionNode
 {
     private static final double FLOATING_WEIGHT = 0.3;
-    private static final double INITIAL_NCSS_PERFORMANCE = 0.0;
-    private static final double INITIAL_OPENDAP_PERFORMANCE = 0.0;
-    private static final double INITIAL_CDMREMOTE_PERFORMANCE = 0.0;
+    
+    private static final double INITIAL_NCSS_PERFORMANCE = 1.0;
+    private static final double INITIAL_OPENDAP_PERFORMANCE = 0.4;
+    private static final double INITIAL_CDMREMOTE_PERFORMANCE = 0.3;
     
     
     private static Map<Protocol, Double> protocolPerformance;

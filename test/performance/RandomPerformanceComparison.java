@@ -1,6 +1,7 @@
 package performance;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -20,18 +21,21 @@ import util.QueryGenerator;
 public class RandomPerformanceComparison
 {
     
-    private static final int N_QUERIES = 5;//1_000;
-    private static final int N_REPETITIONS = 1;//1_000;
+    private static final int N_QUERIES = 20;//1_000;
+    private static final int N_REPETITIONS = 3;//1_000;
     private static final boolean PREFETCH_ALLOWED = true;
     
-    private static int lastProgress = -1;
-
     public static void main(String[] args)
     {
+	CleanUtil.cleanAll();
 	Set<CollectiveProtocol> protocols = QueryGenerator.getNRandCollectives(N_QUERIES);
-	System.out.println("generated " + protocols.size() + " queries");
+	System.out.println("generated " + protocols.size() + " queries:");
+	for (CollectiveProtocol query : protocols) {
+	    System.out.println(query);
+	}
+	
 	new RandomPerformanceComparison().measureBest(protocols);
-	CleanUtil.cleanAuxFiles();
+	CleanUtil.cleanAll();
     }
     
     private void measureBest(Set<CollectiveProtocol> protocols) {
@@ -40,23 +44,27 @@ public class RandomPerformanceComparison
 	// all queries are measured for each of the three protocols
 	ETAPrinter eta = ETAPrinter.init("queries", protocols.size() * 3);
 	
+	System.out.println("Running each of the " + protocols.size() + " queries " + N_REPETITIONS + "-time(s)");
 	CleanUtil.cleanAuxFiles();
+	List<Protocol> translations = new ArrayList<>();
+	translations.add(Protocol.Ncss);
+	translations.add(Protocol.OpenDap);
+	translations.add(Protocol.CdmRemote);
+	
+	
 	for (CollectiveProtocol collective : protocols) {
-	    TranslatedProtocol ncss = ProtocolPicker.pickByName(Protocol.Ncss, collective);
-	    double ncssPerformance = measureAveragePerformance(ncss);
-	    eta.update(1);
-	    CleanUtil.cleanAuxFiles();
-	    TranslatedProtocol opendap = ProtocolPicker.pickByName(Protocol.OpenDap, collective);
-	    double opendapPerformance = measureAveragePerformance(opendap);
-	    eta.update(1);
-	    CleanUtil.cleanAuxFiles();
-	    TranslatedProtocol cdmremote = ProtocolPicker.pickByName(Protocol.CdmRemote, collective);
-	    double cdmremotePerformance = measureAveragePerformance(cdmremote);
-	    eta.update(1);
-	    CleanUtil.cleanAuxFiles();
-
-	    
-	    results.add(new ProtocolComparison(collective, ncssPerformance, cdmremotePerformance, opendapPerformance));
+	    // randomize order
+	    Collections.shuffle(translations);
+	    ProtocolComparison comparison = new ProtocolComparison(collective);
+	    results.add(comparison);
+	    // measure the execution time for each protocol
+	    for (Protocol p : translations) {
+		TranslatedProtocol ncss = ProtocolPicker.pickByName(p, collective);
+		double performanceMillis = measureAveragePerformance(ncss);
+		comparison.add(p, performanceMillis);
+		eta.update(1);
+		CleanUtil.cleanAll();
+	    }
 	}
 	
 	evaluate(results);
@@ -95,7 +103,7 @@ public class RandomPerformanceComparison
 	    }
 	}
 	
-	System.out.println("Evalutation of " + N_QUERIES + " random queries with " + N_REPETITIONS + " repetitions each:");
+	System.out.println("Evalutation of " + N_QUERIES + " random queries with " + N_REPETITIONS + " repetition(s) each:");
 	for (int i = 0; i < dims; i++) {
 	    int totalWithDim = ncssBest[i] + opendapBest[i] + cdmremoteBest[i];
 	    if (totalWithDim != 0) {
@@ -112,11 +120,21 @@ public class RandomPerformanceComparison
 	public double ncssMillis;
 	public double cdmRemoteMillis;
 	public double openDapMillis;
-	public ProtocolComparison(CollectiveProtocol query, double ncssMillis, double cdmRemoteMillis, double openDapMillis) {
+	public ProtocolComparison(CollectiveProtocol query) {
 	    this.query = query;
-	    this.ncssMillis = ncssMillis;
-	    this.cdmRemoteMillis = cdmRemoteMillis;
-	    this.openDapMillis = openDapMillis;
+	}
+	
+	public void add(Protocol p, double millis) {
+	    switch (p) {
+	    case Ncss:
+		ncssMillis = millis; break;
+	    case CdmRemote:
+		cdmRemoteMillis = millis; break;
+	    case OpenDap:
+		openDapMillis = millis; break;
+		default:
+		    throw new IllegalStateException("Unsupported protocol " + p);
+	    }
 	}
     }
 }

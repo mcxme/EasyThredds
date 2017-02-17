@@ -29,8 +29,9 @@ public class OPeNDAPReader extends NetCdfReader
     @Override
     protected NetcdfFile buildNetCdfFile(String baseUri, String query, String identifier)
     {
+	URL dodsUrl = null;
 	try {
-	    URL dodsUrl = new URL(baseUri + "?" + query);
+	    dodsUrl = new URL(baseUri + "?" + query);
 	    String ddsBase = baseUri;
 	    if (baseUri.contains(".dods")) {
 		ddsBase = baseUri.replace(".dods", ".dds");
@@ -50,7 +51,7 @@ public class OPeNDAPReader extends NetCdfReader
 	    FileUtils.copyURLToFile(ddsUrl, ddsFile);
 	    return NetcdfDataset.openFile("file:" + downloadedFile.getAbsolutePath(), null);
 	} catch (IOException e) {
-	    throw new IllegalArgumentException("Could not build the NetCdf File", e);
+	    throw new IllegalArgumentException("Could not build the NetCdf File from URL " + dodsUrl.toString(), e);
 	}
     }
 }

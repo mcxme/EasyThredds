@@ -70,12 +70,12 @@ public abstract class DapProtocol extends TranslatedProtocol
 	if (protocol.hasHightRange())
 	    requestedSpatialDims += "lev,";
 
-	requestedSpatialDims = requestedSpatialDims.substring(0, requestedSpatialDims.length() - 1);
 	IReader latReader = null;
 	IReader lonReader = null;
 	IReader lvlReader = null;
 	if (!requestedSpatialDims.isEmpty())
 	{
+	    requestedSpatialDims = requestedSpatialDims.substring(0, requestedSpatialDims.length() - 1);
 	    IReader reader = readerFactory();
 	    reader.setUri(getDatasetBaseUrl(), requestedSpatialDims, getDataset() + "-spatial");
 	    if (protocol.hasLongitudeRange())

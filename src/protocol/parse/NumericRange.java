@@ -13,7 +13,7 @@ public class NumericRange extends Range
 	
 	public NumericRange(Number start, Number end, int stride) {
 	    super(stride);
-		if (end.doubleValue() <= start.doubleValue()) {
+		if (end.doubleValue() < start.doubleValue()) {
 			throw new IllegalArgumentException("The range has to be defined as: start <= end");
 		}
 		

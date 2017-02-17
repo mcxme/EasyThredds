@@ -108,7 +108,7 @@ public abstract class TranslatedProtocol extends Protocol
     
     protected abstract DimensionArray downloadDimensionData(CollectiveProtocol protocol);
     
-    protected VariableReader getDimensionData()
+    public VariableReader getDimensionData()
     {
 	VariableReader variableReader = VariableReader.getInstance();
 	String datasetKey = getDataset();
@@ -120,7 +120,7 @@ public abstract class TranslatedProtocol extends Protocol
 
 	return variableReader;
     }
-    
+
     public DimensionArray getDimensionArray() {
 	VariableReader reader = getDimensionData();
 	return reader.getDataset(getDataset());

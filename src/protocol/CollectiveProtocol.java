@@ -173,11 +173,16 @@ public class CollectiveProtocol extends Protocol
 	public String toString()
 	{
 	    QueryBuilder query = new QueryBuilder();
-	    query.add(VAR_VARIABLE, variables);
-	    query.add(LONGITUDE_VARIABLE, lonRange);
-	    query.add(LATITUDE_VARIABLE, latRange);
-	    query.add(HIGHT_VARIABLE, hightRange);
-	    query.add(TIME_VARIABLE, timeRange);
-	    return query.toString();
+	    if (!variables.isEmpty())
+		query.add(VAR_VARIABLE, variables);
+	    if (hasLongitudeRange())
+		query.add(LONGITUDE_VARIABLE, lonRange);
+	    if (hasLatitudeRange())
+		query.add(LATITUDE_VARIABLE, latRange);
+	    if (hasHightRange())
+		query.add(HIGHT_VARIABLE, hightRange);
+	    if (hasTimeRangeDefined())
+		query.add(TIME_VARIABLE, timeRange);
+	    return getBaseUrl() + "/" + getDataset() + "?" + query.toString();
 	}
 }
