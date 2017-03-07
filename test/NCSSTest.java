@@ -1,4 +1,3 @@
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -8,7 +7,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.jsoup.nodes.TextNode;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -18,12 +16,9 @@ import org.xml.sax.SAXException;
 
 import config.ConfigReader;
 import protocol.CollectiveProtocol;
-import protocol.reader.NetCdfReader;
 import protocol.translated.TranslatedProtocol;
 import service.ProtocolPicker;
 import service.ProtocolPicker.Protocol;
-import ucar.nc2.NetcdfFile;
-import ucar.nc2.dataset.NetcdfDataset;
 
 public class NCSSTest
 {
@@ -69,7 +64,7 @@ public class NCSSTest
 				valueElement.getAttribute("npts"));
 		    } else {
 			Node content = valueElement.getFirstChild();
-			assert (content.getNodeType() == node.TEXT_NODE);
+			assert (content.getNodeType() == Node.TEXT_NODE);
 //			TextNode textualContents = (TextNode) content;
 			printValues(name, type,
 				content.getNodeValue());

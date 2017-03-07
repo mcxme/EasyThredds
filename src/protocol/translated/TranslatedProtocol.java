@@ -10,6 +10,11 @@ import protocol.translated.util.DimensionArray;
 import protocol.translated.util.QueryBuilder;
 import protocol.translated.util.VariableReader;
 
+/**
+ * This class describes common behaviour for external protocols into which the
+ * collective protocol can be translated (see
+ * {@link protocol.CollectiveProtocol}).
+ */
 public abstract class TranslatedProtocol extends Protocol
 {
     private CollectiveProtocol query;
@@ -27,6 +32,9 @@ public abstract class TranslatedProtocol extends Protocol
     
     protected abstract String getNetCdfName();
     
+    /**
+     * Returns the name of the protocol.
+     */
     public abstract String getProtocolName();
     
     /**
@@ -46,8 +54,15 @@ public abstract class TranslatedProtocol extends Protocol
      */
     protected abstract IReader readerFactory();
     
+    /**
+     * Checks whether the given collective protocol (and query) can be
+     * translated using this protocol.
+     */
     public abstract boolean canTranslate(CollectiveProtocol collectiveProtocol);
     
+    /**
+     * Gets the reader corresponding to this protocol.
+     */
     public IReader getReader() {
 	IReader reader = readerFactory();
 	String uri = getTranslatedHttpUrl().toString();
@@ -56,6 +71,10 @@ public abstract class TranslatedProtocol extends Protocol
 	return reader;
     }
 
+    /**
+     * Gets the netCdf URL: this is basically the normal URL where HTTP(s) is
+     * replaced with the protocol.
+     */
     public URI getTranslatedNetCdfUrl() {
 	URI http = getTranslatedHttpUrl();
 	String protocol = getNetCdfName();
@@ -68,6 +87,9 @@ public abstract class TranslatedProtocol extends Protocol
 	}
     }
     
+    /**
+     * Gets the entire dataset url: base URL/protocol/dataset.extension
+     */
     public String getDatasetBaseUrl() {
 	StringBuilder builder = new StringBuilder();
 	builder.append(getBaseUrl());
@@ -83,6 +105,10 @@ public abstract class TranslatedProtocol extends Protocol
 	return builder.toString();
     }
     
+    /**
+     * Gets the entire dataset url with the query: {@link #getDatasetBaseUrl()}
+     * ?query
+     */
     public URI getTranslatedHttpUrl()
     {
 	QueryBuilder translated = new QueryBuilder();
@@ -106,8 +132,17 @@ public abstract class TranslatedProtocol extends Protocol
 	return getTranslatedHttpUrl().toString();
     }
     
+    /**
+     * The sub classes are responsible for downloading dimensionality data.
+     */
     protected abstract DimensionArray downloadDimensionData(CollectiveProtocol protocol);
-    
+
+    /**
+     * Returns the variable reader for the dimension data which is either loaded
+     * from cache or from the remote data set.
+     * 
+     * @return
+     */
     public VariableReader getDimensionData()
     {
 	VariableReader variableReader = VariableReader.getInstance();
@@ -121,6 +156,9 @@ public abstract class TranslatedProtocol extends Protocol
 	return variableReader;
     }
 
+    /**
+     * Gets only the raw dimension data as opposed to {@link #getDimensionData()}
+     */
     public DimensionArray getDimensionArray() {
 	VariableReader reader = getDimensionData();
 	return reader.getDataset(getDataset());

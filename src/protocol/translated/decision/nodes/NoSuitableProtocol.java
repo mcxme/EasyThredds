@@ -5,6 +5,9 @@ import java.util.Set;
 import protocol.translated.decision.DecisionNode;
 import service.ProtocolPicker.Protocol;
 
+/**
+ * This final node indicates that no protocol could be determined.
+ */
 public class NoSuitableProtocol implements DecisionNode
 {
     @Override

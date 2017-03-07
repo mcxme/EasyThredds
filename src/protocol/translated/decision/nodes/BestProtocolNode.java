@@ -5,6 +5,10 @@ import java.util.Set;
 import protocol.translated.decision.DecisionNode;
 import service.ProtocolPicker.Protocol;
 
+/**
+ * This final decision node holds the protocol selected by the decision tree
+ * process.
+ */
 public class BestProtocolNode implements DecisionNode
 {
     private Protocol protocol;

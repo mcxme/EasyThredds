@@ -21,6 +21,9 @@ import protocol.translated.util.QueryBuilder;
 import service.ProtocolPicker;
 import service.ProtocolPicker.Protocol;
 
+/**
+ * Randomly generates queries with different selectivity and different cardinality.
+ */
 public class QueryGenerator
 {
     private static final String THREDDS = ConfigReader.getInstace().getThreddsUrl();

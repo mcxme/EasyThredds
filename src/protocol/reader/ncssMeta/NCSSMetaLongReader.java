@@ -1,5 +1,9 @@
 package protocol.reader.ncssMeta;
 
+/**
+ * This subclass for reading dimensionality data for the NCSS protocol is
+ * responsible for long data.
+ */
 public class NCSSMetaLongReader extends NCSSMetaReader
 {
     private long[] values;

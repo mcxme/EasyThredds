@@ -8,9 +8,14 @@ import protocol.translated.decision.nodes.SelectByWeightedPerformanceNode;
 import protocol.translated.util.VariableReader;
 import service.ProtocolPicker.Protocol;
 
+/**
+ * This service helps in the translation process by selecting the correct
+ * protocol and measuring the performance for future calls.
+ */
 public class TranslationService
 {
 
+    // counters for the selection of each of the protocols
     private static long ncssCounter = 0;
     private static long cdmRemoteCounter = 0;
     private static long openDapCounter = 0;
@@ -46,6 +51,10 @@ public class TranslationService
 	    }
     }
     
+    /**
+     * Translated the collective protocol into the desired protocol and measures
+     * the performance.
+     */
     public static URI translate(CollectiveProtocol in, TranslatedProtocol out) {
 	// TODO time measurement for translation only not suitable
 	// measure the translation time
@@ -64,16 +73,27 @@ public class TranslationService
 	return translated;
     }
     
+    /**
+     * Translated the collective protocol into the best protocol and measures
+     * the performance.
+     */
     public static URI translate(CollectiveProtocol in) {
 	TranslatedProtocol translated = ProtocolPicker.pickBest(in);
 	return translate(in, translated);
     }
     
+    /**
+     * Translated the collective protocol into the given protocol and measures
+     * the performance.
+     */
     public static URI translate(CollectiveProtocol in, Protocol protocol) {
 	TranslatedProtocol translated = ProtocolPicker.pickByName(protocol, in);
 	return translate(in, translated);
     }
     
+    /**
+     * Returns textual information on the selected protocols and the performance
+     */
     public static String getStats() {
 	String out = "Translation performance in #items/second (#picked)";
 	out += "\nOPeNDAP:\t" + SelectByWeightedPerformanceNode.getPerformance(Protocol.OpenDap)

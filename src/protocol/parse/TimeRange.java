@@ -1,13 +1,12 @@
 package protocol.parse;
 
-import java.util.Arrays;
-
-import javax.swing.JPopupMenu.Separator;
-
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+/**
+ * This type of ranges allows for temporal subsetting.
+ */
 public class TimeRange extends Range
 {
 	public static final String SEPARATOR = ";";
@@ -80,6 +79,9 @@ public class TimeRange extends Range
 		return parse(parts);
 	}
 	
+	/**
+	 * see {@link protocol.parse.TimeRange#parse(String)}
+	 */
 	public static TimeRange parse(String[] parts) {
 		if (parts.length != 3) {
 		    throw new IllegalArgumentException("A time range has to be specified as 3 parts: [s;x;e]");

@@ -2,6 +2,10 @@ package protocol.reader.ncssMeta;
 
 import protocol.reader.IReader;
 
+/**
+ * This reader class helps to read dimensionality meta data for the NCSS
+ * protocol.
+ */
 public abstract class NCSSMetaReader implements IReader
 {
     private String variableName;
@@ -16,8 +20,14 @@ public abstract class NCSSMetaReader implements IReader
 
     protected abstract int getLength();
     
+    /**
+     * Get the i-th item.
+     */
     public abstract Number get(int i);
     
+    /**
+     * Set the i-th item.
+     */
     public abstract void set(int i, String numTxt);
         
     
@@ -43,7 +53,7 @@ public abstract class NCSSMetaReader implements IReader
     {
 	long bytes = 0;
 	for (int i = 0; i < getLength(); i++) {
-	    Number n = get(i);
+	    get(i);
 	    bytes += dataTypeSize();
 	}
 	

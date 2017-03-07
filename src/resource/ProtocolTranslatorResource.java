@@ -20,12 +20,13 @@ import javax.ws.rs.core.UriInfo;
 
 import config.ConfigReader;
 import protocol.CollectiveProtocol;
-import protocol.translated.TranslatedProtocol;
 import protocol.translated.util.VariableReader;
-import service.ProtocolPicker;
 import service.ProtocolPicker.Protocol;
 import service.TranslationService;
 
+/**
+ * This class specifies the valid URL for this servlet.
+ */
 @Path("")
 public class ProtocolTranslatorResource
 {

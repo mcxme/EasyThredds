@@ -1,24 +1,28 @@
 package protocol.translated.util;
 
-import java.io.IOException;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
-import org.joda.time.Duration;
-import org.joda.time.Period;
 import org.joda.time.Seconds;
 
 import protocol.parse.NumericRange;
 import protocol.parse.SpatialRange;
 import protocol.parse.TimeRange;
 
+/**
+ * This utility helps to translate between absolute ranges <-> index range.
+ */
 public class VariableIndexUtil
 {
     private static final int SECONDS_PER_DAY = 24 * 60 * 60;
-    
-    
+
+    // avoid instantiation of utility
     private VariableIndexUtil() {}
     
+    /**
+     * Returns the index range in the spatial dimension that matches the absolute
+     * spatial values specified by the spatial range.
+     */
     public static NumericRange getIndexRange(SpatialRange range, float[] values) {
 	float startCoordinate = (float) range.getStartCoordinate();
 	float endCoordinate = (float) range.getEndCoordinate();
@@ -50,6 +54,10 @@ public class VariableIndexUtil
 	return new NumericRange(startIndex, endIndex, range.getStride());
     }
     
+    /**
+     * Returns the index range in the numeric dimension that matches the absolute
+     * numeric values specified by the numeric range.
+     */
     public static NumericRange getIndexRange(NumericRange range, float[] values) {
 	int startIndex = findIndex(values, range.getStart().floatValue());
 	int endIndex = findIndex(values, range.getEnd().floatValue());
@@ -68,6 +76,10 @@ public class VariableIndexUtil
 	return new NumericRange(startIndex, endIndex, range.getStride());
     }
     
+    /**
+     * Returns the index range in the time dimension that matches the absolute
+     * time values specified by the time range.
+     */
     public static NumericRange getIndexRange(TimeRange range, double[] values) {
 	double convertedStart = timeToFloatSince1950(range.getStartTime());
 	int startIndex = findIndex(values, convertedStart);
@@ -87,7 +99,11 @@ public class VariableIndexUtil
 	
 	return new NumericRange(startIndex, endIndex, range.getStride());
     }
-    
+
+    /**
+     * Converts the double representation of (partial) days since 1.1.1950 into
+     * a date time object.
+     */
     public static DateTime timeFromFloatSince1950(double value) {
 	int additionalDays = (int)value;
 	double dayFraction = value - additionalDays;
@@ -104,7 +120,11 @@ public class VariableIndexUtil
 	
 	return converted;
     }
-    
+
+    /**
+     * Converts the date time object into a double representation as (partial)
+     * days since 1.1.1950.
+     */
     public static double timeToFloatSince1950(DateTime dateTime) {
 	DateTime baseline = new DateTime(1950, 1, 1, 0, 0, 0);
 	int days = Days.daysBetween(baseline, dateTime).getDays();
@@ -121,7 +141,10 @@ public class VariableIndexUtil
 	boolean ascending = array[0] < array[array.length - 1];
 	return findIndex(array, value, ascending);
     }
-    
+
+    /**
+     * Performs a binary search on float data which is either ascending or descending.
+     */
     private static int findIndex(float[] array, float value, boolean ascending) {
 	int startIndex = 0;
 	int endIndex = array.length;
@@ -151,6 +174,9 @@ public class VariableIndexUtil
 	return findIndex(array, value, ascending);
     }
     
+    /**
+     * Performs a binary search on double data which is either ascending or descending.
+     */
     private static int findIndex(double[] array, double value, boolean ascending) {
 	int startIndex = 0;
 	int endIndex = array.length;

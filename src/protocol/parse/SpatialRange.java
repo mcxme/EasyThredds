@@ -1,7 +1,9 @@
 package protocol.parse;
 
-import java.util.Arrays;
-
+/**
+ * This is a spatial range used for space subsetting such as for longitude or latitude.
+ * The values are defined as floating point coordinates.
+ */
 public class SpatialRange extends Range
 {
 	public static final String SEPARATOR = ";";
@@ -71,6 +73,9 @@ public class SpatialRange extends Range
 		return parse(parts);
 	}
 	
+	/**
+	 * see {@link protocol.parse.SpatialRange#parse(String)}
+	 */
 	public static SpatialRange parse(String[] parts) {
 		if (parts.length != 3) {
 		    throw new IllegalArgumentException("A time range has to be specified as 3 parts: [s;x;e]");

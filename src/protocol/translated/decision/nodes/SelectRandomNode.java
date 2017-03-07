@@ -9,6 +9,9 @@ import com.amazonaws.services.kms.model.UnsupportedOperationException;
 import protocol.translated.decision.DecisionNode;
 import service.ProtocolPicker.Protocol;
 
+/**
+ * This decision node randomly picks any of the remaining protocols.
+ */
 public class SelectRandomNode implements DecisionNode
 {
 

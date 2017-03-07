@@ -21,9 +21,17 @@ import org.xml.sax.SAXException;
 import config.ConfigReader;
 import service.ProtocolPicker.Protocol;
 
+/**
+ * This service class provides basic functionality on the remote (or local)
+ * corresponding THREDDS data catalogue.
+ */
 public class Thredds
 {
 
+    /**
+     * Fetches and parses all available protocols for the given data set using
+     * the THREDDS URL from the configuration.
+     */
     public static Set<Protocol> getSupportedProtocols(String dataset)
     {
 
@@ -115,5 +123,4 @@ public class Thredds
 
 	return supportedProtocols;
     }
-
 }

@@ -1,29 +1,9 @@
 package service;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-
-import config.ConfigReader;
 import protocol.CollectiveProtocol;
 import protocol.translated.CdmRemoteProtocol;
 import protocol.translated.Dap4Protocol;
@@ -32,11 +12,17 @@ import protocol.translated.OPeNDAPProtocol;
 import protocol.translated.TranslatedProtocol;
 import protocol.translated.decision.DecisionTree;
 
+/**
+ * This service provides different mechanisms for selecting a protocol.
+ */
 public class ProtocolPicker
 {
     
     public static int N_PROTOCOLS = 4;
-    
+
+    /**
+     * An enumeration of all supported protocols plus some selection mechanisms.
+     */
     public enum Protocol {
 	CdmRemote,
 	OpenDap,
@@ -54,7 +40,7 @@ public class ProtocolPicker
     
     /**
      * Chooses any of the implemented protocols that should work best for the given query.
-     * Possible protocols: OPeNDAP, NCSS, CmdRemote
+     * A simple decision tree is used {@link protocol.translated.decision.DecisionTree}
      */
     public static TranslatedProtocol pickBest(CollectiveProtocol query) {
 	Protocol bestProtocol = DecisionTree.decide(query);
@@ -73,20 +59,32 @@ public class ProtocolPicker
 	return protocols;
     }
     
+    /**
+     * Picks protocols in a round robin fashion.
+     */
     public static TranslatedProtocol pickNext(CollectiveProtocol query) {
 	return pickByIndex(Math.abs(counter++) % N_PROTOCOLS, query);
     }
     
+    /**
+     * Picks a random protocol.
+     */
     public static TranslatedProtocol pickRandom(CollectiveProtocol query) {
 	Random rand = new Random(System.currentTimeMillis());
 	return pickByIndex(Math.abs(rand.nextInt()) % N_PROTOCOLS, query);
     }
     
+    /**
+     * Finds the name of the protocol as indexed in {@link Protocol}.
+     */
     public static String getProtocolNameByIndex(int index) {
 	TranslatedProtocol dummy = pickByIndex(index, new CollectiveProtocol("", "", ""));
 	return dummy.getProtocolName();
     }
     
+    /**
+     * Picks the indicated protocol.
+     */
     public static synchronized TranslatedProtocol pickByName(Protocol protocol, CollectiveProtocol query) {
 	TranslatedProtocol translated = null;
 	switch (protocol) {
@@ -109,6 +107,9 @@ public class ProtocolPicker
 	return translated;
     }
     
+    /**
+     * Picks the protocol as indexed in {@link Protocol}.
+     */
     public static TranslatedProtocol pickByIndex(int index, CollectiveProtocol query) {
 	return pickByName(Protocol.values()[index], query);
     }

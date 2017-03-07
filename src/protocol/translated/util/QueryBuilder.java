@@ -1,5 +1,8 @@
 package protocol.translated.util;
 
+/**
+ * This utility class helps building queries using a buffer,
+ */
 public class QueryBuilder
 {
     public static final String AND = "&";
@@ -12,6 +15,10 @@ public class QueryBuilder
 	this.builder = new StringBuilder();
     }
     
+    /**
+     * Adds this key-value pair to the query in the format key=value (separators
+     * are added if necessary)
+     */
     public void add(String key, String value) {
 	if (key == null || value == null) {
 	    throw new IllegalArgumentException("neither key nor value can be null");
@@ -25,7 +32,12 @@ public class QueryBuilder
 	builder.append(ASSIGN);
 	builder.append(value);
     }
-    
+
+    /**
+     * Adds this key-value pair to the query in the format key=value (separators
+     * are added if necessary). The value is obtained throught the toString
+     * method
+     */
     public void add(String key, Object value) {
 	if (value == null) {
 	    throw new IllegalArgumentException("the value must not be null");
@@ -34,6 +46,10 @@ public class QueryBuilder
 	add(key, value.toString());
     }
     
+    /**
+     * Adds this key-value pair to the query in the format key=value (separators
+     * are added if necessary). The value is a list of chained textual values.
+     */
     public void add(String key, Iterable<?> values) {
 	if (values == null) {
 	    throw new IllegalArgumentException("the values must not be null");
@@ -54,10 +70,17 @@ public class QueryBuilder
 	add(key, valueBuilder);
     }
     
+    /**
+     * Appends the given string to the query without verification.
+     */
     public void append(String value) {
 	builder.append(value);
     }
-    
+
+    /**
+     * Appends the given textual representation of the object to the query
+     * without verification.
+     */
     public void append(Object value) {
 	if (value == null) {
 	    throw new IllegalArgumentException("the value must not be null");

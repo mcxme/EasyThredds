@@ -3,12 +3,19 @@ package util;
 import protocol.reader.IReader;
 import protocol.translated.TranslatedProtocol;
 
+/**
+ * Helps to measure the performance for translating and reading a given protocol.
+ */
 public class MeasureUtil
 {
     public static boolean PRINT = false;
     
     private MeasureUtil() {}
 
+    /**
+     * Measures the translation and full iteration n times. Optionally, the data
+     * set can be prefetched to hold coordinate data in a cache.
+     */
     public static double[] measurePerformanceMillis(int nRepetitions,
 	    TranslatedProtocol translatedProtocol, boolean prefetchFirst) {
 	if (prefetchFirst) {
@@ -18,6 +25,9 @@ public class MeasureUtil
 	return measurePerformanceMillis(nRepetitions, translatedProtocol);
     }
     
+    /**
+     * Measures the translation and full iteration n times. No prefetching.
+     */
     public static double[] measurePerformanceMillis(int nRepetitions,
 	    TranslatedProtocol translatedProtocol) {
 	double[] performance = new double[nRepetitions];
@@ -28,6 +38,9 @@ public class MeasureUtil
 	return performance;
     }
     
+    /**
+     * Measures the translation and full iteration once.
+     */
     public static double measurePerformanceMillis(TranslatedProtocol translated) {
 	if (PRINT)
 	    System.out.println("---- " + translated.getProtocolName() + "\t----");

@@ -6,6 +6,9 @@ import protocol.reader.Dap4Reader;
 import protocol.reader.IReader;
 import service.ProtocolPicker.Protocol;
 
+/**
+ * Adapter class for the DAP4 protocol. 
+ */
 public class Dap4Protocol extends DapProtocol
 {
     public Dap4Protocol(CollectiveProtocol query)

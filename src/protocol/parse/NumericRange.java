@@ -1,5 +1,8 @@
 package protocol.parse;
 
+/**
+ * This class is used for simple numeric ranges such as those for altitude level subsetting.
+ */
 public class NumericRange extends Range
 {
 	public static final int STD_START = 0;
@@ -48,7 +51,7 @@ public class NumericRange extends Range
 	}
 	
 	/**
-	 * Parses a range in the format '[x:y:z]' where x<z define the bounds of the range and y the step size:
+	 * Parses a range in the format '[x:y:z]' where x <= z define the bounds of the range and y the step size:
 	 * [x, x + y, x + 2y, ..., z]
 	 * 
 	 * If the stride is omitted a default stride is assumed.
@@ -65,6 +68,9 @@ public class NumericRange extends Range
 		return parse(vars);
 	}
 	
+	/**
+	 * see {@link protocol.parse.NumericRange#parse(String)}
+	 */
 	public static NumericRange parse(String[] vars) {
 		if (vars.length != 3) {
 			throw new IllegalArgumentException("A range must contain 3 variables to be valid but had " + vars.length);

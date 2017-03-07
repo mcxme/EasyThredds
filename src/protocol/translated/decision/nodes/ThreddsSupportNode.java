@@ -9,6 +9,10 @@ import protocol.translated.decision.DecisionNode;
 import service.ProtocolPicker.Protocol;
 import service.Thredds;
 
+/**
+ * This decision node excludes all protocols that are not supported on the
+ * remote data set managed by THREDDS.
+ */
 public class ThreddsSupportNode implements DecisionNode
 {
     private CollectiveProtocol collective;

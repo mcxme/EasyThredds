@@ -4,10 +4,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+/**
+ * This utility class helps to read properties from the configuration file
+ * (located in the ressources directory).
+ *
+ */
 public class ConfigReader implements AutoCloseable
 {
     // Property file:
     private static final String PROPERTIES_FILE_NAME = "config.properties";
+    
     // Properties:
     private static final String THREDDS_CATALOGUE_URL_PROPERTY = "threddsCatalogueUrl";
     private static final String THREDDS_URL_PROPERTY = "threddsServerUrl";

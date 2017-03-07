@@ -17,13 +17,16 @@ import org.jfree.ui.ApplicationFrame;
 
 import config.ConfigReader;
 import protocol.CollectiveProtocol;
-import protocol.reader.IReader;
 import protocol.translated.TranslatedProtocol;
 import protocol.translated.util.VariableReader;
 import service.ProtocolPicker;
 import util.CleanUtil;
 import util.MeasureUtil;
 
+/**
+ * This runner takes all input queries, executes them and plots a boxplot for
+ * the performances.
+ */
 public class PerformanceComparison
 {
     

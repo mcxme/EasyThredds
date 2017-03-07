@@ -9,9 +9,14 @@ import org.apache.commons.io.FileUtils;
 import ucar.nc2.NetcdfFile;
 import ucar.nc2.dataset.NetcdfDataset;
 
+/**
+ * A reader that is capable of downloading remote OPeNDAP data sets.
+ */
 public class OPeNDAPReader extends NetCdfReader
 {
+    // the actual data file
     private File dodsFile;
+    // the data description
     private File ddsFile;
     
     @Override
@@ -31,6 +36,8 @@ public class OPeNDAPReader extends NetCdfReader
     {
 	URL dodsUrl = null;
 	try {
+	    
+	    // create the query as specified by OPeNDAP
 	    dodsUrl = new URL(baseUri + "?" + query);
 	    String ddsBase = baseUri;
 	    if (baseUri.contains(".dods")) {
@@ -39,6 +46,7 @@ public class OPeNDAPReader extends NetCdfReader
 		ddsBase = baseUri + ".dds";
 	    }
 	    
+	    // Download the data along with the description
 	    URL ddsUrl = new URL(ddsBase + "?" + query);
 	    String fileName = (identifier.isEmpty() || identifier == null)? "defaultOpendap" : identifier;
 	    String filePath = BASE_DIRECTORY + File.separator +
@@ -49,6 +57,8 @@ public class OPeNDAPReader extends NetCdfReader
 	    ddsFile = new File(filePath + ".dds");
 	    FileUtils.copyURLToFile(dodsUrl, dodsFile);
 	    FileUtils.copyURLToFile(ddsUrl, ddsFile);
+	    
+	    // provide the stored data to the netCdf library
 	    return NetcdfDataset.openFile("file:" + downloadedFile.getAbsolutePath(), null);
 	} catch (IOException e) {
 	    throw new IllegalArgumentException("Could not build the NetCdf File from URL " + dodsUrl.toString(), e);

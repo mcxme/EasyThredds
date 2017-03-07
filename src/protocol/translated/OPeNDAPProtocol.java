@@ -6,9 +6,11 @@ import protocol.reader.IReader;
 import protocol.reader.OPeNDAPReader;
 import service.ProtocolPicker.Protocol;
 
+/**
+ * Adapter class for the OPeNDAP protocol.
+ */
 public class OPeNDAPProtocol extends DapProtocol
 {
-    
     public static final String FILE_EXTENSION = "dods";
 
     public OPeNDAPProtocol(CollectiveProtocol query)

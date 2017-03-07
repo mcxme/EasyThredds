@@ -6,8 +6,12 @@ import ucar.ma2.Array;
 import ucar.ma2.IndexIterator;
 import ucar.nc2.NetcdfFile;
 import ucar.nc2.Variable;
-import ucar.nc2.time.CalendarDateUnit;
 
+/**
+ * This is a reader for NetCDF-files (.nc). It is based on the netCdf-library
+ * for Java and provides all reading related functionality. The actual download
+ * of the file should be handled by each protocol individually.
+ */
 public abstract class NetCdfReader implements IReader
 {
     public static final String BASE_DIRECTORY = "netCdfFiles";
@@ -49,7 +53,7 @@ public abstract class NetCdfReader implements IReader
 		int dataByteSize = data.getDataType().getSize();
 		IndexIterator it = data.getIndexIterator();
 		while (it.hasNext()) {
-		    Object val = it.next();
+		    it.next();
 		    bytes += dataByteSize;
 		}
 	    } catch (IOException e) {
@@ -145,7 +149,6 @@ public abstract class NetCdfReader implements IReader
         
         return dims[0];
     }
-    
     
     @Override
     public boolean hasVariableWithName(String name)

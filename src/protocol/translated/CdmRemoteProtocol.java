@@ -12,6 +12,9 @@ import protocol.translated.util.QueryBuilder;
 import protocol.translated.util.VariableReader;
 import service.ProtocolPicker.Protocol;
 
+/**
+ * Adapter class for the CdmRemote protocol.
+ */
 public class CdmRemoteProtocol extends TranslatedProtocol
 {
 
@@ -46,7 +49,6 @@ public class CdmRemoteProtocol extends TranslatedProtocol
     @Override
     protected String getNetCdfName() {
 	return "cdmremote";
-//	throw new UnsupportedOperationException("Not implemented");
     }
     
     @Override

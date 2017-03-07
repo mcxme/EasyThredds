@@ -8,9 +8,11 @@ import protocol.reader.NetCdfReader;
 import protocol.translated.decision.nodes.SelectByWeightedPerformanceNode;
 import protocol.translated.util.VariableReader;
 
+/**
+ * Helps cleaning up stored data such as auxiliary files or caches.
+ */
 public class CleanUtil
 {
-
     private CleanUtil() {}
     
     public static void cleanAuxFiles() {

@@ -1,5 +1,10 @@
 package protocol.reader.ncssMeta;
 
+/**
+ * This subclass for reading dimensionality data for the NCSS protocol is
+ * responsible for double data.
+ */
+
 public class NCSSMetaDoubleReader extends NCSSMetaReader
 {
 

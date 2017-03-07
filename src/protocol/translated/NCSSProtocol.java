@@ -3,8 +3,6 @@ package protocol.translated;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -225,7 +223,7 @@ public class NCSSProtocol extends TranslatedProtocol
 		} else {
 		    // ... a given list of values
 		    Node content = valueElement.getFirstChild();
-		    assert (content.getNodeType() == node.TEXT_NODE);
+		    assert (content.getNodeType() == Node.TEXT_NODE);
 		    reader = getMetaReader(name, type, content.getNodeValue());
 		}
 
@@ -267,6 +265,9 @@ public class NCSSProtocol extends TranslatedProtocol
 	}
     }
     
+    /**
+     * Get the correct meta data reader depending on the data type.
+     */
     private static IReader getMetaReader(String name, String type, String txtData) {
 	String[] data = txtData.split(" ");
 	

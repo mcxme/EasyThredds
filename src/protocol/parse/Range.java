@@ -1,5 +1,12 @@
 package protocol.parse;
 
+/**
+ * Specifies some common behaviour of all ranges. Each range has some concept of
+ * a start, a stride and an end. Whereas, start and end are defined
+ * individually, the stride is always a positive integer.
+ *
+ * A range where the start is equal to the end is considered a point.
+ */
 public abstract class Range
 {
     public static final int STD_STRIDE = 1;
@@ -23,7 +30,11 @@ public abstract class Range
     public boolean hasDefaultStride() {
 	    return stride == STD_STRIDE;
 	}
-    
+
+    /**
+     * Parses the given numerical stride. If none is provided the default stride
+     * is assumed.
+     */
     protected static int parseStride(String textualStride) {
 	return (textualStride.isEmpty() || textualStride == null)?
 		STD_STRIDE

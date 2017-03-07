@@ -9,6 +9,9 @@ import protocol.translated.util.DimensionArray;
 import protocol.translated.util.QueryBuilder;
 import protocol.translated.util.VariableReader;
 
+/**
+ * This class generalizes behaviour of the DAP protocols.
+ */
 public abstract class DapProtocol extends TranslatedProtocol
 {
     public DapProtocol(CollectiveProtocol query)

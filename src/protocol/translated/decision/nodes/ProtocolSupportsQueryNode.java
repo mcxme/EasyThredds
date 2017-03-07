@@ -12,8 +12,18 @@ import protocol.translated.decision.DecisionNode;
 import service.ProtocolPicker;
 import service.ProtocolPicker.Protocol;
 
+/**
+ * This decision node excludes all protocols that cannot fully handle the
+ * requested query.
+ * 
+ * It then refers to the selection process by either picking the best performing
+ * node (@link {@link SelectByWeightedPerformanceNode}) or by using a random
+ * node to gather sample performance data ({@link SelectRandomNode}).
+ */
 public class ProtocolSupportsQueryNode implements DecisionNode
 {
+    
+    // sample probability
     private static final double SAMPLE_RANDOM_PROTOCOL_PROBABILITY = 0.1;
     
     private CollectiveProtocol collective;

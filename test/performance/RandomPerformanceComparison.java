@@ -18,6 +18,10 @@ import util.CleanUtil;
 import util.MeasureUtil;
 import util.QueryGenerator;
 
+/**
+ * This runner executes randomly generated queries, measures the performance and
+ * counts the best protocols.
+ */
 public class RandomPerformanceComparison
 {
     

@@ -9,15 +9,24 @@ import com.amazonaws.services.kms.model.UnsupportedOperationException;
 import protocol.translated.decision.DecisionNode;
 import service.ProtocolPicker.Protocol;
 
+/**
+ * This decision node picks the best remaining protocol based on the weighted
+ * floating average of each of the protocols.
+ * 
+ * The protocol with the highest average performance is selected.
+ */
 public class SelectByWeightedPerformanceNode implements DecisionNode
 {
+    
+    // The weight for historical data
     private static final double FLOATING_WEIGHT = 0.3;
     
+    // Some manually predetermined performances
     private static final double INITIAL_NCSS_PERFORMANCE = 1.0;
     private static final double INITIAL_OPENDAP_PERFORMANCE = 0.4;
     private static final double INITIAL_CDMREMOTE_PERFORMANCE = 0.3;
     
-    
+    // Holds the performance value for each protocol
     private static Map<Protocol, Double> protocolPerformance;
     
     private static void initProtocolPerformance() {

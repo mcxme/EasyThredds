@@ -1,5 +1,10 @@
 package protocol.reader.ncssMeta;
 
+/**
+ * This subclass for reading dimensionality data for the NCSS protocol is
+ * responsible for float data.
+ */
+
 public class NCSSMetaFloatReader extends NCSSMetaReader
 {
     private float[] values;

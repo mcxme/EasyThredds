@@ -4,6 +4,10 @@ import org.joda.time.DateTime;
 
 import protocol.reader.IReader;
 
+/**
+ * This wrapper class stores coordinate (dimension) data.
+ * It takes readers for each dimensions and returns raw data.
+ */
 public class DimensionArray
 {
     private static final String LATITUDE_VARIABLE = "lat";

@@ -2,18 +2,16 @@ package protocol.reader;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 
-import org.apache.commons.io.FileUtils;
-
-import com.amazonaws.services.kms.model.UnsupportedOperationException;
-
-import ucar.ma2.Array;
-import ucar.ma2.IndexIterator;
 import ucar.nc2.NetcdfFile;
-import ucar.nc2.Variable;
 import ucar.nc2.dataset.NetcdfDataset;
 
+/**
+ * A reader that is capable of downloading remote DAP4 data sets.
+ * 
+ * This should work similarly to {@link protocol.reader.OPeNDAPReader} but could
+ * not be tested as the DAP4 protocol did not work properly.
+ */
 public class Dap4Reader extends NetCdfReader
 {
     private File dapFile;
@@ -22,8 +20,8 @@ public class Dap4Reader extends NetCdfReader
     @Override
     protected NetcdfFile buildNetCdfFile(String baseUri, String query, String indentifier) {
 	try {
-	    URL dodsUrl = new URL(baseUri + ".dap?" + query);
-	    URL ddsUrl = new URL(baseUri + ".dds?" + query);
+	    //URL dodsUrl = new URL(baseUri + ".dap?" + query);
+	    //URL ddsUrl = new URL(baseUri + ".dds?" + query);
 	    
 	    return NetcdfDataset.openDataset("dap4:" + baseUri);
 	    

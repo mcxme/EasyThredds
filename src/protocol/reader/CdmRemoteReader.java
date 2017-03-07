@@ -6,10 +6,13 @@ import java.lang.reflect.Field;
 
 import ucar.ma2.Array;
 import ucar.ma2.IndexIterator;
-import ucar.nc2.NetcdfFile;
 import ucar.nc2.stream.CdmRemote;
 import ucar.nc2.stream.NcStreamReader;
 
+/**
+ * A reader that is capable of downloading remote CdmRemote data sets.
+ * Therefore, it fully streams the queried data set and reads the result.
+ */
 public class CdmRemoteReader implements IReader {
     
     private Array dataArray;
@@ -44,12 +47,16 @@ public class CdmRemoteReader implements IReader {
 	    NcStreamReader ncStreamReader = new NcStreamReader();
 	    Object data = ncStreamReader.readData(ncStream, null);
 	    
-	    // get the array data
-	    Class resultClass = data.getClass();
+	    // get the array data even though it is hidden
+	    Class<? extends Object> resultClass = data.getClass();
 	    Field arrayDataField = resultClass.getDeclaredField("data");
 	    arrayDataField.setAccessible(true);
 	    dataArray = (Array)arrayDataField.get(data);
 	    
+	    // TODO unfortunately, this did not work because the wrong magic
+	    // data start is returned by the server when requesting a queried
+	    // data set and the netCdf library expects the magic header start:
+
 	    // http://www.unidata.ucar.edu/software/thredds/current/netcdf-java/reference/stream/NcstreamGrammer.html
 //	    dataFile = NetcdfDataset.openFile("cdmremote:" + baseUri, null);
 //	    ncStream = CdmRemote.sendQuery(baseUri, query);
@@ -71,7 +78,7 @@ public class CdmRemoteReader implements IReader {
 	int dataByteSize = dataArray.getDataType().getSize();
 	IndexIterator it = dataArray.getIndexIterator();
 	while (it.hasNext()) {
-	    Object val = it.next();
+	    it.next();
 	    bytes += dataByteSize;
 	}
 	

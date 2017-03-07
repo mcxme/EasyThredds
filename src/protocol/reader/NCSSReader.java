@@ -7,17 +7,21 @@ import java.net.URL;
 import org.apache.commons.io.FileUtils;
 
 import ucar.nc2.NetcdfFile;
-import ucar.nc2.dataset.NetcdfDataset;
 
+/**
+ * A reader that is capable of downloading remote NCSS data sets.
+ */
 public class NCSSReader extends NetCdfReader
 {
 
+    // The netCdf file
     private File ncFile;
     
     @Override
     protected NetcdfFile buildNetCdfFile(String baseUri, String query, String identifier)
     {
 	try {
+	    // download the .nc file
 	    URL ncUrl = new URL(baseUri + "?" + query);
 	    String fileName = (identifier.isEmpty() || identifier == null)? "defaultNcss" : identifier;
 	    String filePath = BASE_DIRECTORY + File.separator
@@ -25,6 +29,8 @@ public class NCSSReader extends NetCdfReader
 		    + fileName + ".nc";
 	    ncFile = new File(filePath);
 	    FileUtils.copyURLToFile(ncUrl, ncFile);
+	    
+	    // provide the .nc file locally to the netCdf library
 	    return NetcdfFile.open("file:" + ncFile.getAbsolutePath());
 	} catch (IOException e) {
 	    throw new IllegalArgumentException("Could not build the NetCdf File", e);
